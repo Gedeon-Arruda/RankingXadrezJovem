@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ranking xadrezjovemes</title>
+<style>
+/* copie o CSS do seu INDEX_HTML ou use simplificado */
+:root{--bg:#f5f7fb;--card:#fff;--muted:#6b7280;--accent:#0f69ff;--table-border:#e6e9ee}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);margin:20px;color:#111}
+.wrap{max-width:1100px;margin:0 auto}
+.card{background:var(--card);padding:16px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.06)}
+.table-wrap{overflow:auto;border:1px solid var(--table-border);border-radius:8px}
+table{width:100%;border-collapse:collapse}
+th,td{padding:10px;border-bottom:1px solid var(--table-border);text-align:left}
+th{background:#fafafa}
+.rank{width:56px;font-weight:700;color:var(--accent)}
+a.link{color:#0b61d6;text-decoration:none}
+.pager{margin-top:12px}
+.small{color:var(--muted);font-size:0.9rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Ranking xadrezjovemes</h1>
+  <div class="card">
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
+      <input id="q" placeholder="buscar usuário..." style="padding:8px;border-radius:6px;border:1px solid #ddd">
+      <select id="sort"><option value="blitz">Blitz</option><option value="bullet">Bullet</option><option value="rapid">Rapid</option></select>
+      <select id="order"><option value="desc">Desc</option><option value="asc">Asc</option></select>
+      <select id="perPage"><option>10</option><option selected>20</option><option>50</option></select>
+      <button id="reload">Recarregar</button>
+      <div id="info" class="small">—</div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="rank">#</th><th>Usuário</th><th>Blitz</th><th>Bullet</th><th>Rapid</th><th>Último login</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="pager" id="pager"></div>
+  </div>
+</div>
+
+<script>
+let allPlayers = [];
+let filtered = [];
+let page = 1;
+
+function loadData(){
+  document.getElementById('info').textContent = 'Carregando...';
+  fetch('./players.json').then(r=>r.json()).then(js=>{
+    allPlayers = js.players || [];
+    document.getElementById('info').textContent = `Total: ${allPlayers.length} — gerado: ${new Date(js.generated_at).toLocaleString()}`;
+    applyFilters();
+  }).catch(e=>{
+    console.error(e);
+    document.getElementById('info').textContent = 'Erro ao carregar players.json';
+  });
+}
+
+function applyFilters(){
+  const q = document.getElementById('q').value.trim().toLowerCase();
+  const sort = document.getElementById('sort').value;
+  const order = document.getElementById('order').value;
+  filtered = allPlayers.filter(p => !q || p.username.toLowerCase().includes(q));
+  filtered.sort((a,b)=>{
+    let va = (sort==='username') ? a.username.toLowerCase() : (a[sort]||0);
+    let vb = (sort==='username') ? b.username.toLowerCase() : (b[sort]||0);
+    if(va < vb) return order==='asc' ? -1 : 1;
+    if(va > vb) return order==='asc' ? 1 : -1;
+    return 0;
+  });
+  page = 1;
+  renderPage();
+}
+
+function renderPage(){
+  const perPage = parseInt(document.getElementById('perPage').value,10) || 20;
+  const start = (page-1)*perPage;
+  const slice = filtered.slice(start, start+perPage);
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = '';
+  slice.forEach((p,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="rank">${start+i+1}</td>
+      <td><a class="link" href="${p.profile}" target="_blank">${p.username}</a></td>
+      <td>${p.blitz}</td><td>${p.bullet}</td><td>${p.rapid}</td>
+      <td class="small">${formatSeen(p.seenAt)}</td>`;
+    tbody.appendChild(tr);
+  });
+  renderPager(perPage);
+}
+
+function renderPager(perPage){
+  const pager = document.getElementById('pager');
+  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
+  pager.innerHTML = '';
+  for(let i=Math.max(1,page-2); i<=Math.min(totalPages,page+2); i++){
+    const b = document.createElement('button');
+    b.textContent = i;
+    b.disabled = (i===page);
+    b.onclick = ()=>{ page=i; renderPage(); };
+    pager.appendChild(b);
+  }
+}
+
+function formatSeen(ms){
+  if(!ms) return 'N/A';
+  const d = Math.floor((Date.now()-ms)/(24*3600*1000));
+  if(d===0) return 'Hoje'; if(d===1) return '1 dia'; return `${d} dias`;
+}
+
+document.getElementById('q').addEventListener('input', ()=>applyFilters());
+document.getElementById('sort').addEventListener('change', ()=>applyFilters());
+document.getElementById('order').addEventListener('change', ()=>applyFilters());
+document.getElementById('perPage').addEventListener('change', ()=>{ page=1; renderPage(); });
+document.getElementById('reload').addEventListener('click', ()=>{ loadData(); });
+
+loadData();
+</script>
+</body>
+</html>

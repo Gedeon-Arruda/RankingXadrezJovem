@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Ranking xadrezjovemes - ativos</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Ranking xadrezjovemes</h1>
+        <div class="sub">Jogadores ativos (últimos {{ days }} dias)</div>
+      </div>
+      <div class="badge">Ativos: <span id="totalBadge">—</span></div>
+    </header>
+
+    <div class="card">
+      <div class="controls">
+        <label>Pesquisar:
+          <input id="q" type="text" placeholder="buscar usuário..." oninput="debouncedSearch()" />
+        </label>
+
+        <label>Por página:
+          <select id="perPage" onchange="fetchPage(1)">
+            <option value="10">10</option>
+            <option value="20" selected>20</option>
+            <option value="50">50</option>
+          </select>
+        </label>
+
+        <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+          <button id="reload" class="btn">Recarregar dados</button>
+          <div id="info" class="info">—</div>
+        </div>
+      </div>
+
+      <div class="table-wrap" id="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="rank">#</th>
+              <th class="sortable" data-sort="username">Usuário <span class="arrow">↕</span></th>
+              <th class="sortable" data-sort="blitz">Blitz <span class="arrow">↕</span></th>
+              <th class="sortable" data-sort="bullet">Bullet <span class="arrow">↕</span></th>
+              <th class="sortable" data-sort="rapid">Rapid <span class="arrow">↕</span></th>
+              <th>Último login</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="pager" id="pager"></div>
+    </div>
+
+    <footer style="margin-top:12px;color:var(--muted);font-size:0.9rem">
+      Dados fornecidos pelo Lichess — página local. Clique no nome para abrir perfil.
+    </footer>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
