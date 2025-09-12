@@ -25,73 +25,109 @@
       color:#0b1220;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      padding:24px;
+      padding:20px;
     }
     .wrap{max-width:1200px;margin:0 auto}
     header.site{
-      display:flex;align-items:center;gap:16px;justify-content:space-between;margin-bottom:18px;
-      flex-wrap:wrap;
+      display:flex;align-items:center;gap:12px;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;
     }
-    .brand{display:flex;gap:12px;align-items:center}
+    .brand{display:flex;gap:10px;align-items:center}
     .logo{
-      width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
       display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;box-shadow:0 6px 18px rgba(6,34,102,0.12);
       flex:0 0 auto;
     }
-    h1{font-size:1.35rem;margin:0}
-    .subtitle{color:var(--muted);font-size:0.95rem;margin-top:2px}
+    h1{font-size:1.25rem;margin:0}
+    .subtitle{color:var(--muted);font-size:0.9rem;margin-top:2px}
     .top-meta{display:flex;gap:10px;align-items:center}
     .badge{background:linear-gradient(180deg,#f1f9ff,#eef6ff);color:var(--accent);padding:6px 10px;border-radius:999px;border:1px solid rgba(11,102,255,0.08);font-weight:700;font-size:0.9rem;}
-    .card{background:var(--card);border-radius:14px;padding:16px;box-shadow:0 10px 30px rgba(12,32,80,0.06);}
-    .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;}
+    .card{background:var(--card);border-radius:12px;padding:14px;box-shadow:0 10px 30px rgba(12,32,80,0.06);}
+    .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;}
     .controls .left{display:flex;gap:8px;align-items:center}
     .search{display:flex;align-items:center;gap:8px;background:var(--glass);padding:8px;border-radius:10px;border:1px solid rgba(11,20,40,0.04);}
-    .search input{border:0;background:transparent;outline:none;padding:6px 8px;font-size:0.95rem;width:240px;}
+    .search input{border:0;background:transparent;outline:none;padding:6px 8px;font-size:0.95rem;width:220px;}
     select,button{padding:8px 10px;border-radius:8px;border:1px solid #e6e9ee;background:#fff;font-size:0.95rem;}
     button.btn{background:linear-gradient(180deg,var(--accent),var(--accent-2));color:#fff;border:none;cursor:pointer;}
     .info{color:var(--muted);font-size:0.9rem;margin-left:6px}
     .table-wrap{overflow:auto;border-radius:10px;border:1px solid var(--table-border);background:linear-gradient(180deg,#fff,#fbfdff);margin-top:8px}
-    table{width:100%;border-collapse:collapse;min-width:720px}
-    thead th{position:sticky;top:0;background:linear-gradient(180deg,#ffffff,#f7fbff);padding:12px 14px;text-align:left;border-bottom:1px solid var(--table-border);font-weight:700;font-size:0.95rem;color:#0b1220;}
-    tbody td{padding:12px 14px;border-bottom:1px solid var(--table-border);vertical-align:middle;font-size:0.95rem;color:#122036}
+    table{width:100%;border-collapse:collapse;min-width:640px;table-layout:auto}
+    thead th{position:sticky;top:0;background:linear-gradient(180deg,#ffffff,#f7fbff);padding:12px 12px;text-align:left;border-bottom:1px solid var(--table-border);font-weight:700;font-size:0.95rem;color:#0b1220;}
+    tbody td{padding:10px 12px;border-bottom:1px solid var(--table-border);vertical-align:middle;font-size:0.95rem;color:#122036}
     tbody tr:hover{background:linear-gradient(90deg,rgba(0,102,255,0.03),transparent)}
     .rank{width:56px;font-weight:700;color:var(--accent)}
-    .user a{color:var(--accent);text-decoration:none;font-weight:600}
-    .user a:hover{text-decoration:underline}
+    .user a{color:var(--accent);text-decoration:none;font-weight:600;word-break:break-word}
     .small{display:block;color:var(--muted);font-size:0.82rem;margin-top:4px}
-    .rating{font-weight:700;color:#111}
-    .seen{color:var(--muted);font-size:0.9rem}
+    .rating{font-weight:700;color:#111;text-align:right;min-width:56px}
+    .seen{color:var(--muted);font-size:0.9rem;text-align:right}
     .pager{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:12px;justify-content:flex-end}
     .pager button{background:#fff;border:1px solid #eef3fb;padding:6px 10px;border-radius:8px;cursor:pointer}
     .pager button[disabled]{opacity:.6;cursor:default}
 
-    /* Responsive improvements */
+    /* Tablet */
     @media (max-width:900px){
-      .search input{width:160px}
-      table{min-width:640px}
+      .search input{width:140px}
+      thead th, tbody td{padding:10px}
+      h1{font-size:1.1rem}
     }
 
-    /* Mobile: transform table rows into card-like blocks with labels */
+    /* Mobile: stacked card layout with all fields visible */
     @media (max-width:720px){
-      header.site{padding-bottom:8px}
-      .top-meta{width:100%;justify-content:flex-end}
-      table{min-width:0;border:0}
-      thead{display:none}
-      tbody tr{display:block;border-bottom:1px solid var(--table-border);padding:12px 10px;margin:8px 0;border-radius:8px;background:linear-gradient(180deg,#fff,#fbfdff);box-shadow:0 4px 14px rgba(12,32,80,0.03)}
-      tbody td{display:flex;justify-content:space-between;padding:8px 0;border:0}
-      tbody td + td{margin-top:6px}
-      tbody td::before{content:attr(data-label);color:var(--muted);font-size:0.85rem;margin-right:12px;flex:0 0 36%;}
-      .rank::before{display:none}
-      .user a{display:block}
-      .small{display:none}
+      body{padding:12px}
+      .wrap{padding:0}
+      .logo{width:44px;height:44px;font-size:15px}
+      .search input{width:110px}
+      table{min-width:0}
+      thead{display:none} /* hide desktop headers */
+      tbody tr{
+        display:block;
+        border-radius:10px;
+        padding:10px;
+        margin:10px 0;
+        background:linear-gradient(180deg,#fff,#fbfdff);
+        box-shadow:0 6px 18px rgba(6,34,102,0.04);
+        border:1px solid var(--table-border);
+      }
+      /* Each cell becomes a row: label on left, value on right; username full width */
+      tbody td{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        padding:6px 0;
+        border:0;
+        font-size:0.95rem;
+      }
+      tbody td.user{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:6px;
+      }
+      tbody td.user a{font-size:1rem}
+      tbody td.user .small{display:block}
+      tbody td.data-metric{
+        width:100%;
+        display:flex;
+        justify-content:space-between;
+        gap:12px;
+        padding-top:6px;
+        font-size:0.95rem;
+      }
+      /* compact metric badges */
+      .metric{
+        flex:1;
+        display:flex;
+        flex-direction:column;
+        align-items:flex-end;
+        min-width:64px;
+      }
+      .metric .label{color:var(--muted);font-size:0.78rem}
+      .metric .value{font-weight:700}
+      .rank{display:inline-block;margin-bottom:6px}
       .pager{justify-content:center}
     }
 
     @media (max-width:420px){
-      body{padding:12px}
-      .logo{width:44px;height:44px;font-size:15px}
-      .search input{width:110px}
-      tbody td::before{flex:0 0 48%}
+      .search input{width:90px}
+      h1{font-size:1rem}
     }
   </style>
 </head>
@@ -109,6 +145,24 @@
         <div class="badge">Ativos: <strong id="totalBadge">—</strong></div>
       </div>
     </header>
+
+    <!-- Join banner (concise, dismissible) -->
+    <div id="joinBanner" class="card" style="margin-bottom:12px; border-left:4px solid var(--accent); display:flex;align-items:center;gap:12px;">
+      <div style="flex:1">
+        <strong>Quer aparecer no ranking?</strong>
+        <div style="color:var(--muted);margin-top:6px">
+          Basta ser membro do time <strong>xadrezjovemes</strong> no Lichess e ter rating Blitz.
+          <div style="margin-top:6px">
+            <a href="https://lichess.org/team/xadrezjovemes" target="_blank" rel="noopener">Entrar no time</a> — ou peça confirmação a um administrador.
+          </div>
+          <div style="margin-top:6px;font-size:0.9rem;color:var(--muted)">Aparece automaticamente após a próxima geração (diária).</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+        <a class="btn" href="https://lichess.org/team/xadrezjovemes" target="_blank" rel="noopener" style="padding:8px 12px">Entrar no time</a>
+        <button id="dismissJoinBanner" style="background:transparent;border:0;color:var(--muted);cursor:pointer;font-size:0.9rem">Fechar</button>
+      </div>
+    </div>
 
     <div class="card">
       <div class="controls">
@@ -169,7 +223,7 @@
 
 <script>
 /* client-side: load ./players.json, search, sort, paginate.
-   Adds data-label attributes so mobile CSS shows field labels. */
+   For mobile the layout is stacked; JS builds simple table rows with data-labels. */
 let all = [];
 let filtered = [];
 let page = 1;
@@ -230,8 +284,8 @@ function renderPage(){
   pageItems.forEach((p, idx) => {
     const tr = document.createElement('tr');
 
-    // build cells with data-label for mobile
     const rank = start + idx + 1;
+    // For mobile stacked layout we rely on CSS — keep semantic cells.
     const tdRank = `<td class="rank" data-label="#">${rank}</td>`;
     const tdUser = `<td class="user" data-label="Usuário"><a href="${p.profile}" target="_blank" rel="noopener">${escapeHtml(p.username)}</a><span class="small">${p.username}</span></td>`;
     const tdBlitz = `<td class="rating" data-label="Blitz">${p.blitz}</td>`;
@@ -279,6 +333,21 @@ function formatSeen(ms){
 }
 
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+/* join banner dismiss */
+(function(){
+  try{
+    const key = 'rk_join_banner_dismissed_v1';
+    const banner = document.getElementById('joinBanner');
+    const btn = document.getElementById('dismissJoinBanner');
+    if(!banner || !btn) return;
+    if(localStorage.getItem(key)) { banner.style.display = 'none'; return; }
+    btn.addEventListener('click', ()=>{
+      banner.style.display = 'none';
+      try{ localStorage.setItem(key, '1'); }catch(e){}
+    });
+  }catch(e){}
+})();
 
 window.addEventListener('load', loadData);
 </script>
