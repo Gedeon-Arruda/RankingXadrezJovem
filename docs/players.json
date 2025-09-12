@@ -1,5 +1,5 @@
 {
-  "generated_at": 1757698790680,
+  "generated_at": 1757699674636,
   "count": 75,
   "players": [
     {
@@ -157,7 +157,7 @@
     {
       "username": "andrewsmacbeir",
       "blitz": 2039,
-      "bullet": 2076,
+      "bullet": 2077,
       "rapid": 2292,
       "seenAt": 1757698490431,
       "profile": "https://lichess.org/@/andrewsmacbeir"
@@ -247,7 +247,7 @@
       "blitz": 1932,
       "bullet": 2211,
       "rapid": 1500,
-      "seenAt": 1757687317688,
+      "seenAt": 1757698999877,
       "profile": "https://lichess.org/@/gedevon_arrudev"
     },
     {
@@ -294,7 +294,7 @@
       "username": "rota_capixaba",
       "blitz": 1905,
       "bullet": 1857,
-      "rapid": 1975,
+      "rapid": 1965,
       "seenAt": 1757698376944,
       "profile": "https://lichess.org/@/rota_capixaba"
     },
@@ -575,7 +575,7 @@
       "blitz": 1164,
       "bullet": 1162,
       "rapid": 1238,
-      "seenAt": 1757692626096,
+      "seenAt": 1757699321330,
       "profile": "https://lichess.org/@/paulo-faccin"
     },
     {
@@ -599,7 +599,7 @@
       "blitz": 1102,
       "bullet": 833,
       "rapid": 1589,
-      "seenAt": 1757694293423,
+      "seenAt": 1757698823442,
       "profile": "https://lichess.org/@/ztnilz"
     }
   ]
