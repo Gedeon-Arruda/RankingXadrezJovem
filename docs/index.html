@@ -1,124 +1,297 @@
 <!doctype html>
-<html>
+<html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ranking xadrezjovemes</title>
-<style>
-/* copie o CSS do seu INDEX_HTML ou use simplificado */
-:root{--bg:#f5f7fb;--card:#fff;--muted:#6b7280;--accent:#0f69ff;--table-border:#e6e9ee}
-body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);margin:20px;color:#111}
-.wrap{max-width:1100px;margin:0 auto}
-.card{background:var(--card);padding:16px;border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.06)}
-.table-wrap{overflow:auto;border:1px solid var(--table-border);border-radius:8px}
-table{width:100%;border-collapse:collapse}
-th,td{padding:10px;border-bottom:1px solid var(--table-border);text-align:left}
-th{background:#fafafa}
-.rank{width:56px;font-weight:700;color:var(--accent)}
-a.link{color:#0b61d6;text-decoration:none}
-.pager{margin-top:12px}
-.small{color:var(--muted);font-size:0.9rem}
-</style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Ranking Xadrez Jovem ES</title>
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f3f6fb;
+      --card:#ffffff;
+      --muted:#6b7280;
+      --accent:#0066ff;
+      --accent-2:#004ecb;
+      --table-border:#e6e9ee;
+      --glass: rgba(255,255,255,0.7);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:linear-gradient(180deg,var(--bg),#eef4ff);
+      color:#0b1220;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:28px;
+    }
+    .wrap{max-width:1200px;margin:0 auto}
+    header.site{
+      display:flex;align-items:center;gap:16px;justify-content:space-between;margin-bottom:20px;
+    }
+    .brand{
+      display:flex;gap:12px;align-items:center;
+    }
+    .logo{
+      width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;box-shadow:0 6px 18px rgba(6,34,102,0.12);
+    }
+    h1{font-size:1.35rem;margin:0}
+    .subtitle{color:var(--muted);font-size:0.95rem;margin-top:2px}
+    .top-meta{display:flex;gap:10px;align-items:center}
+    .badge{
+      background:linear-gradient(180deg,#f1f9ff,#eef6ff);color:var(--accent);padding:6px 10px;border-radius:999px;border:1px solid rgba(11,102,255,0.08);font-weight:700;font-size:0.9rem;
+    }
+
+    .card{
+      background:var(--card);
+      border-radius:14px;
+      padding:16px;
+      box-shadow:0 10px 30px rgba(12,32,80,0.06);
+    }
+
+    .controls{
+      display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;
+    }
+    .controls .left{display:flex;gap:8px;align-items:center}
+    .search{
+      display:flex;align-items:center;gap:8px;background:var(--glass);padding:8px;border-radius:10px;border:1px solid rgba(11,20,40,0.04);
+    }
+    .search input{
+      border:0;background:transparent;outline:none;padding:6px 8px;font-size:0.95rem;width:240px;
+    }
+    select,button{
+      padding:8px 10px;border-radius:8px;border:1px solid #e6e9ee;background:#fff;font-size:0.95rem;
+    }
+    button.btn{
+      background:linear-gradient(180deg,var(--accent),var(--accent-2));color:#fff;border:none;cursor:pointer;
+    }
+    .info{color:var(--muted);font-size:0.9rem;margin-left:6px}
+
+    .table-wrap{overflow:auto;border-radius:10px;border:1px solid var(--table-border);background:linear-gradient(180deg,#fff,#fbfdff);margin-top:8px}
+    table{width:100%;border-collapse:collapse;min-width:720px}
+    thead th{
+      position:sticky;top:0;background:linear-gradient(180deg,#ffffff,#f7fbff);padding:12px 14px;text-align:left;border-bottom:1px solid var(--table-border);font-weight:700;font-size:0.95rem;color:#0b1220;
+    }
+    tbody td{padding:12px 14px;border-bottom:1px solid var(--table-border);vertical-align:middle;font-size:0.95rem;color:#122036}
+    tbody tr:hover{background:linear-gradient(90deg,rgba(0,102,255,0.03),transparent)}
+    .rank{width:56px;font-weight:700;color:var(--accent)}
+    .user a{color:var(--accent);text-decoration:none;font-weight:600}
+    .user a:hover{text-decoration:underline}
+    .small{display:block;color:var(--muted);font-size:0.82rem;margin-top:4px}
+    .rating{font-weight:700;color:#111}
+    .seen{color:var(--muted);font-size:0.9rem}
+
+    .pager{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:12px;justify-content:flex-end}
+    .pager button{background:#fff;border:1px solid #eef3fb;padding:6px 10px;border-radius:8px;cursor:pointer}
+    .pager button[disabled]{opacity:.6;cursor:default}
+
+    @media (max-width:900px){
+      .brand h1{font-size:1.05rem}
+      .search input{width:140px}
+      table{min-width:640px}
+    }
+    @media (max-width:640px){
+      body{padding:14px}
+      .controls{flex-direction:column;align-items:flex-start}
+      .top-meta{display:none}
+      .logo{width:48px;height:48px;font-size:16px}
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>Ranking xadrezjovemes</h1>
-  <div class="card">
-    <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
-      <input id="q" placeholder="buscar usuário..." style="padding:8px;border-radius:6px;border:1px solid #ddd">
-      <select id="sort"><option value="blitz">Blitz</option><option value="bullet">Bullet</option><option value="rapid">Rapid</option></select>
-      <select id="order"><option value="desc">Desc</option><option value="asc">Asc</option></select>
-      <select id="perPage"><option>10</option><option selected>20</option><option>50</option></select>
-      <button id="reload">Recarregar</button>
-      <div id="info" class="small">—</div>
+  <div class="wrap">
+    <header class="site">
+      <div class="brand">
+        <div class="logo">RJ</div>
+        <div>
+          <h1>Ranking Xadrez Jovem ES</h1>
+          <div class="subtitle">Jogadores ativos — últimos 30 dias</div>
+        </div>
+      </div>
+      <div class="top-meta">
+        <div class="badge">Ativos: <strong id="totalBadge">—</strong></div>
+      </div>
+    </header>
+
+    <div class="card">
+      <div class="controls">
+        <div class="left">
+          <div class="search" title="Pesquisar usuário">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="opacity:.7"><path d="M21 21l-4.35-4.35" stroke="#456" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11" cy="11" r="6" stroke="#456" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <input id="q" type="search" placeholder="buscar usuário..." />
+          </div>
+
+          <label>
+            <select id="sort">
+              <option value="blitz">Blitz</option>
+              <option value="bullet">Bullet</option>
+              <option value="rapid">Rapid</option>
+              <option value="username">Usuário</option>
+            </select>
+          </label>
+
+          <label>
+            <select id="order">
+              <option value="desc">Desc</option>
+              <option value="asc">Asc</option>
+            </select>
+          </label>
+
+          <label>
+            <select id="perPage">
+              <option value="10">10</option>
+              <option value="20" selected>20</option>
+              <option value="50">50</option>
+            </select>
+          </label>
+        </div>
+
+        <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+          <button id="reload" class="btn">Recarregar</button>
+          <div id="info" class="info">—</div>
+        </div>
+      </div>
+
+      <div class="table-wrap" id="tableWrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="rank">#</th>
+              <th>Usuário</th>
+              <th>Blitz</th>
+              <th>Bullet</th>
+              <th>Rapid</th>
+              <th>Último login</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+
+      <div class="pager" id="pager"></div>
     </div>
 
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th class="rank">#</th><th>Usuário</th><th>Blitz</th><th>Bullet</th><th>Rapid</th><th>Último login</th></tr></thead>
-        <tbody id="tbody"></tbody>
-      </table>
-    </div>
-    <div class="pager" id="pager"></div>
+    <footer style="margin-top:14px;color:var(--muted);font-size:0.9rem;text-align:center">
+      Dados: Lichess · Site estático gerado a partir de players.json
+    </footer>
   </div>
-</div>
 
 <script>
-let allPlayers = [];
+/* client-side: load ./players.json, search, sort, paginate */
+let all = [];
 let filtered = [];
 let page = 1;
 
-function loadData(){
-  document.getElementById('info').textContent = 'Carregando...';
-  fetch('./players.json').then(r=>r.json()).then(js=>{
-    allPlayers = js.players || [];
-    document.getElementById('info').textContent = `Total: ${allPlayers.length} — gerado: ${new Date(js.generated_at).toLocaleString()}`;
+const qEl = document.getElementById('q');
+const sortEl = document.getElementById('sort');
+const orderEl = document.getElementById('order');
+const perPageEl = document.getElementById('perPage');
+const infoEl = document.getElementById('info');
+const totalBadge = document.getElementById('totalBadge');
+
+document.getElementById('reload').addEventListener('click', () => {
+  loadData(true);
+});
+
+qEl.addEventListener('input', ()=>{ page = 1; applyFilters(); });
+sortEl.addEventListener('change', ()=>{ page = 1; applyFilters(); });
+orderEl.addEventListener('change', ()=>{ page = 1; applyFilters(); });
+perPageEl.addEventListener('change', ()=>{ page = 1; renderPage(); });
+
+async function loadData(force=false){
+  infoEl.textContent = 'Carregando...';
+  try{
+    const r = await fetch('./players.json', {cache: force ? 'no-store' : 'default'});
+    if(!r.ok) throw new Error('Erro ao buscar players.json');
+    const js = await r.json();
+    all = js.players || [];
+    totalBadge.textContent = all.length;
+    const dt = js.generated_at ? new Date(js.generated_at).toLocaleString() : '—';
+    infoEl.textContent = `Total: ${all.length} — gerado: ${dt}`;
+    page = 1;
     applyFilters();
-  }).catch(e=>{
-    console.error(e);
-    document.getElementById('info').textContent = 'Erro ao carregar players.json';
-  });
+  }catch(err){
+    console.error(err);
+    infoEl.textContent = 'Erro ao carregar';
+  }
 }
 
 function applyFilters(){
-  const q = document.getElementById('q').value.trim().toLowerCase();
-  const sort = document.getElementById('sort').value;
-  const order = document.getElementById('order').value;
-  filtered = allPlayers.filter(p => !q || p.username.toLowerCase().includes(q));
+  const q = qEl.value.trim().toLowerCase();
+  filtered = all.filter(p => !q || p.username.toLowerCase().includes(q));
+  const sortKey = sortEl.value;
+  const order = orderEl.value === 'asc' ? 1 : -1;
   filtered.sort((a,b)=>{
-    let va = (sort==='username') ? a.username.toLowerCase() : (a[sort]||0);
-    let vb = (sort==='username') ? b.username.toLowerCase() : (b[sort]||0);
-    if(va < vb) return order==='asc' ? -1 : 1;
-    if(va > vb) return order==='asc' ? 1 : -1;
+    let va = sortKey === 'username' ? (a.username || '').toLowerCase() : (a[sortKey] || 0);
+    let vb = sortKey === 'username' ? (b.username || '').toLowerCase() : (b[sortKey] || 0);
+    if(va < vb) return -1 * order;
+    if(va > vb) return 1 * order;
     return 0;
   });
-  page = 1;
   renderPage();
 }
 
 function renderPage(){
-  const perPage = parseInt(document.getElementById('perPage').value,10) || 20;
-  const start = (page-1)*perPage;
-  const slice = filtered.slice(start, start+perPage);
+  const per = parseInt(perPageEl.value,10) || 20;
+  const start = (page-1)*per;
+  const pageItems = filtered.slice(start, start+per);
   const tbody = document.getElementById('tbody');
   tbody.innerHTML = '';
-  slice.forEach((p,i)=>{
+  pageItems.forEach((p, idx) => {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td class="rank">${start+i+1}</td>
-      <td><a class="link" href="${p.profile}" target="_blank">${p.username}</a></td>
-      <td>${p.blitz}</td><td>${p.bullet}</td><td>${p.rapid}</td>
-      <td class="small">${formatSeen(p.seenAt)}</td>`;
+    const rank = start + idx + 1;
+    tr.innerHTML = `
+      <td class="rank">${rank}</td>
+      <td class="user"><a href="${p.profile}" target="_blank" rel="noopener">${escapeHtml(p.username)}</a><span class="small">${p.username}</span></td>
+      <td class="rating">${p.blitz}</td>
+      <td class="rating">${p.bullet}</td>
+      <td class="rating">${p.rapid}</td>
+      <td class="seen">${formatSeen(p.seenAt)}</td>
+    `;
     tbody.appendChild(tr);
   });
-  renderPager(perPage);
+  renderPager(per);
 }
 
-function renderPager(perPage){
+function renderPager(per){
   const pager = document.getElementById('pager');
-  const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
   pager.innerHTML = '';
-  for(let i=Math.max(1,page-2); i<=Math.min(totalPages,page+2); i++){
+  const totalPages = Math.max(1, Math.ceil(filtered.length / per));
+  const createBtn = (text, p) => {
     const b = document.createElement('button');
-    b.textContent = i;
-    b.disabled = (i===page);
-    b.onclick = ()=>{ page=i; renderPage(); };
-    pager.appendChild(b);
-  }
+    b.textContent = text;
+    b.disabled = p === page;
+    b.onclick = () => { page = p; renderPage(); };
+    return b;
+  };
+  pager.appendChild(createBtn('«', 1));
+  pager.appendChild(createBtn('‹', Math.max(1, page-1)));
+  const start = Math.max(1, page-2);
+  const end = Math.min(totalPages, page+2);
+  for(let i=start;i<=end;i++) pager.appendChild(createBtn(i, i));
+  pager.appendChild(createBtn('›', Math.min(totalPages, page+1)));
+  pager.appendChild(createBtn('»', totalPages));
 }
 
 function formatSeen(ms){
-  if(!ms) return 'N/A';
-  const d = Math.floor((Date.now()-ms)/(24*3600*1000));
-  if(d===0) return 'Hoje'; if(d===1) return '1 dia'; return `${d} dias`;
+  if(!ms || ms <= 0) return 'N/A';
+  const diff = Date.now() - ms;
+  const days = Math.floor(diff / (24*3600*1000));
+  if(days === 0) return 'Hoje';
+  if(days === 1) return '1 dia';
+  if(days < 30) return `${days} dias`;
+  const months = Math.floor(days / 30);
+  if(months < 12) return `${months} meses`;
+  const years = Math.floor(months / 12);
+  return `${years} anos`;
 }
 
-document.getElementById('q').addEventListener('input', ()=>applyFilters());
-document.getElementById('sort').addEventListener('change', ()=>applyFilters());
-document.getElementById('order').addEventListener('change', ()=>applyFilters());
-document.getElementById('perPage').addEventListener('change', ()=>{ page=1; renderPage(); });
-document.getElementById('reload').addEventListener('click', ()=>{ loadData(); });
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
 
-loadData();
+window.addEventListener('load', loadData);
 </script>
 </body>
 </html>
