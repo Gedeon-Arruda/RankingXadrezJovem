@@ -1,5 +1,5 @@
 {
-  "generated_at": 1757693961219,
+  "generated_at": 1757696555742,
   "count": 75,
   "players": [
     {
@@ -47,15 +47,15 @@
       "blitz": 2231,
       "bullet": 2505,
       "rapid": 2288,
-      "seenAt": 1757683656971,
+      "seenAt": 1757696158264,
       "profile": "https://lichess.org/@/wendellshadow13"
     },
     {
       "username": "cleber_x",
       "blitz": 2203,
-      "bullet": 2461,
+      "bullet": 2446,
       "rapid": 2223,
-      "seenAt": 1757692169553,
+      "seenAt": 1757694052603,
       "profile": "https://lichess.org/@/cleber_x"
     },
     {
@@ -91,20 +91,20 @@
       "profile": "https://lichess.org/@/overdragon"
     },
     {
-      "username": "lvinicios777",
-      "blitz": 2103,
-      "bullet": 1733,
-      "rapid": 2021,
-      "seenAt": 1757690260769,
-      "profile": "https://lichess.org/@/lvinicios777"
-    },
-    {
       "username": "sesi_senai",
       "blitz": 2103,
       "bullet": 2205,
       "rapid": 2122,
       "seenAt": 1757553128259,
       "profile": "https://lichess.org/@/sesi_senai"
+    },
+    {
+      "username": "lvinicios777",
+      "blitz": 2103,
+      "bullet": 1733,
+      "rapid": 2021,
+      "seenAt": 1757690260769,
+      "profile": "https://lichess.org/@/lvinicios777"
     },
     {
       "username": "hupp",
@@ -231,7 +231,7 @@
       "blitz": 1953,
       "bullet": 1600,
       "rapid": 2157,
-      "seenAt": 1757690197327,
+      "seenAt": 1757696484569,
       "profile": "https://lichess.org/@/msffla"
     },
     {
@@ -492,10 +492,10 @@
     },
     {
       "username": "kiritoking",
-      "blitz": 1397,
+      "blitz": 1391,
       "bullet": 1268,
       "rapid": 1531,
-      "seenAt": 1757638359129,
+      "seenAt": 1757695144504,
       "profile": "https://lichess.org/@/kiritoking"
     },
     {
@@ -503,7 +503,7 @@
       "blitz": 1388,
       "bullet": 1248,
       "rapid": 1090,
-      "seenAt": 1757693870395,
+      "seenAt": 1757695622274,
       "profile": "https://lichess.org/@/miguel2024"
     },
     {
@@ -599,7 +599,7 @@
       "blitz": 1102,
       "bullet": 833,
       "rapid": 1589,
-      "seenAt": 1757691924622,
+      "seenAt": 1757694293423,
       "profile": "https://lichess.org/@/ztnilz"
     }
   ]
