@@ -1,5 +1,5 @@
 {
-  "generated_at": 1757693961219,
+  "generated_at": 1757696943624,
   "count": 75,
   "players": [
     {
@@ -47,15 +47,15 @@
       "blitz": 2231,
       "bullet": 2505,
       "rapid": 2288,
-      "seenAt": 1757683656971,
+      "seenAt": 1757696158264,
       "profile": "https://lichess.org/@/wendellshadow13"
     },
     {
       "username": "cleber_x",
       "blitz": 2203,
-      "bullet": 2461,
+      "bullet": 2452,
       "rapid": 2223,
-      "seenAt": 1757692169553,
+      "seenAt": 1757696645670,
       "profile": "https://lichess.org/@/cleber_x"
     },
     {
@@ -111,7 +111,7 @@
       "blitz": 2100,
       "bullet": 2093,
       "rapid": 2380,
-      "seenAt": 1757683719210,
+      "seenAt": 1757696704456,
       "profile": "https://lichess.org/@/hupp"
     },
     {
@@ -229,9 +229,9 @@
     {
       "username": "msffla",
       "blitz": 1953,
-      "bullet": 1600,
+      "bullet": 1611,
       "rapid": 2157,
-      "seenAt": 1757690197327,
+      "seenAt": 1757696484569,
       "profile": "https://lichess.org/@/msffla"
     },
     {
@@ -492,10 +492,10 @@
     },
     {
       "username": "kiritoking",
-      "blitz": 1397,
+      "blitz": 1391,
       "bullet": 1268,
       "rapid": 1531,
-      "seenAt": 1757638359129,
+      "seenAt": 1757695144504,
       "profile": "https://lichess.org/@/kiritoking"
     },
     {
@@ -503,7 +503,7 @@
       "blitz": 1388,
       "bullet": 1248,
       "rapid": 1090,
-      "seenAt": 1757693870395,
+      "seenAt": 1757695622274,
       "profile": "https://lichess.org/@/miguel2024"
     },
     {
@@ -599,7 +599,7 @@
       "blitz": 1102,
       "bullet": 833,
       "rapid": 1589,
-      "seenAt": 1757691924622,
+      "seenAt": 1757694293423,
       "profile": "https://lichess.org/@/ztnilz"
     }
   ]
