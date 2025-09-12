@@ -25,56 +25,34 @@
       color:#0b1220;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      padding:28px;
+      padding:24px;
     }
     .wrap{max-width:1200px;margin:0 auto}
     header.site{
-      display:flex;align-items:center;gap:16px;justify-content:space-between;margin-bottom:20px;
+      display:flex;align-items:center;gap:16px;justify-content:space-between;margin-bottom:18px;
+      flex-wrap:wrap;
     }
-    .brand{
-      display:flex;gap:12px;align-items:center;
-    }
+    .brand{display:flex;gap:12px;align-items:center}
     .logo{
       width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
       display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;box-shadow:0 6px 18px rgba(6,34,102,0.12);
+      flex:0 0 auto;
     }
     h1{font-size:1.35rem;margin:0}
     .subtitle{color:var(--muted);font-size:0.95rem;margin-top:2px}
     .top-meta{display:flex;gap:10px;align-items:center}
-    .badge{
-      background:linear-gradient(180deg,#f1f9ff,#eef6ff);color:var(--accent);padding:6px 10px;border-radius:999px;border:1px solid rgba(11,102,255,0.08);font-weight:700;font-size:0.9rem;
-    }
-
-    .card{
-      background:var(--card);
-      border-radius:14px;
-      padding:16px;
-      box-shadow:0 10px 30px rgba(12,32,80,0.06);
-    }
-
-    .controls{
-      display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;
-    }
+    .badge{background:linear-gradient(180deg,#f1f9ff,#eef6ff);color:var(--accent);padding:6px 10px;border-radius:999px;border:1px solid rgba(11,102,255,0.08);font-weight:700;font-size:0.9rem;}
+    .card{background:var(--card);border-radius:14px;padding:16px;box-shadow:0 10px 30px rgba(12,32,80,0.06);}
+    .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;}
     .controls .left{display:flex;gap:8px;align-items:center}
-    .search{
-      display:flex;align-items:center;gap:8px;background:var(--glass);padding:8px;border-radius:10px;border:1px solid rgba(11,20,40,0.04);
-    }
-    .search input{
-      border:0;background:transparent;outline:none;padding:6px 8px;font-size:0.95rem;width:240px;
-    }
-    select,button{
-      padding:8px 10px;border-radius:8px;border:1px solid #e6e9ee;background:#fff;font-size:0.95rem;
-    }
-    button.btn{
-      background:linear-gradient(180deg,var(--accent),var(--accent-2));color:#fff;border:none;cursor:pointer;
-    }
+    .search{display:flex;align-items:center;gap:8px;background:var(--glass);padding:8px;border-radius:10px;border:1px solid rgba(11,20,40,0.04);}
+    .search input{border:0;background:transparent;outline:none;padding:6px 8px;font-size:0.95rem;width:240px;}
+    select,button{padding:8px 10px;border-radius:8px;border:1px solid #e6e9ee;background:#fff;font-size:0.95rem;}
+    button.btn{background:linear-gradient(180deg,var(--accent),var(--accent-2));color:#fff;border:none;cursor:pointer;}
     .info{color:var(--muted);font-size:0.9rem;margin-left:6px}
-
     .table-wrap{overflow:auto;border-radius:10px;border:1px solid var(--table-border);background:linear-gradient(180deg,#fff,#fbfdff);margin-top:8px}
     table{width:100%;border-collapse:collapse;min-width:720px}
-    thead th{
-      position:sticky;top:0;background:linear-gradient(180deg,#ffffff,#f7fbff);padding:12px 14px;text-align:left;border-bottom:1px solid var(--table-border);font-weight:700;font-size:0.95rem;color:#0b1220;
-    }
+    thead th{position:sticky;top:0;background:linear-gradient(180deg,#ffffff,#f7fbff);padding:12px 14px;text-align:left;border-bottom:1px solid var(--table-border);font-weight:700;font-size:0.95rem;color:#0b1220;}
     tbody td{padding:12px 14px;border-bottom:1px solid var(--table-border);vertical-align:middle;font-size:0.95rem;color:#122036}
     tbody tr:hover{background:linear-gradient(90deg,rgba(0,102,255,0.03),transparent)}
     .rank{width:56px;font-weight:700;color:var(--accent)}
@@ -83,21 +61,37 @@
     .small{display:block;color:var(--muted);font-size:0.82rem;margin-top:4px}
     .rating{font-weight:700;color:#111}
     .seen{color:var(--muted);font-size:0.9rem}
-
     .pager{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:12px;justify-content:flex-end}
     .pager button{background:#fff;border:1px solid #eef3fb;padding:6px 10px;border-radius:8px;cursor:pointer}
     .pager button[disabled]{opacity:.6;cursor:default}
 
+    /* Responsive improvements */
     @media (max-width:900px){
-      .brand h1{font-size:1.05rem}
-      .search input{width:140px}
+      .search input{width:160px}
       table{min-width:640px}
     }
-    @media (max-width:640px){
-      body{padding:14px}
-      .controls{flex-direction:column;align-items:flex-start}
-      .top-meta{display:none}
-      .logo{width:48px;height:48px;font-size:16px}
+
+    /* Mobile: transform table rows into card-like blocks with labels */
+    @media (max-width:720px){
+      header.site{padding-bottom:8px}
+      .top-meta{width:100%;justify-content:flex-end}
+      table{min-width:0;border:0}
+      thead{display:none}
+      tbody tr{display:block;border-bottom:1px solid var(--table-border);padding:12px 10px;margin:8px 0;border-radius:8px;background:linear-gradient(180deg,#fff,#fbfdff);box-shadow:0 4px 14px rgba(12,32,80,0.03)}
+      tbody td{display:flex;justify-content:space-between;padding:8px 0;border:0}
+      tbody td + td{margin-top:6px}
+      tbody td::before{content:attr(data-label);color:var(--muted);font-size:0.85rem;margin-right:12px;flex:0 0 36%;}
+      .rank::before{display:none}
+      .user a{display:block}
+      .small{display:none}
+      .pager{justify-content:center}
+    }
+
+    @media (max-width:420px){
+      body{padding:12px}
+      .logo{width:44px;height:44px;font-size:15px}
+      .search input{width:110px}
+      tbody td::before{flex:0 0 48%}
     }
   </style>
 </head>
@@ -105,7 +99,7 @@
   <div class="wrap">
     <header class="site">
       <div class="brand">
-        <div class="logo">RJ</div>
+        <div class="logo" aria-hidden="true">RJ</div>
         <div>
           <h1>Ranking Xadrez Jovem ES</h1>
           <div class="subtitle">Jogadores ativos — últimos 30 dias</div>
@@ -124,29 +118,23 @@
             <input id="q" type="search" placeholder="buscar usuário..." />
           </div>
 
-          <label>
-            <select id="sort">
+          <label><select id="sort">
               <option value="blitz">Blitz</option>
               <option value="bullet">Bullet</option>
               <option value="rapid">Rapid</option>
               <option value="username">Usuário</option>
-            </select>
-          </label>
+            </select></label>
 
-          <label>
-            <select id="order">
+          <label><select id="order">
               <option value="desc">Desc</option>
               <option value="asc">Asc</option>
-            </select>
-          </label>
+            </select></label>
 
-          <label>
-            <select id="perPage">
+          <label><select id="perPage">
               <option value="10">10</option>
               <option value="20" selected>20</option>
               <option value="50">50</option>
-            </select>
-          </label>
+            </select></label>
         </div>
 
         <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
@@ -155,7 +143,7 @@
         </div>
       </div>
 
-      <div class="table-wrap" id="tableWrap">
+      <div class="table-wrap" id="tableWrap" role="region" aria-label="Tabela de jogadores">
         <table>
           <thead>
             <tr>
@@ -171,7 +159,7 @@
         </table>
       </div>
 
-      <div class="pager" id="pager"></div>
+      <div class="pager" id="pager" aria-label="Navegação de páginas"></div>
     </div>
 
     <footer style="margin-top:14px;color:var(--muted);font-size:0.9rem;text-align:center">
@@ -180,7 +168,8 @@
   </div>
 
 <script>
-/* client-side: load ./players.json, search, sort, paginate */
+/* client-side: load ./players.json, search, sort, paginate.
+   Adds data-label attributes so mobile CSS shows field labels. */
 let all = [];
 let filtered = [];
 let page = 1;
@@ -192,9 +181,7 @@ const perPageEl = document.getElementById('perPage');
 const infoEl = document.getElementById('info');
 const totalBadge = document.getElementById('totalBadge');
 
-document.getElementById('reload').addEventListener('click', () => {
-  loadData(true);
-});
+document.getElementById('reload').addEventListener('click', () => { loadData(true); });
 
 qEl.addEventListener('input', ()=>{ page = 1; applyFilters(); });
 sortEl.addEventListener('change', ()=>{ page = 1; applyFilters(); });
@@ -242,15 +229,17 @@ function renderPage(){
   tbody.innerHTML = '';
   pageItems.forEach((p, idx) => {
     const tr = document.createElement('tr');
+
+    // build cells with data-label for mobile
     const rank = start + idx + 1;
-    tr.innerHTML = `
-      <td class="rank">${rank}</td>
-      <td class="user"><a href="${p.profile}" target="_blank" rel="noopener">${escapeHtml(p.username)}</a><span class="small">${p.username}</span></td>
-      <td class="rating">${p.blitz}</td>
-      <td class="rating">${p.bullet}</td>
-      <td class="rating">${p.rapid}</td>
-      <td class="seen">${formatSeen(p.seenAt)}</td>
-    `;
+    const tdRank = `<td class="rank" data-label="#">${rank}</td>`;
+    const tdUser = `<td class="user" data-label="Usuário"><a href="${p.profile}" target="_blank" rel="noopener">${escapeHtml(p.username)}</a><span class="small">${p.username}</span></td>`;
+    const tdBlitz = `<td class="rating" data-label="Blitz">${p.blitz}</td>`;
+    const tdBullet = `<td class="rating" data-label="Bullet">${p.bullet}</td>`;
+    const tdRapid = `<td class="rating" data-label="Rapid">${p.rapid}</td>`;
+    const tdSeen = `<td class="seen" data-label="Último login">${formatSeen(p.seenAt)}</td>`;
+
+    tr.innerHTML = tdRank + tdUser + tdBlitz + tdBullet + tdRapid + tdSeen;
     tbody.appendChild(tr);
   });
   renderPager(per);
