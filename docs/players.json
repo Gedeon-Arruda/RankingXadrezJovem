@@ -1,5 +1,5 @@
 {
-  "generated_at": 1758003655208,
+  "generated_at": 1758040704281,
   "count": 74,
   "players": [
     {
@@ -23,7 +23,7 @@
       "blitz": 2260,
       "bullet": 2501,
       "rapid": 2227,
-      "seenAt": 1757968858922,
+      "seenAt": 1758007314088,
       "profile": "https://lichess.org/@/rafinhagod"
     },
     {
@@ -45,17 +45,17 @@
     {
       "username": "cleber_x",
       "blitz": 2203,
-      "bullet": 2359,
+      "bullet": 2366,
       "rapid": 2223,
-      "seenAt": 1757973069948,
+      "seenAt": 1758040677173,
       "profile": "https://lichess.org/@/cleber_x"
     },
     {
       "username": "wendellshadow13",
-      "blitz": 2199,
+      "blitz": 2188,
       "bullet": 2505,
       "rapid": 2288,
-      "seenAt": 1757980520486,
+      "seenAt": 1758040588384,
       "profile": "https://lichess.org/@/wendellshadow13"
     },
     {
@@ -68,10 +68,10 @@
     },
     {
       "username": "i_hate_chess_betinho",
-      "blitz": 2136,
+      "blitz": 2144,
       "bullet": 2316,
       "rapid": 2290,
-      "seenAt": 1757791651616,
+      "seenAt": 1758032709308,
       "profile": "https://lichess.org/@/i_hate_chess_betinho"
     },
     {
@@ -85,9 +85,9 @@
     {
       "username": "lvinicios777",
       "blitz": 2105,
-      "bullet": 1636,
+      "bullet": 1625,
       "rapid": 2021,
-      "seenAt": 1757991233224,
+      "seenAt": 1758038412205,
       "profile": "https://lichess.org/@/lvinicios777"
     },
     {
@@ -103,7 +103,7 @@
       "blitz": 2103,
       "bullet": 2205,
       "rapid": 2122,
-      "seenAt": 1757873055568,
+      "seenAt": 1758037074953,
       "profile": "https://lichess.org/@/sesi_senai"
     },
     {
@@ -127,7 +127,7 @@
       "blitz": 2073,
       "bullet": 2193,
       "rapid": 2063,
-      "seenAt": 1757805368965,
+      "seenAt": 1758035072148,
       "profile": "https://lichess.org/@/danielfla"
     },
     {
@@ -135,23 +135,23 @@
       "blitz": 2073,
       "bullet": 1849,
       "rapid": 2093,
-      "seenAt": 1757975004193,
+      "seenAt": 1758036650111,
       "profile": "https://lichess.org/@/onlywaltz"
     },
     {
       "username": "hericybr2",
       "blitz": 2066,
       "bullet": 2158,
-      "rapid": 2145,
-      "seenAt": 1757962028644,
+      "rapid": 2135,
+      "seenAt": 1758028773561,
       "profile": "https://lichess.org/@/hericybr2"
     },
     {
       "username": "leokhine",
       "blitz": 2054,
-      "bullet": 1938,
+      "bullet": 1945,
       "rapid": 1963,
-      "seenAt": 1757981075677,
+      "seenAt": 1758036557686,
       "profile": "https://lichess.org/@/leokhine"
     },
     {
@@ -165,9 +165,9 @@
     {
       "username": "andrewsmacbeir",
       "blitz": 2039,
-      "bullet": 2120,
+      "bullet": 2126,
       "rapid": 2292,
-      "seenAt": 1757992589266,
+      "seenAt": 1758036248089,
       "profile": "https://lichess.org/@/andrewsmacbeir"
     },
     {
@@ -212,10 +212,10 @@
     },
     {
       "username": "alisson2brayer",
-      "blitz": 1998,
+      "blitz": 1990,
       "bullet": 1816,
       "rapid": 2139,
-      "seenAt": 1757600482494,
+      "seenAt": 1758036709071,
       "profile": "https://lichess.org/@/alisson2brayer"
     },
     {
@@ -223,7 +223,7 @@
       "blitz": 1969,
       "bullet": 2065,
       "rapid": 1500,
-      "seenAt": 1757962942127,
+      "seenAt": 1758032150461,
       "profile": "https://lichess.org/@/gedevon_arrudev"
     },
     {
@@ -235,20 +235,20 @@
       "profile": "https://lichess.org/@/lemosdavid"
     },
     {
+      "username": "dcm77",
+      "blitz": 1964,
+      "bullet": 2039,
+      "rapid": 2097,
+      "seenAt": 1758032954648,
+      "profile": "https://lichess.org/@/dcm77"
+    },
+    {
       "username": "or1onchess",
       "blitz": 1956,
       "bullet": 1766,
       "rapid": 1984,
       "seenAt": 1757465658702,
       "profile": "https://lichess.org/@/or1onchess"
-    },
-    {
-      "username": "dcm77",
-      "blitz": 1950,
-      "bullet": 2032,
-      "rapid": 2097,
-      "seenAt": 1757898076763,
-      "profile": "https://lichess.org/@/dcm77"
     },
     {
       "username": "historiailton",
@@ -277,9 +277,9 @@
     {
       "username": "capixaba",
       "blitz": 1905,
-      "bullet": 1737,
+      "bullet": 1736,
       "rapid": 1982,
-      "seenAt": 1757974625004,
+      "seenAt": 1758040540549,
       "profile": "https://lichess.org/@/capixaba"
     },
     {
@@ -299,6 +299,14 @@
       "profile": "https://lichess.org/@/lenhador"
     },
     {
+      "username": "ale_cunha",
+      "blitz": 1879,
+      "bullet": 1809,
+      "rapid": 1985,
+      "seenAt": 1758032419272,
+      "profile": "https://lichess.org/@/ale_cunha"
+    },
+    {
       "username": "rota_capixaba",
       "blitz": 1873,
       "bullet": 1857,
@@ -313,14 +321,6 @@
       "rapid": 1875,
       "seenAt": 1757186837850,
       "profile": "https://lichess.org/@/ph_ls"
-    },
-    {
-      "username": "ale_cunha",
-      "blitz": 1872,
-      "bullet": 1809,
-      "rapid": 1985,
-      "seenAt": 1757989785144,
-      "profile": "https://lichess.org/@/ale_cunha"
     },
     {
       "username": "capixabaiano",
@@ -355,20 +355,20 @@
       "profile": "https://lichess.org/@/claudiogp"
     },
     {
+      "username": "rob_schuina",
+      "blitz": 1771,
+      "bullet": 1734,
+      "rapid": 1866,
+      "seenAt": 1758035527920,
+      "profile": "https://lichess.org/@/rob_schuina"
+    },
+    {
       "username": "littlebirdmaiorqz11",
       "blitz": 1761,
       "bullet": 1886,
       "rapid": 1841,
-      "seenAt": 1757934999552,
+      "seenAt": 1758022393278,
       "profile": "https://lichess.org/@/littlebirdmaiorqz11"
-    },
-    {
-      "username": "rob_schuina",
-      "blitz": 1754,
-      "bullet": 1734,
-      "rapid": 1866,
-      "seenAt": 1757993600952,
-      "profile": "https://lichess.org/@/rob_schuina"
     },
     {
       "username": "restritah",
@@ -391,7 +391,7 @@
       "blitz": 1706,
       "bullet": 1567,
       "rapid": 1915,
-      "seenAt": 1757941497652,
+      "seenAt": 1758029355833,
       "profile": "https://lichess.org/@/paulo_rodrigues"
     },
     {
@@ -476,18 +476,18 @@
     },
     {
       "username": "hpasti",
-      "blitz": 1419,
+      "blitz": 1404,
       "bullet": 1105,
       "rapid": 1416,
-      "seenAt": 1757880921457,
+      "seenAt": 1758008839477,
       "profile": "https://lichess.org/@/hpasti"
     },
     {
       "username": "kiritoking",
-      "blitz": 1370,
+      "blitz": 1368,
       "bullet": 1268,
       "rapid": 1531,
-      "seenAt": 1757970150106,
+      "seenAt": 1758033175421,
       "profile": "https://lichess.org/@/kiritoking"
     },
     {
@@ -499,6 +499,14 @@
       "profile": "https://lichess.org/@/cleber39"
     },
     {
+      "username": "miguel2024",
+      "blitz": 1325,
+      "bullet": 1256,
+      "rapid": 1090,
+      "seenAt": 1758027378748,
+      "profile": "https://lichess.org/@/miguel2024"
+    },
+    {
       "username": "lilti",
       "blitz": 1324,
       "bullet": 818,
@@ -507,19 +515,11 @@
       "profile": "https://lichess.org/@/lilti"
     },
     {
-      "username": "miguel2024",
-      "blitz": 1316,
-      "bullet": 1256,
-      "rapid": 1090,
-      "seenAt": 1757960688890,
-      "profile": "https://lichess.org/@/miguel2024"
-    },
-    {
       "username": "elvisfcardoso",
       "blitz": 1306,
       "bullet": 1320,
-      "rapid": 1669,
-      "seenAt": 1757822772148,
+      "rapid": 1662,
+      "seenAt": 1758005262159,
       "profile": "https://lichess.org/@/elvisfcardoso"
     },
     {
@@ -535,7 +535,7 @@
       "blitz": 1290,
       "bullet": 804,
       "rapid": 1121,
-      "seenAt": 1757938401984,
+      "seenAt": 1758026420526,
       "profile": "https://lichess.org/@/patolimpico"
     },
     {
