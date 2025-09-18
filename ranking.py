@@ -1,10 +1,13 @@
+#!/usr/bin/env python3
+# coding: utf-8
+
 import requests
 import json
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-from flask import Flask, jsonify, request, render_template_string
+from flask import Flask, jsonify, request, render_template_string, make_response
 from urllib.parse import quote
 
 TEAM_ID = "xadrezjovemes"
@@ -87,7 +90,6 @@ def fetch_user_once(session, username, timeout):
 
         # Captura nome real do profile; usa fallback pedido pelo usuário
         profile_data = data.get("profile") or {}
-        # verificar possíveis chaves (defensivo), mas a prioridade é realName
         real_name = profile_data.get("realName") or profile_data.get("name") or profile_data.get("fullName") or "Nome não encontrato"
 
         return {
@@ -133,7 +135,10 @@ def load_players():
             completed = 0
             for fut in as_completed(futures):
                 completed += 1
-                res = fut.result()
+                try:
+                    res = fut.result()
+                except Exception:
+                    res = None
                 if res is None:
                     failed.append(futures[fut])
                 else:
@@ -225,6 +230,28 @@ def api_players():
         "items": resp_items,
     })
 
+# rota compatível com o frontend estático: players.json
+@app.route("/players.json")
+def players_json():
+    # devolve full list (sem paginação) no formato que o frontend já esperava
+    payload = {
+        "players": [
+            {
+                "username": p["username"],
+                "name": p.get("name", "Nome não encontrato"),
+                "blitz": p["blitz"],
+                "bullet": p["bullet"],
+                "rapid": p["rapid"],
+                "seenAt": p["seenAt"],
+                "profile": p["profile"],
+            } for p in PLAYERS
+        ],
+        "generated_at": DATA_LOADED_AT
+    }
+    resp = make_response(json.dumps(payload), 200)
+    resp.headers["Content-Type"] = "application/json; charset=utf-8"
+    return resp
+
 # Simple admin endpoint to refresh data manually
 @app.route("/admin/refresh", methods=["POST"])
 def admin_refresh():
@@ -234,7 +261,7 @@ def admin_refresh():
     load_players()
     return jsonify({"status": "ok", "loaded": len(PLAYERS)})
 
-# Improved single-file frontend (styled)
+# FULL frontend HTML (INDEX_HTML) - o JS carrega ./players.json e exibe `name`
 INDEX_HTML = """
 <!doctype html>
 <html lang="pt-BR">
@@ -445,7 +472,7 @@ async function loadData(force=false){
     const r = await fetch('./players.json', {cache: force ? 'no-store' : 'default'});
     if(!r.ok) throw new Error('Erro ao buscar players.json');
     const js = await r.json();
-    // support legacy shape (if users use /api/players result)
+    // suporta ambos: { players: [...] } ou { items: [...] }
     all = js.players || js.items || [];
     totalBadge.textContent = all.length;
     const dt = js.generated_at ? new Date(js.generated_at).toLocaleString() : (js.data_loaded_at ? new Date(js.data_loaded_at).toLocaleString() : '—');
