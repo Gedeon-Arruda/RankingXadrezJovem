@@ -370,7 +370,7 @@ INDEX_HTML = """
   <div class="wrap">
     <header class="site">
       <div class="brand">
-        <div class="logo">RJ</div>
+        <div class="logo">XJES</div>
         <div>
           <h1>Ranking Xadrez Jovem ES</h1>
           <div class="subtitle">Jogadores ativos — últimos 30 dias</div>
