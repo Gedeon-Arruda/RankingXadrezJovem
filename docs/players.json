@@ -1,5 +1,5 @@
 {
-  "generated_at": 1758220778370,
+  "generated_at": 1758221164880,
   "count": 76,
   "players": [
     {
@@ -31,7 +31,7 @@
       "blitz": 2254,
       "bullet": 2204,
       "rapid": 2231,
-      "seenAt": 1758199991190,
+      "seenAt": 1758220977235,
       "profile": "https://lichess.org/@/normanfrieman"
     },
     {
@@ -500,7 +500,7 @@
     },
     {
       "username": "miguel2024",
-      "blitz": 1392,
+      "blitz": 1388,
       "bullet": 1266,
       "rapid": 1090,
       "seenAt": 1758220557761,
@@ -511,7 +511,7 @@
       "blitz": 1383,
       "bullet": 1268,
       "rapid": 1531,
-      "seenAt": 1758149318915,
+      "seenAt": 1758220927316,
       "profile": "https://lichess.org/@/kiritoking"
     },
     {
