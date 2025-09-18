@@ -9,6 +9,15 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from flask import Flask, jsonify, request, render_template_string, make_response
 from urllib.parse import quote
+import urllib3
+
+# ---------------------------------------------------------------------
+# ATENÇÃO: para contornar o erro de SSL no seu ambiente local, este
+# script desabilita a verificação de certificados SSL (s.verify = False).
+# Isto é inseguro — faça apenas para testes locais. Depois voltamos à
+# solução segura (certifi / CA bundle).
+# ---------------------------------------------------------------------
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 TEAM_ID = "xadrezjovemes"
 TEAM_URL = "https://lichess.org/api/team/{}/users"
@@ -27,6 +36,9 @@ DATA_LOADED_AT = 0    # timestamp ms
 
 def create_session():
     s = requests.Session()
+    # 🚨 DESABILITA VERIFICAÇÃO SSL (apenas para teste local)
+    s.verify = False
+
     retries = Retry(
         total=3,
         backoff_factor=0.5,
