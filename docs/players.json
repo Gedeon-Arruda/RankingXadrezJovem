@@ -1,5 +1,5 @@
 {
-  "generated_at": 1758217164546,
+  "generated_at": 1758217231984,
   "count": 76,
   "players": [
     {
@@ -387,6 +387,14 @@
       "profile": "https://lichess.org/@/rob_schuina"
     },
     {
+      "username": "paulo_rodrigues",
+      "blitz": 1715,
+      "bullet": 1567,
+      "rapid": 1915,
+      "seenAt": 1758216591699,
+      "profile": "https://lichess.org/@/paulo_rodrigues"
+    },
+    {
       "username": "restritah",
       "blitz": 1713,
       "bullet": 1983,
@@ -401,14 +409,6 @@
       "rapid": 1933,
       "seenAt": 1757196843301,
       "profile": "https://lichess.org/@/hsdb"
-    },
-    {
-      "username": "paulo_rodrigues",
-      "blitz": 1709,
-      "bullet": 1567,
-      "rapid": 1915,
-      "seenAt": 1758216591699,
-      "profile": "https://lichess.org/@/paulo_rodrigues"
     },
     {
       "username": "ja178",
