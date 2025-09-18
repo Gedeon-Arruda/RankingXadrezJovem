@@ -274,6 +274,7 @@ def admin_refresh():
     return jsonify({"status": "ok", "loaded": len(PLAYERS)})
 
 # FULL frontend HTML (INDEX_HTML) - o JS carrega ./players.json e exibe `name`
+
 INDEX_HTML = """
 <!doctype html>
 <html lang="pt-BR">
