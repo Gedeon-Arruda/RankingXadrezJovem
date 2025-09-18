@@ -8,131 +8,136 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --bg:#f3f6fb;
+      --bg:#eef5ff;
       --card:#ffffff;
       --muted:#6b7280;
-      --accent:#0066ff;
+      --accent:#0b63ff;
       --accent-2:#004ecb;
       --table-border:#e6e9ee;
-      --glass: rgba(255,255,255,0.7);
+      --glass: rgba(255,255,255,0.75);
+      --radius:12px;
+      --shadow-1: 0 6px 18px rgba(6,34,102,0.06);
+      --shadow-2: 0 10px 30px rgba(6,34,102,0.08);
+      --glass-2: rgba(255,255,255,0.85);
     }
+
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0;
       font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:linear-gradient(180deg,var(--bg),#eef4ff);
-      color:#0b1220;
+      background: linear-gradient(180deg,var(--bg),#f7fbff);
+      color:#07102a;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      padding:20px;
+      padding:24px;
+      -webkit-tap-highlight-color: transparent;
     }
-    .wrap{max-width:1200px;margin:0 auto}
-    header.site{
-      display:flex;align-items:center;gap:12px;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;
-    }
-    .brand{display:flex;gap:10px;align-items:center}
+
+    /* Container */
+    .wrap{max-width:1160px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+    header.site{display:flex;align-items:center;gap:16px;justify-content:space-between;flex-wrap:wrap}
+
+    /* Brand */
+    .brand{display:flex;gap:14px;align-items:center}
     .logo{
-      width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
-      display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;box-shadow:0 6px 18px rgba(6,34,102,0.12);
+      width:64px;height:64px;border-radius:14px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:22px;
+      box-shadow:var(--shadow-2);
       flex:0 0 auto;
     }
-    h1{font-size:1.25rem;margin:0}
-    .subtitle{color:var(--muted);font-size:0.9rem;margin-top:2px}
-    .top-meta{display:flex;gap:10px;align-items:center}
-    .badge{background:linear-gradient(180deg,#f1f9ff,#eef6ff);color:var(--accent);padding:6px 10px;border-radius:999px;border:1px solid rgba(11,102,255,0.08);font-weight:700;font-size:0.9rem;}
-    .card{background:var(--card);border-radius:12px;padding:14px;box-shadow:0 10px 30px rgba(12,32,80,0.06);}
-    .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;}
-    .controls .left{display:flex;gap:8px;align-items:center}
-    .search{display:flex;align-items:center;gap:8px;background:var(--glass);padding:8px;border-radius:10px;border:1px solid rgba(11,20,40,0.04);}
-    .search input{border:0;background:transparent;outline:none;padding:6px 8px;font-size:0.95rem;width:220px;}
-    select,button{padding:8px 10px;border-radius:8px;border:1px solid #e6e9ee;background:#fff;font-size:0.95rem;}
-    button.btn{background:linear-gradient(180deg,var(--accent),var(--accent-2));color:#fff;border:none;cursor:pointer;}
-    .info{color:var(--muted);font-size:0.9rem;margin-left:6px}
-    .table-wrap{overflow:auto;border-radius:10px;border:1px solid var(--table-border);background:linear-gradient(180deg,#fff,#fbfdff);margin-top:8px}
-    table{width:100%;border-collapse:collapse;min-width:640px;table-layout:auto}
-    thead th{position:sticky;top:0;background:linear-gradient(180deg,#ffffff,#f7fbff);padding:12px 12px;text-align:left;border-bottom:1px solid var(--table-border);font-weight:700;font-size:0.95rem;color:#0b1220;}
-    tbody td{padding:10px 12px;border-bottom:1px solid var(--table-border);vertical-align:middle;font-size:0.95rem;color:#122036}
-    tbody tr:hover{background:linear-gradient(90deg,rgba(0,102,255,0.03),transparent)}
-    .rank{width:56px;font-weight:700;color:var(--accent)}
-    .user a{color:var(--accent);text-decoration:none;font-weight:600;word-break:break-word}
-    .small{display:block;color:var(--muted);font-size:0.82rem;margin-top:4px}
-    .rating{font-weight:700;color:#111;text-align:right;min-width:56px}
-    .seen{color:var(--muted);font-size:0.9rem;text-align:right}
-    .pager{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:12px;justify-content:flex-end}
-    .pager button{background:#fff;border:1px solid #eef3fb;padding:6px 10px;border-radius:8px;cursor:pointer}
-    .pager button[disabled]{opacity:.6;cursor:default}
+    .brand h1{font-size:1.125rem;margin:0}
+    .subtitle{color:var(--muted);font-size:0.92rem;margin-top:3px}
 
-    /* Tablet */
-    @media (max-width:900px){
-      .search input{width:140px}
-      thead th, tbody td{padding:10px}
-      h1{font-size:1.1rem}
+    .top-meta{display:flex;gap:12px;align-items:center}
+    .badge{
+      background:linear-gradient(180deg,#f1f9ff,#eef6ff);
+      color:var(--accent);padding:8px 12px;border-radius:999px;border:1px solid rgba(11,102,255,0.08);
+      font-weight:700;font-size:0.95rem;display:flex;gap:8px;align-items:center;
     }
 
-    /* Mobile: stacked card layout with all fields visible */
+    /* Card */
+    .card{background:var(--card);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow-1)}
+    .banner{display:flex;gap:12px;align-items:center;border-left:4px solid var(--accent);padding:14px}
+
+    /* Controls */
+    .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+    .controls .left{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    .search{display:flex;align-items:center;gap:8px;background:var(--glass);padding:8px;border-radius:10px;border:1px solid rgba(11,20,40,0.04)}
+    .search svg{opacity:.7}
+    .search input{
+      border:0;background:transparent;outline:none;padding:6px 8px;font-size:0.95rem;min-width:160px;
+    }
+
+    .select, .btn, .ghost{
+      padding:8px 10px;border-radius:10px;border:1px solid var(--table-border);background:#fff;font-size:0.95rem;
+    }
+    .btn{background:linear-gradient(180deg,var(--accent),var(--accent-2));color:#fff;border:none;cursor:pointer;box-shadow:0 6px 20px rgba(11,99,255,0.08)}
+    .ghost{background:transparent;border:1px solid rgba(16,24,40,0.05);color:var(--muted)}
+    .btn:focus, .select:focus, .search input:focus, .ghost:focus{outline:3px solid rgba(11,99,255,0.12);outline-offset:2px}
+
+    .info{color:var(--muted);font-size:0.9rem;margin-left:6px}
+
+    /* Table */
+    .table-wrap{overflow:auto;border-radius:10px;border:1px solid var(--table-border);background:linear-gradient(180deg,#fff,#fbfdff);margin-top:8px}
+    table{width:100%;border-collapse:collapse;min-width:720px;table-layout:auto}
+    thead th{position:sticky;top:0;background:linear-gradient(180deg,#ffffff,#f7fbff);padding:14px;text-align:left;border-bottom:1px solid var(--table-border);font-weight:700;font-size:0.95rem;color:#07102a}
+    tbody td{padding:12px;border-bottom:1px solid var(--table-border);vertical-align:middle;font-size:0.95rem;color:#122036}
+    tbody tr:hover{background:linear-gradient(90deg,rgba(11,99,255,0.03),transparent)}
+    .rank{width:72px;font-weight:700;color:var(--accent);text-align:left}
+    .user a{color:var(--accent);text-decoration:none;font-weight:600;word-break:break-word}
+    .small{display:block;color:var(--muted);font-size:0.86rem;margin-top:6px}
+    .rating{font-weight:700;color:#0b1220;text-align:right;min-width:72px}
+    .seen{color:var(--muted);font-size:0.92rem;text-align:right;min-width:120px}
+    .actions{display:flex;gap:8px;justify-content:flex-end}
+    .pager{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px;justify-content:flex-end}
+    .pager button{background:#fff;border:1px solid #eef3fb;padding:8px 10px;border-radius:10px;cursor:pointer}
+    .pager button[disabled]{opacity:.5;cursor:default}
+
+    /* Responsive / Mobile cards */
+    @media (max-width:900px){
+      .search input{min-width:120px}
+      thead th, tbody td{padding:10px}
+      .logo{width:56px;height:56px}
+      .brand h1{font-size:1rem}
+    }
+
     @media (max-width:720px){
-      body{padding:12px}
+      body{padding:14px}
       .wrap{padding:0}
-      .logo{width:44px;height:44px;font-size:15px}
-      .search input{width:110px}
+      .logo{width:48px;height:48px;font-size:18px}
+      .search input{min-width:96px}
       table{min-width:0}
-      thead{display:none} /* hide desktop headers */
+      thead{display:none}
       tbody tr{
-        display:block;
-        border-radius:10px;
-        padding:10px;
-        margin:10px 0;
-        background:linear-gradient(180deg,#fff,#fbfdff);
-        box-shadow:0 6px 18px rgba(6,34,102,0.04);
-        border:1px solid var(--table-border);
+        display:block;border-radius:10px;padding:12px;margin:10px 0;background:linear-gradient(180deg,#fff,#fbfdff);box-shadow:0 6px 18px rgba(6,34,102,0.04);border:1px solid var(--table-border)
       }
-      /* Each cell becomes a row: label on left, value on right; username full width */
-      tbody td{
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-        padding:6px 0;
-        border:0;
-        font-size:0.95rem;
-      }
-      tbody td.user{
-        flex-direction:column;
-        align-items:flex-start;
-        gap:6px;
-      }
+      tbody td{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border:0;font-size:0.95rem}
+      tbody td.user{flex-direction:column;align-items:flex-start;gap:6px}
       tbody td.user a{font-size:1rem}
-      tbody td.user .small{display:block}
-      tbody td.data-metric{
-        width:100%;
-        display:flex;
-        justify-content:space-between;
-        gap:12px;
-        padding-top:6px;
-        font-size:0.95rem;
-      }
-      /* compact metric badges */
-      .metric{
-        flex:1;
-        display:flex;
-        flex-direction:column;
-        align-items:flex-end;
-        min-width:64px;
-      }
-      .metric .label{color:var(--muted);font-size:0.78rem}
+      .metric-row{display:flex;gap:10px;width:100%;margin-top:6px}
+      .metric{flex:1;display:flex;flex-direction:column;align-items:flex-end;min-width:64px}
+      .metric .label{color:var(--muted);font-size:0.82rem}
       .metric .value{font-weight:700}
       .rank{display:inline-block;margin-bottom:6px}
       .pager{justify-content:center}
+      .actions{width:100%;justify-content:flex-end}
     }
 
     @media (max-width:420px){
-      .search input{width:90px}
-      h1{font-size:1rem}
+      .search input{min-width:72px}
+      .brand h1{font-size:0.98rem}
     }
+
+    /* small utilities */
+    .muted{color:var(--muted)}
+    .chip{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:var(--glass-2);border:1px solid rgba(11,20,40,0.03)}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
   </style>
 </head>
 <body>
-  <div class="wrap">
+  <div class="wrap" id="app">
     <header class="site">
       <div class="brand">
         <div class="logo" aria-hidden="true">RJ</div>
@@ -142,214 +147,312 @@
         </div>
       </div>
       <div class="top-meta">
-        <div class="badge">Ativos: <strong id="totalBadge">—</strong></div>
+        <div class="badge" aria-live="polite">Ativos: <strong id="totalBadge">—</strong></div>
       </div>
     </header>
 
-    <!-- Join banner (concise, dismissible) -->
-    <div id="joinBanner" class="card" style="margin-bottom:12px; border-left:4px solid var(--accent); display:flex;align-items:center;gap:12px;">
+    <!-- Banner -->
+    <div id="joinBanner" class="card banner" role="region" aria-label="Informação para aparecer no ranking">
       <div style="flex:1">
         <strong>Quer aparecer no ranking?</strong>
-        <div style="color:var(--muted);margin-top:6px">
-          Basta ser membro do time <strong>xadrezjovemes</strong> no Lichess e ter rating Blitz.
-          <div style="margin-top:6px">
-            <a href="https://lichess.org/team/xadrezjovemes" target="_blank" rel="noopener">Entrar no time</a> — ou peça confirmação a um administrador.
-          </div>
-          <div style="margin-top:6px;font-size:0.9rem;color:var(--muted)">Aparece automaticamente após a próxima geração (diária).</div>
+        <div class="muted" style="margin-top:6px">
+          Seja membro do time <strong>xadrezjovemes</strong> no Lichess e tenha rating Blitz.
+          <div style="margin-top:8px"><a href="https://lichess.org/team/xadrezjovemes" target="_blank" rel="noopener">Entrar no time</a></div>
+          <div style="margin-top:6px;font-size:0.9rem;color:var(--muted)">Aparece automaticamente após a geração diária.</div>
         </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
-        <a class="btn" href="https://lichess.org/team/xadrezjovemes" target="_blank" rel="noopener" style="padding:8px 12px">Entrar no time</a>
-        <button id="dismissJoinBanner" style="background:transparent;border:0;color:var(--muted);cursor:pointer;font-size:0.9rem">Fechar</button>
+        <a class="btn" href="https://lichess.org/team/xadrezjovemes" target="_blank" rel="noopener" style="padding:10px 14px">Entrar no time</a>
+        <button id="dismissJoinBanner" class="ghost" aria-label="Fechar banner">Fechar</button>
       </div>
     </div>
 
-    <div class="card">
-      <div class="controls">
-        <div class="left">
+    <!-- Main card -->
+    <div class="card" role="main" aria-labelledby="main-title">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
           <div class="search" title="Pesquisar usuário">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="opacity:.7"><path d="M21 21l-4.35-4.35" stroke="#456" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11" cy="11" r="6" stroke="#456" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <input id="q" type="search" placeholder="buscar usuário..." />
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.35-4.35" stroke="#456" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11" cy="11" r="6" stroke="#456" stroke-width="2"/></svg>
+            <input id="q" type="search" placeholder="Buscar usuário..." aria-label="Buscar usuário" />
+            <button id="clearSearch" class="ghost" title="Limpar pesquisa" aria-label="Limpar pesquisa" style="display:none">Limpar</button>
           </div>
 
-          <label><select id="sort">
-              <option value="blitz">Blitz</option>
-              <option value="bullet">Bullet</option>
-              <option value="rapid">Rapid</option>
-              <option value="username">Usuário</option>
-            </select></label>
+          <label class="sr-only" for="sort">Ordenar por</label>
+          <select id="sort" class="select" aria-label="Ordenar por">
+            <option value="blitz">Blitz</option>
+            <option value="bullet">Bullet</option>
+            <option value="rapid">Rapid</option>
+            <option value="username">Usuário</option>
+          </select>
 
-          <label><select id="order">
-              <option value="desc">Desc</option>
-              <option value="asc">Asc</option>
-            </select></label>
+          <label class="sr-only" for="order">Ordem</label>
+          <select id="order" class="select" aria-label="Ordem">
+            <option value="desc">Desc</option>
+            <option value="asc">Asc</option>
+          </select>
 
-          <label><select id="perPage">
-              <option value="10">10</option>
-              <option value="20" selected>20</option>
-              <option value="50">50</option>
-            </select></label>
+          <label class="sr-only" for="perPage">Por página</label>
+          <select id="perPage" class="select" aria-label="Itens por página">
+            <option value="10">10</option>
+            <option value="20" selected>20</option>
+            <option value="50">50</option>
+          </select>
         </div>
 
-        <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
-          <button id="reload" class="btn">Recarregar</button>
-          <div id="info" class="info">—</div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <button id="reload" class="btn" title="Recarregar dados">Recarregar</button>
+          <button id="exportCsv" class="ghost" title="Exportar página para CSV">Exportar CSV</button>
+          <div id="info" class="info" aria-live="polite">—</div>
         </div>
       </div>
 
       <div class="table-wrap" id="tableWrap" role="region" aria-label="Tabela de jogadores">
-        <table>
+        <table aria-describedby="table-desc">
+          <caption id="table-desc" class="sr-only">Lista de jogadores com rating Blitz, Bullet e Rapid</caption>
           <thead>
             <tr>
-              <th class="rank">#</th>
-              <th>Usuário</th>
-              <th>Blitz</th>
-              <th>Bullet</th>
-              <th>Rapid</th>
-              <th>Último login</th>
+              <th class="rank" scope="col">#</th>
+              <th scope="col">Usuário</th>
+              <th scope="col" style="text-align:right">Blitz</th>
+              <th scope="col" style="text-align:right">Bullet</th>
+              <th scope="col" style="text-align:right">Rapid</th>
+              <th scope="col" style="text-align:right">Último login</th>
             </tr>
           </thead>
-          <tbody id="tbody"></tbody>
+          <tbody id="tbody" role="rowgroup"></tbody>
         </table>
       </div>
 
       <div class="pager" id="pager" aria-label="Navegação de páginas"></div>
     </div>
 
-    <footer style="margin-top:14px;color:var(--muted);font-size:0.9rem;text-align:center">
+    <footer style="margin-top:6px;color:var(--muted);font-size:0.9rem;text-align:center">
       Dados: Lichess · Site atualizado uma vez por dia.
     </footer>
   </div>
 
 <script>
-/* client-side: load ./players.json, search, sort, paginate.
-   For mobile the layout is stacked; JS builds simple table rows with data-labels. */
-let all = [];
-let filtered = [];
-let page = 1;
+/* Responsive, accessible, premium table UI
+   - Assumes players.json structure: { "generated_at": <ms-or-iso>, "players": [ { username, profile, blitz, bullet, rapid, seenAt } ] }
+   - Features: debounce search, CSV export, accessible pagination, mobile card layout handled by CSS
+*/
 
-const qEl = document.getElementById('q');
-const sortEl = document.getElementById('sort');
-const orderEl = document.getElementById('order');
-const perPageEl = document.getElementById('perPage');
-const infoEl = document.getElementById('info');
-const totalBadge = document.getElementById('totalBadge');
+(() => {
+  // State
+  let all = [];
+  let filtered = [];
+  let page = 1;
 
-document.getElementById('reload').addEventListener('click', () => { loadData(true); });
-
-qEl.addEventListener('input', ()=>{ page = 1; applyFilters(); });
-sortEl.addEventListener('change', ()=>{ page = 1; applyFilters(); });
-orderEl.addEventListener('change', ()=>{ page = 1; applyFilters(); });
-perPageEl.addEventListener('change', ()=>{ page = 1; renderPage(); });
-
-async function loadData(force=false){
-  infoEl.textContent = 'Carregando...';
-  try{
-    const r = await fetch('./players.json', {cache: force ? 'no-store' : 'default'});
-    if(!r.ok) throw new Error('Erro ao buscar players.json');
-    const js = await r.json();
-    all = js.players || [];
-    totalBadge.textContent = all.length;
-    const dt = js.generated_at ? new Date(js.generated_at).toLocaleString() : '—';
-    infoEl.textContent = `Total: ${all.length} — gerado: ${dt}`;
-    page = 1;
-    applyFilters();
-  }catch(err){
-    console.error(err);
-    infoEl.textContent = 'Erro ao carregar';
-  }
-}
-
-function applyFilters(){
-  const q = qEl.value.trim().toLowerCase();
-  filtered = all.filter(p => !q || p.username.toLowerCase().includes(q));
-  const sortKey = sortEl.value;
-  const order = orderEl.value === 'asc' ? 1 : -1;
-  filtered.sort((a,b)=>{
-    let va = sortKey === 'username' ? (a.username || '').toLowerCase() : (a[sortKey] || 0);
-    let vb = sortKey === 'username' ? (b.username || '').toLowerCase() : (b[sortKey] || 0);
-    if(va < vb) return -1 * order;
-    if(va > vb) return 1 * order;
-    return 0;
-  });
-  renderPage();
-}
-
-function renderPage(){
-  const per = parseInt(perPageEl.value,10) || 20;
-  const start = (page-1)*per;
-  const pageItems = filtered.slice(start, start+per);
+  const qEl = document.getElementById('q');
+  const clearBtn = document.getElementById('clearSearch');
+  const sortEl = document.getElementById('sort');
+  const orderEl = document.getElementById('order');
+  const perPageEl = document.getElementById('perPage');
+  const infoEl = document.getElementById('info');
+  const totalBadge = document.getElementById('totalBadge');
   const tbody = document.getElementById('tbody');
-  tbody.innerHTML = '';
-  pageItems.forEach((p, idx) => {
-    const tr = document.createElement('tr');
-
-    const rank = start + idx + 1;
-    // For mobile stacked layout we rely on CSS — keep semantic cells.
-    const tdRank = `<td class="rank" data-label="#">${rank}</td>`;
-    const tdUser = `<td class="user" data-label="Usuário"><a href="${p.profile}" target="_blank" rel="noopener">${escapeHtml(p.username)}</a><span class="small">${p.username}</span></td>`;
-    const tdBlitz = `<td class="rating" data-label="Blitz">${p.blitz}</td>`;
-    const tdBullet = `<td class="rating" data-label="Bullet">${p.bullet}</td>`;
-    const tdRapid = `<td class="rating" data-label="Rapid">${p.rapid}</td>`;
-    const tdSeen = `<td class="seen" data-label="Último login">${formatSeen(p.seenAt)}</td>`;
-
-    tr.innerHTML = tdRank + tdUser + tdBlitz + tdBullet + tdRapid + tdSeen;
-    tbody.appendChild(tr);
-  });
-  renderPager(per);
-}
-
-function renderPager(per){
   const pager = document.getElementById('pager');
-  pager.innerHTML = '';
-  const totalPages = Math.max(1, Math.ceil(filtered.length / per));
-  const createBtn = (text, p) => {
-    const b = document.createElement('button');
-    b.textContent = text;
-    b.disabled = p === page;
-    b.onclick = () => { page = p; renderPage(); };
-    return b;
-  };
-  pager.appendChild(createBtn('«', 1));
-  pager.appendChild(createBtn('‹', Math.max(1, page-1)));
-  const start = Math.max(1, page-2);
-  const end = Math.min(totalPages, page+2);
-  for(let i=start;i<=end;i++) pager.appendChild(createBtn(i, i));
-  pager.appendChild(createBtn('›', Math.min(totalPages, page+1)));
-  pager.appendChild(createBtn('»', totalPages));
-}
+  const reloadBtn = document.getElementById('reload');
+  const exportBtn = document.getElementById('exportCsv');
 
-function formatSeen(ms){
-  if(!ms || ms <= 0) return 'N/A';
-  const diff = Date.now() - ms;
-  const days = Math.floor(diff / (24*3600*1000));
-  if(days === 0) return 'Hoje';
-  if(days === 1) return '1 dia';
-  if(days < 30) return `${days} dias`;
-  const months = Math.floor(days / 30);
-  if(months < 12) return `${months} meses`;
-  const years = Math.floor(months / 12);
-  return `${years} anos`;
-}
+  // Helpers
+  function debounce(fn, wait=300){
+    let t;
+    return (...args) => { clearTimeout(t); t = setTimeout(()=>fn(...args), wait); };
+  }
 
-function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+  function escapeHtml(s){
+    return String(s==null?'':s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
 
-/* join banner dismiss */
-(function(){
-  try{
+  function formatSeen(ms){
+    if(!ms) return 'N/A';
+    const ts = Number(ms) || Date.parse(ms) || 0;
+    if(!ts) return 'N/A';
+    const diff = Date.now() - ts;
+    if(diff < 0) return 'Agora';
+    const days = Math.floor(diff / (24*3600*1000));
+    if(days === 0) return 'Hoje';
+    if(days === 1) return '1 dia';
+    if(days < 30) return `${days} dias`;
+    const months = Math.floor(days / 30);
+    if(months < 12) return `${months} meses`;
+    const years = Math.floor(months / 12);
+    return `${years} anos`;
+  }
+
+  function safeNumber(v){ return v == null || v === '' ? 0 : Number(v) || 0; }
+
+  async function loadData(force=false){
+    infoEl.textContent = 'Carregando...';
+    try{
+      const res = await fetch('./players.json', { cache: force ? 'no-store' : 'default' });
+      if(!res.ok) throw new Error('Falha ao buscar players.json');
+      const js = await res.json();
+      all = Array.isArray(js.players) ? js.players : [];
+      totalBadge.textContent = all.length;
+      const dt = js.generated_at ? new Date(js.generated_at).toLocaleString() : '—';
+      infoEl.textContent = `Total: ${all.length} — gerado: ${dt}`;
+      page = 1;
+      applyFilters();
+    }catch(err){
+      console.error(err);
+      infoEl.textContent = 'Erro ao carregar dados';
+      tbody.innerHTML = `<tr><td colspan="6" style="padding:18px;text-align:center;color:var(--muted)">Erro ao carregar players.json</td></tr>`;
+    }
+  }
+
+  function applyFilters(){
+    const q = qEl.value.trim().toLowerCase();
+    filtered = all.filter(p => {
+      if(!q) return true;
+      const uname = (p.username || '').toString().toLowerCase();
+      return uname.includes(q);
+    });
+
+    // sort
+    const key = sortEl.value;
+    const order = orderEl.value === 'asc' ? 1 : -1;
+    filtered.sort((a,b) => {
+      if(key === 'username'){
+        const A = (a.username||'').toLowerCase();
+        const B = (b.username||'').toLowerCase();
+        return (A < B ? -1 : A > B ? 1 : 0) * order;
+      }
+      const va = safeNumber(a[key]);
+      const vb = safeNumber(b[key]);
+      return (va < vb ? -1 : va > vb ? 1 : 0) * order;
+    });
+
+    page = 1;
+    renderPage();
+    clearBtn.style.display = q ? 'inline-block' : 'none';
+  }
+
+  function renderPage(){
+    const per = Math.max(1, parseInt(perPageEl.value,10) || 20);
+    const totalPages = Math.max(1, Math.ceil(filtered.length / per));
+    if(page > totalPages) page = totalPages;
+
+    const start = (page - 1) * per;
+    const items = filtered.slice(start, start + per);
+
+    // build fragment for performance
+    const frag = document.createDocumentFragment();
+    if(items.length === 0){
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td colspan="6" style="padding:18px;text-align:center;color:var(--muted)">Nenhum jogador encontrado</td>`;
+      frag.appendChild(tr);
+    } else {
+      items.forEach((p, idx) => {
+        const tr = document.createElement('tr');
+        const rank = start + idx + 1;
+
+        // desktop cells (semantic) — CSS will transform into cards on mobile
+        const tdRank = document.createElement('td'); tdRank.className = 'rank'; tdRank.setAttribute('data-label','#'); tdRank.innerHTML = `${rank}`;
+        const tdUser = document.createElement('td'); tdUser.className = 'user'; tdUser.setAttribute('data-label','Usuário');
+        const a = document.createElement('a'); a.href = p.profile || '#'; a.target = '_blank'; a.rel = 'noopener'; a.textContent = p.username || '(sem usuário)';
+        tdUser.appendChild(a);
+        const small = document.createElement('span'); small.className='small'; small.textContent = p.username || ''; tdUser.appendChild(small);
+
+        const tdBlitz = document.createElement('td'); tdBlitz.className='rating'; tdBlitz.setAttribute('data-label','Blitz'); tdBlitz.style.textAlign='right'; tdBlitz.textContent = p.blitz ?? '—';
+        const tdBullet = document.createElement('td'); tdBullet.className='rating'; tdBullet.setAttribute('data-label','Bullet'); tdBullet.style.textAlign='right'; tdBullet.textContent = p.bullet ?? '—';
+        const tdRapid = document.createElement('td'); tdRapid.className='rating'; tdRapid.setAttribute('data-label','Rapid'); tdRapid.style.textAlign='right'; tdRapid.textContent = p.rapid ?? '—';
+        const tdSeen = document.createElement('td'); tdSeen.className='seen'; tdSeen.setAttribute('data-label','Último login'); tdSeen.style.textAlign='right'; tdSeen.textContent = formatSeen(p.seenAt);
+
+        tr.appendChild(tdRank);
+        tr.appendChild(tdUser);
+        tr.appendChild(tdBlitz);
+        tr.appendChild(tdBullet);
+        tr.appendChild(tdRapid);
+        tr.appendChild(tdSeen);
+
+        frag.appendChild(tr);
+      });
+    }
+
+    tbody.innerHTML = '';
+    tbody.appendChild(frag);
+    renderPager(per, totalPages);
+  }
+
+  function renderPager(per, totalPages){
+    pager.innerHTML = '';
+    const make = (label, p, disabled=false, ariaLabel) => {
+      const b = document.createElement('button');
+      b.textContent = label;
+      b.disabled = disabled;
+      b.setAttribute('aria-label', ariaLabel || `Ir para página ${p}`);
+      b.className = 'select';
+      b.onclick = () => { page = p; renderPage(); window.scrollTo({top:0,behavior:'smooth'}); };
+      return b;
+    };
+    const first = make('«', 1, page===1, 'Primeira página');
+    const prev = make('‹', Math.max(1,page-1), page===1, 'Página anterior');
+    pager.appendChild(first);
+    pager.appendChild(prev);
+
+    const start = Math.max(1, page - 2);
+    const end = Math.min(totalPages, page + 2);
+    for(let i=start;i<=end;i++){
+      const b = make(String(i), i, i===page, `Página ${i}`);
+      if(i===page){ b.style.fontWeight='700'; b.style.background='linear-gradient(90deg,var(--accent),var(--accent-2))'; b.style.color='#fff'; b.style.border='none' }
+      pager.appendChild(b);
+    }
+
+    const next = make('›', Math.min(totalPages, page+1), page===totalPages, 'Próxima página');
+    const last = make('»', totalPages, page===totalPages, 'Última página');
+    pager.appendChild(next);
+    pager.appendChild(last);
+  }
+
+  // CSV export for the current page
+  function exportCurrentPageCsv(){
+    const per = Math.max(1, parseInt(perPageEl.value,10) || 20);
+    const start = (page - 1) * per;
+    const items = filtered.slice(start, start + per);
+    if(items.length === 0){ alert('Nenhum item para exportar'); return; }
+    const headers = ['#','username','profile','blitz','bullet','rapid','seenAt'];
+    const rows = items.map((p,idx) => {
+      const rank = start + idx + 1;
+      return [rank, p.username || '', p.profile || '', p.blitz ?? '', p.bullet ?? '', p.rapid ?? '', p.seenAt ?? ''].map(cell => `"${String(cell).replace(/"/g,'""')}"`).join(',');
+    });
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `ranking_page_${page}.csv`; document.body.appendChild(a); a.click();
+    setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 500);
+  }
+
+  // Bind events (with debounce)
+  const debouncedFilter = debounce(applyFilters, 220);
+  qEl.addEventListener('input', debouncedFilter);
+  clearBtn.addEventListener('click', ()=>{ qEl.value=''; applyFilters(); qEl.focus(); });
+  sortEl.addEventListener('change', ()=>{ page = 1; applyFilters(); });
+  orderEl.addEventListener('change', ()=>{ page = 1; applyFilters(); });
+  perPageEl.addEventListener('change', ()=>{ page = 1; renderPage(); });
+  reloadBtn.addEventListener('click', ()=> loadData(true));
+  exportBtn.addEventListener('click', exportCurrentPageCsv);
+
+  // Join banner dismiss (persistent)
+  (function joinBanner(){
     const key = 'rk_join_banner_dismissed_v1';
     const banner = document.getElementById('joinBanner');
     const btn = document.getElementById('dismissJoinBanner');
     if(!banner || !btn) return;
-    if(localStorage.getItem(key)) { banner.style.display = 'none'; return; }
+    try{
+      if(localStorage.getItem(key)){ banner.style.display='none'; return; }
+    }catch(e){}
     btn.addEventListener('click', ()=>{
       banner.style.display = 'none';
-      try{ localStorage.setItem(key, '1'); }catch(e){}
+      try{ localStorage.setItem(key,'1'); }catch(e){}
     });
-  }catch(e){}
-})();
+  })();
 
-window.addEventListener('load', loadData);
+  // initial load
+  window.addEventListener('load', ()=> loadData(false));
+})();
 </script>
 </body>
 </html>
