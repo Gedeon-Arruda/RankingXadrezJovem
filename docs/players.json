@@ -1,5 +1,5 @@
 {
-  "generated_at": 1758225184937,
+  "generated_at": 1758225643304,
   "count": 76,
   "players": [
     {
@@ -359,7 +359,7 @@
       "blitz": 1782,
       "bullet": 1900,
       "rapid": 1500,
-      "seenAt": 1758210645309,
+      "seenAt": 1758225416356,
       "profile": "https://lichess.org/@/lost_in_the_space"
     },
     {
@@ -500,10 +500,10 @@
     },
     {
       "username": "miguel2024",
-      "blitz": 1394,
+      "blitz": 1400,
       "bullet": 1266,
       "rapid": 1090,
-      "seenAt": 1758224596988,
+      "seenAt": 1758225220144,
       "profile": "https://lichess.org/@/miguel2024"
     },
     {
