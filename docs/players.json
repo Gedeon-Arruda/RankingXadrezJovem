@@ -1,5 +1,5 @@
 {
-  "generated_at": 1758225756626,
+  "generated_at": 1758226568570,
   "count": 76,
   "players": [
     {
@@ -347,20 +347,20 @@
       "profile": "https://lichess.org/@/mago1"
     },
     {
+      "username": "lost_in_the_space",
+      "blitz": 1791,
+      "bullet": 1900,
+      "rapid": 1500,
+      "seenAt": 1758226026432,
+      "profile": "https://lichess.org/@/lost_in_the_space"
+    },
+    {
       "username": "draank1",
       "blitz": 1784,
       "bullet": 1780,
       "rapid": 1962,
       "seenAt": 1758129902903,
       "profile": "https://lichess.org/@/draank1"
-    },
-    {
-      "username": "lost_in_the_space",
-      "blitz": 1782,
-      "bullet": 1900,
-      "rapid": 1500,
-      "seenAt": 1758225416356,
-      "profile": "https://lichess.org/@/lost_in_the_space"
     },
     {
       "username": "claudiogp",
