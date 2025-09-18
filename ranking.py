@@ -84,8 +84,15 @@ def fetch_user_once(session, username, timeout):
         bullet = safe_int(perfs.get("bullet", {}).get("rating") or 0)
         rapid = safe_int(perfs.get("rapid", {}).get("rating") or 0)
         seen_at = safe_int(data.get("seenAt") or data.get("seen_at") or 0)
+
+        # Captura nome real do profile; usa fallback pedido pelo usuário
+        profile_data = data.get("profile") or {}
+        # verificar possíveis chaves (defensivo), mas a prioridade é realName
+        real_name = profile_data.get("realName") or profile_data.get("name") or profile_data.get("fullName") or "Nome não encontrato"
+
         return {
             "username": username,
+            "name": real_name,
             "blitz": blitz,
             "bullet": bullet,
             "rapid": rapid,
@@ -195,10 +202,11 @@ def api_players():
     end = start + per_page
     page_items = data[start:end]
 
-    # Return minimal fields
+    # Return minimal fields (agora incluindo 'name')
     resp_items = [
         {
             "username": p["username"],
+            "name": p.get("name", "Nome não encontrato"),
             "blitz": p["blitz"],
             "bullet": p["bullet"],
             "rapid": p["rapid"],
@@ -437,9 +445,10 @@ async function loadData(force=false){
     const r = await fetch('./players.json', {cache: force ? 'no-store' : 'default'});
     if(!r.ok) throw new Error('Erro ao buscar players.json');
     const js = await r.json();
-    all = js.players || [];
+    // support legacy shape (if users use /api/players result)
+    all = js.players || js.items || [];
     totalBadge.textContent = all.length;
-    const dt = js.generated_at ? new Date(js.generated_at).toLocaleString() : '—';
+    const dt = js.generated_at ? new Date(js.generated_at).toLocaleString() : (js.data_loaded_at ? new Date(js.data_loaded_at).toLocaleString() : '—');
     infoEl.textContent = `Total: ${all.length} — gerado: ${dt}`;
     page = 1;
     applyFilters();
@@ -451,7 +460,12 @@ async function loadData(force=false){
 
 function applyFilters(){
   const q = qEl.value.trim().toLowerCase();
-  filtered = all.filter(p => !q || p.username.toLowerCase().includes(q));
+  filtered = all.filter(p => {
+    if(!q) return true;
+    const uname = (p.username || '').toLowerCase();
+    const name = (p.name || '').toLowerCase();
+    return uname.includes(q) || name.includes(q);
+  });
   const sortKey = sortEl.value;
   const order = orderEl.value === 'asc' ? 1 : -1;
   filtered.sort((a,b)=>{
@@ -473,9 +487,14 @@ function renderPage(){
   pageItems.forEach((p, idx) => {
     const tr = document.createElement('tr');
     const rank = start + idx + 1;
+    // Mostrar username como link e name abaixo (com fallback pedido)
+    const displayName = p.name || 'Nome não encontrato';
     tr.innerHTML = `
       <td class="rank">${rank}</td>
-      <td class="user"><a href="${p.profile}" target="_blank" rel="noopener">${escapeHtml(p.username)}</a><span class="small">${p.username}</span></td>
+      <td class="user">
+        <a href="${p.profile}" target="_blank" rel="noopener">${escapeHtml(p.username)}</a>
+        <span class="small">${escapeHtml(displayName)}</span>
+      </td>
       <td class="rating">${p.blitz}</td>
       <td class="rating">${p.bullet}</td>
       <td class="rating">${p.rapid}</td>
