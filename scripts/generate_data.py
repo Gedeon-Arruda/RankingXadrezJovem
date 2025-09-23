@@ -33,7 +33,6 @@ def fetch_team_members(session):
     resp.raise_for_status()
     text = resp.text.strip()
     users = []
-    # API pode retornar newline-delimited JSON ou um array; tente ambos
     try:
         if text.startswith('['):
             arr = resp.json()
@@ -47,30 +46,39 @@ def fetch_team_members(session):
                     obj = json.loads(line)
                     users.append(obj.get('id') or obj.get('username'))
                 except Exception:
-                    # fallback: linha pode conter apenas username
                     users.append(line.strip())
     except Exception:
         pass
     return [u for u in users if u]
 
 def extract_name_from_profile(profile, user_obj):
-    # Try several fields used by lichess/profile variations
     if not profile and not user_obj:
         return ""
     profile = profile or {}
-    # prefer profile.name
-    name = profile.get("name") or profile.get("fullName") or ""
-    # some records may have firstName/lastName
-    first = profile.get("firstName") or profile.get("first") or ""
-    last = profile.get("lastName") or profile.get("last") or ""
+    # tenta várias chaves possíveis
+    candidates = []
+    # campos comuns
+    for k in ("name","fullName","full_name","displayName","display_name"):
+        v = profile.get(k)
+        if v: candidates.append(str(v).strip())
+    # first/last combinados
+    first = profile.get("firstName") or profile.get("first") or profile.get("givenName") or ""
+    last = profile.get("lastName") or profile.get("last") or profile.get("familyName") or ""
     if first and last:
-        name = f"{first} {last}".strip()
-    elif first and not name:
-        name = first.strip()
-    # fallback to top-level user name fields
-    if not name:
-        name = user_obj.get("name") if isinstance(user_obj, dict) else ""
-    return (name or "").strip()
+        candidates.append(f"{first} {last}".strip())
+    elif first:
+        candidates.append(first.strip())
+    # fallback para campos de topo do objeto user
+    for k in ("name","fullName","full_name"):
+        v = user_obj.get(k) if isinstance(user_obj, dict) else None
+        if v: candidates.append(str(v).strip())
+    # remove vazios e duplicates
+    seen = set()
+    for c in candidates:
+        if c and c not in seen:
+            seen.add(c)
+            return c
+    return ""
 
 def fetch_user(session, username):
     try:
@@ -89,7 +97,7 @@ def fetch_user(session, username):
         profile_url = prof.get("url") or f"https://lichess.org/@/{username}"
         return {
             "username": username,
-            "name": name,
+            "name": name or "",
             "profile": profile_url,
             "blitz": blitz,
             "bullet": bullet,
