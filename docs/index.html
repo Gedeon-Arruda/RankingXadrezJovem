@@ -300,7 +300,7 @@
       const profile = (p.profile || p.url) ? (p.profile || p.url) : `https://lichess.org/@/${encodeURIComponent(p.username||'')}`;
       const initial = escapeHtml((p.username||'').charAt(0).toUpperCase());
       const userEsc = escapeHtml(p.username||'(sem usuário)');
-      const realEsc = escapeHtml(real);
+      const realEsc = real ? escapeHtml(real) : '';
       const html = `<div class="player-card">
         <div class="player-left">
           <a href="${profile}" target="_blank" rel="noopener" style="display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit">
