@@ -1,5 +1,5 @@
 {
-  "generated_at": 1758646101780,
+  "generated_at": 1758646641219,
   "count": 77,
   "players": [
     {
@@ -161,8 +161,8 @@
       "profile": "https://lichess.org/@/hericybr2",
       "blitz": 2066,
       "bullet": 2176,
-      "rapid": 2149,
-      "seenAt": 1758645399297
+      "rapid": 2153,
+      "seenAt": 1758646393222
     },
     {
       "username": "leokhine",
@@ -273,15 +273,6 @@
       "seenAt": 1758496355707
     },
     {
-      "username": "gedevon_arrudev",
-      "name": "",
-      "profile": "https://lichess.org/@/gedevon_arrudev",
-      "blitz": 1935,
-      "bullet": 2027,
-      "rapid": 1500,
-      "seenAt": 1758644773597
-    },
-    {
       "username": "historiailton",
       "name": "",
       "profile": "https://lichess.org/@/historiailton",
@@ -298,6 +289,15 @@
       "bullet": 1500,
       "rapid": 2168,
       "seenAt": 1758484771570
+    },
+    {
+      "username": "gedevon_arrudev",
+      "name": "",
+      "profile": "https://lichess.org/@/gedevon_arrudev",
+      "blitz": 1923,
+      "bullet": 2027,
+      "rapid": 1500,
+      "seenAt": 1758646054573
     },
     {
       "username": "msffla",
@@ -345,15 +345,6 @@
       "seenAt": 1758641320885
     },
     {
-      "username": "deannedark",
-      "name": "",
-      "profile": "https://lichess.org/@/deannedark",
-      "blitz": 1867,
-      "bullet": 1907,
-      "rapid": 1779,
-      "seenAt": 1758644589702
-    },
-    {
       "username": "fpfreitas",
       "name": "",
       "profile": "https://lichess.org/@/fpfreitas",
@@ -361,6 +352,15 @@
       "bullet": 1500,
       "rapid": 2167,
       "seenAt": 1758578038916
+    },
+    {
+      "username": "deannedark",
+      "name": "",
+      "profile": "https://lichess.org/@/deannedark",
+      "blitz": 1860,
+      "bullet": 1907,
+      "rapid": 1779,
+      "seenAt": 1758646138474
     },
     {
       "username": "capixabaiano",
@@ -570,15 +570,6 @@
       "seenAt": 1758561011392
     },
     {
-      "username": "kiritoking",
-      "name": "",
-      "profile": "https://lichess.org/@/kiritoking",
-      "blitz": 1379,
-      "bullet": 1268,
-      "rapid": 1531,
-      "seenAt": 1758645857074
-    },
-    {
       "username": "cleber39",
       "name": "",
       "profile": "https://lichess.org/@/cleber39",
@@ -586,6 +577,15 @@
       "bullet": 1367,
       "rapid": 1555,
       "seenAt": 1758478709747
+    },
+    {
+      "username": "kiritoking",
+      "name": "",
+      "profile": "https://lichess.org/@/kiritoking",
+      "blitz": 1374,
+      "bullet": 1268,
+      "rapid": 1531,
+      "seenAt": 1758645857074
     },
     {
       "username": "lilti",
