@@ -2,11 +2,11 @@ import json
 import time
 import requests
 import certifi
+import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from urllib.parse import quote
-import os
 
 TEAM_ID = "xadrezjovemes"
 TEAM_URL = "https://lichess.org/api/team/{}/users"
@@ -44,47 +44,36 @@ def fetch_team_members(session):
                 if not line.strip(): continue
                 try:
                     obj = json.loads(line)
-                    users.append(obj.get('id') or obj.get('username'))
+                    users.append(obj.get('id') or obj.get('username') or obj.get('name'))
                 except Exception:
                     users.append(line.strip())
     except Exception:
         pass
     return [u for u in users if u]
 
-def extract_name_from_profile(profile, user_obj):
-    if not profile and not user_obj:
+def extract_name_from_profile(profile, uobj):
+    if not profile and not isinstance(uobj, dict):
         return ""
     profile = profile or {}
-    # tenta várias chaves possíveis
-    candidates = []
-    # campos comuns
-    for k in ("name","fullName","full_name","displayName","display_name"):
-        v = profile.get(k)
-        if v: candidates.append(str(v).strip())
-    # first/last combinados
-    first = profile.get("firstName") or profile.get("first") or profile.get("givenName") or ""
-    last = profile.get("lastName") or profile.get("last") or profile.get("familyName") or ""
+    # Prioridade: profile.name, profile.fullName, profile.first/last, top-level name/displayName
+    name = profile.get("name") or profile.get("fullName") or ""
+    first = profile.get("firstName") or profile.get("first") or ""
+    last = profile.get("lastName") or profile.get("last") or ""
     if first and last:
-        candidates.append(f"{first} {last}".strip())
-    elif first:
-        candidates.append(first.strip())
-    # fallback para campos de topo do objeto user
-    for k in ("name","fullName","full_name"):
-        v = user_obj.get(k) if isinstance(user_obj, dict) else None
-        if v: candidates.append(str(v).strip())
-    # remove vazios e duplicates
-    seen = set()
-    for c in candidates:
-        if c and c not in seen:
-            seen.add(c)
-            return c
-    return ""
+        name = f"{first} {last}".strip()
+    elif first and not name:
+        name = first.strip()
+    # some users use human name in 'bio' or 'realName' (rare)
+    if not name:
+        name = profile.get("realName") or profile.get("displayName") or ""
+    if not name and isinstance(uobj, dict):
+        name = uobj.get("name") or uobj.get("fullName") or uobj.get("displayName") or ""
+    return (name or "").strip()
 
 def fetch_user(session, username):
     try:
         resp = session.get(USER_URL.format(quote(username)), timeout=REQUEST_TIMEOUT)
-        if resp.status_code == 404:
-            return None
+        if resp.status_code == 404: return None
         resp.raise_for_status()
         u = resp.json()
         prof = u.get("profile") or {}
@@ -97,7 +86,7 @@ def fetch_user(session, username):
         profile_url = prof.get("url") or f"https://lichess.org/@/{username}"
         return {
             "username": username,
-            "name": name or "",
+            "name": name,
             "profile": profile_url,
             "blitz": blitz,
             "bullet": bullet,
@@ -115,10 +104,8 @@ def active_since_days(player, days=ACTIVE_DAYS):
     try:
         ts = int(seen)
     except Exception:
-        try:
-            ts = int(float(seen))
-        except Exception:
-            return False
+        try: ts = int(float(seen))
+        except Exception: return False
     age_days = (time.time()*1000 - ts) / (24*3600*1000)
     return age_days <= days
 
@@ -132,33 +119,22 @@ def main():
         futures = {ex.submit(fetch_user, session, m): m for m in members}
         for fut in as_completed(futures):
             res = fut.result()
-            if res:
-                players.append(res)
-    # dedupe por username, preferir ratings/seenAt mais recentes
+            if res: players.append(res)
+    # dedupe
     byu = {}
-    def score(p):
-        return (p.get("blitz") or 0) + (p.get("bullet") or 0) + (p.get("rapid") or 0)
+    def score(p): return (p.get("blitz") or 0) + (p.get("bullet") or 0) + (p.get("rapid") or 0)
     for p in players:
         key = (p.get("username") or "").strip().lower()
-        if not key:
-            continue
+        if not key: continue
         if key not in byu or score(p) > score(byu[key]) or (p.get("seenAt") or 0) > (byu[key].get("seenAt") or 0):
             byu[key] = p
     active = [v for v in byu.values() if active_since_days(v)]
     active_sorted = sorted(active, key=lambda x: (-(x.get("blitz") or 0), -(x.get("bullet") or 0), -(x.get("rapid") or 0)))
-    out = {
-        "generated_at": int(time.time()*1000),
-        "count": len(active_sorted),
-        "players": active_sorted
-    }
+    out = {"generated_at": int(time.time()*1000), "count": len(active_sorted), "players": active_sorted}
     os.makedirs(OUT_DIR, exist_ok=True)
     with open(OUT_FILE, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
     print(f"Wrote {OUT_FILE} ({len(active_sorted)} players)")
-    print("Arquivo gerado. Para publicar, execute:")
-    print("  git add docs/players.json")
-    print("  git commit -m \"chore: atualiza players.json (inclui nome real)\"")
-    print("  git pull --rebase origin main && git push origin main")
 
 if __name__ == "__main__":
     main()
