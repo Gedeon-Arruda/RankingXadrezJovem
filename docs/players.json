@@ -1,5 +1,5 @@
 {
-  "generated_at": 1758640721181,
+  "generated_at": 1758641024497,
   "count": 76,
   "players": [
     {
@@ -45,7 +45,7 @@
     {
       "username": "cleber_x",
       "blitz": 2203,
-      "bullet": 2386,
+      "bullet": 2380,
       "rapid": 2223,
       "seenAt": 1758640522160,
       "profile": "https://lichess.org/@/cleber_x"
