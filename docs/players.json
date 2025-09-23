@@ -1,5 +1,5 @@
 {
-  "generated_at": 1758646746674,
+  "generated_at": 1758647167795,
   "count": 77,
   "players": [
     {
@@ -18,7 +18,7 @@
       "blitz": 2268,
       "bullet": 2240,
       "rapid": 2500,
-      "seenAt": 1758644071183
+      "seenAt": 1758646862832
     },
     {
       "username": "rafinhagod",
@@ -340,9 +340,9 @@
       "name": "Alessandro Alves",
       "profile": "https://lichess.org/@/ale_cunha",
       "blitz": 1870,
-      "bullet": 1796,
+      "bullet": 1802,
       "rapid": 1985,
-      "seenAt": 1758641320885
+      "seenAt": 1758646737178
     },
     {
       "username": "fpfreitas",
@@ -561,6 +561,15 @@
       "seenAt": 1758482358796
     },
     {
+      "username": "kiritoking",
+      "name": "Cristiano Carrafa Benfica",
+      "profile": "https://lichess.org/@/kiritoking",
+      "blitz": 1382,
+      "bullet": 1268,
+      "rapid": 1531,
+      "seenAt": 1758646864455
+    },
+    {
       "username": "hpasti",
       "name": "Heitor Pasti",
       "profile": "https://lichess.org/@/hpasti",
@@ -577,15 +586,6 @@
       "bullet": 1367,
       "rapid": 1555,
       "seenAt": 1758478709747
-    },
-    {
-      "username": "kiritoking",
-      "name": "Cristiano Carrafa Benfica",
-      "profile": "https://lichess.org/@/kiritoking",
-      "blitz": 1374,
-      "bullet": 1268,
-      "rapid": 1531,
-      "seenAt": 1758645857074
     },
     {
       "username": "lilti",
