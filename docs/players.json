@@ -1,5 +1,5 @@
 {
-  "generated_at": 1758647283076,
+  "generated_at": 1758648509570,
   "count": 77,
   "players": [
     {
@@ -18,7 +18,7 @@
       "blitz": 2268,
       "bullet": 2240,
       "rapid": 2500,
-      "seenAt": 1758646862832
+      "seenAt": 1758648158663
     },
     {
       "username": "rafinhagod",
@@ -85,7 +85,7 @@
     },
     {
       "username": "hupp",
-      "name": "",
+      "name": "Sem nome registrado",
       "profile": "https://lichess.org/@/hupp",
       "blitz": 2114,
       "bullet": 2059,
@@ -121,7 +121,7 @@
     },
     {
       "username": "lvinicios777",
-      "name": "",
+      "name": "Sem nome registrado",
       "profile": "https://lichess.org/@/lvinicios777",
       "blitz": 2091,
       "bullet": 1607,
@@ -130,7 +130,7 @@
     },
     {
       "username": "onlywaltz",
-      "name": "",
+      "name": "Sem nome registrado",
       "profile": "https://lichess.org/@/onlywaltz",
       "blitz": 2073,
       "bullet": 1849,
@@ -148,7 +148,7 @@
     },
     {
       "username": "danielfla",
-      "name": "",
+      "name": "Sem nome registrado",
       "profile": "https://lichess.org/@/danielfla",
       "blitz": 2066,
       "bullet": 2193,
@@ -157,12 +157,12 @@
     },
     {
       "username": "hericybr2",
-      "name": "Hericão bolado",
+      "name": "...",
       "profile": "https://lichess.org/@/hericybr2",
       "blitz": 2066,
       "bullet": 2176,
       "rapid": 2153,
-      "seenAt": 1758646393222
+      "seenAt": 1758647652683
     },
     {
       "username": "leokhine",
@@ -184,7 +184,7 @@
     },
     {
       "username": "capasid",
-      "name": "",
+      "name": "Sem nome registrado",
       "profile": "https://lichess.org/@/capasid",
       "blitz": 2042,
       "bullet": 2238,
@@ -193,7 +193,7 @@
     },
     {
       "username": "sanzio23",
-      "name": "",
+      "name": "Sem nome registrado",
       "profile": "https://lichess.org/@/sanzio23",
       "blitz": 2024,
       "bullet": 1920,
@@ -220,7 +220,7 @@
     },
     {
       "username": "severochess18",
-      "name": "",
+      "name": "Sem nome registrado",
       "profile": "https://lichess.org/@/severochess18",
       "blitz": 2008,
       "bullet": 1930,
@@ -229,7 +229,7 @@
     },
     {
       "username": "pablo_mn",
-      "name": "",
+      "name": "Sem nome registrado",
       "profile": "https://lichess.org/@/pablo_mn",
       "blitz": 2003,
       "bullet": 1849,
@@ -238,7 +238,7 @@
     },
     {
       "username": "alisson2brayer",
-      "name": "",
+      "name": "Sem nome registrado",
       "profile": "https://lichess.org/@/alisson2brayer",
       "blitz": 1990,
       "bullet": 1816,
@@ -274,7 +274,7 @@
     },
     {
       "username": "historiailton",
-      "name": "",
+      "name": "Sem nome registrado",
       "profile": "https://lichess.org/@/historiailton",
       "blitz": 1932,
       "bullet": 1531,
@@ -319,7 +319,7 @@
     },
     {
       "username": "ph_ls",
-      "name": "",
+      "name": "Sem nome registrado",
       "profile": "https://lichess.org/@/ph_ls",
       "blitz": 1873,
       "bullet": 1876,
@@ -340,9 +340,9 @@
       "name": "Alessandro Alves",
       "profile": "https://lichess.org/@/ale_cunha",
       "blitz": 1870,
-      "bullet": 1802,
+      "bullet": 1808,
       "rapid": 1985,
-      "seenAt": 1758646737178
+      "seenAt": 1758647890459
     },
     {
       "username": "fpfreitas",
