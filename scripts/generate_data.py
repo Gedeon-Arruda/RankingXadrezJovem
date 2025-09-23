@@ -1,18 +1,18 @@
-import os
 import json
 import time
 import requests
+import certifi
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from urllib.parse import quote
-import certifi
+import os
 
 TEAM_ID = "xadrezjovemes"
 TEAM_URL = "https://lichess.org/api/team/{}/users"
 USER_URL = "https://lichess.org/api/user/{}"
 MAX_WORKERS = 8
-REQUEST_TIMEOUT = 8
+REQUEST_TIMEOUT = 10
 RETRY_ATTEMPTS = 3
 RETRY_BACKOFF = 1.0
 ACTIVE_DAYS = 30
@@ -24,7 +24,6 @@ def make_session():
     retries = Retry(total=RETRY_ATTEMPTS, backoff_factor=RETRY_BACKOFF, status_forcelist=(500,502,503,504))
     s.mount("https://", HTTPAdapter(max_retries=retries))
     s.headers.update({"User-Agent":"xadrezjovemes-generator/1.0"})
-    # força requests a usar o bundle do certifi (resolve CERTIFICATE_VERIFY_FAILED)
     s.verify = certifi.where()
     return s
 
@@ -32,19 +31,46 @@ def fetch_team_members(session):
     url = TEAM_URL.format(quote(TEAM_ID))
     resp = session.get(url, timeout=REQUEST_TIMEOUT)
     resp.raise_for_status()
-    # API returns newline-delimited JSON per user; parse usernames
+    text = resp.text.strip()
     users = []
-    for line in resp.text.splitlines():
-        if not line.strip(): continue
-        try:
-            obj = json.loads(line)
-            if 'id' in obj:
-                users.append(obj['id'])
-            elif 'username' in obj:
-                users.append(obj['username'])
-        except Exception:
-            continue
-    return users
+    # API pode retornar newline-delimited JSON ou um array; tente ambos
+    try:
+        if text.startswith('['):
+            arr = resp.json()
+            for obj in arr:
+                if isinstance(obj, dict):
+                    users.append(obj.get('id') or obj.get('username'))
+        else:
+            for line in text.splitlines():
+                if not line.strip(): continue
+                try:
+                    obj = json.loads(line)
+                    users.append(obj.get('id') or obj.get('username'))
+                except Exception:
+                    # fallback: linha pode conter apenas username
+                    users.append(line.strip())
+    except Exception:
+        pass
+    return [u for u in users if u]
+
+def extract_name_from_profile(profile, user_obj):
+    # Try several fields used by lichess/profile variations
+    if not profile and not user_obj:
+        return ""
+    profile = profile or {}
+    # prefer profile.name
+    name = profile.get("name") or profile.get("fullName") or ""
+    # some records may have firstName/lastName
+    first = profile.get("firstName") or profile.get("first") or ""
+    last = profile.get("lastName") or profile.get("last") or ""
+    if first and last:
+        name = f"{first} {last}".strip()
+    elif first and not name:
+        name = first.strip()
+    # fallback to top-level user name fields
+    if not name:
+        name = user_obj.get("name") if isinstance(user_obj, dict) else ""
+    return (name or "").strip()
 
 def fetch_user(session, username):
     try:
@@ -53,23 +79,13 @@ def fetch_user(session, username):
             return None
         resp.raise_for_status()
         u = resp.json()
-        # extração segura de nome real
-        name = ""
         prof = u.get("profile") or {}
-        first = prof.get("firstName") or prof.get("name") or ""
-        last = prof.get("lastName") or ""
-        if first and last:
-            name = f"{first} {last}".strip()
-        elif first:
-            name = first
-        elif prof.get("name"):
-            name = prof.get("name")
-        # ratings
+        name = extract_name_from_profile(prof, u)
         perfs = u.get("perfs", {})
         blitz = perfs.get("blitz", {}).get("rating")
         bullet = perfs.get("bullet", {}).get("rating")
         rapid = perfs.get("rapid", {}).get("rating")
-        seenAt = u.get("seenAt") or u.get("lastSeenAt") or u.get("activity") or None
+        seenAt = u.get("seenAt") or u.get("lastSeenAt") or u.get("seenAtMillis") or None
         profile_url = prof.get("url") or f"https://lichess.org/@/{username}"
         return {
             "username": username,
@@ -81,7 +97,6 @@ def fetch_user(session, username):
             "seenAt": seenAt
         }
     except Exception as e:
-        # falha isolada não interrompe todo o processo
         print(f"warning: erro ao buscar {username}: {e}")
         return None
 
@@ -90,7 +105,6 @@ def active_since_days(player, days=ACTIVE_DAYS):
     seen = player.get("seenAt")
     if not seen: return False
     try:
-        # seenAt costuma vir em ms epoch
         ts = int(seen)
     except Exception:
         try:
@@ -112,7 +126,7 @@ def main():
             res = fut.result()
             if res:
                 players.append(res)
-    # dedupe by username, preferring entries with more ratings / recent seenAt
+    # dedupe por username, preferir ratings/seenAt mais recentes
     byu = {}
     def score(p):
         return (p.get("blitz") or 0) + (p.get("bullet") or 0) + (p.get("rapid") or 0)
@@ -129,18 +143,14 @@ def main():
         "count": len(active_sorted),
         "players": active_sorted
     }
-    # write file
-    import os
     os.makedirs(OUT_DIR, exist_ok=True)
     with open(OUT_FILE, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
     print(f"Wrote {OUT_FILE} ({len(active_sorted)} players)")
-    # Não realizar git push automático. Faça commit/push manualmente:
     print("Arquivo gerado. Para publicar, execute:")
-    print("  git add docs/players.json docs/index.html")
-    print("  git commit -m \"chore: atualiza players.json e frontend\"")
-    print("  git pull --rebase origin main   # integre remoto se necessário")
-    print("  git push origin main")
+    print("  git add docs/players.json")
+    print("  git commit -m \"chore: atualiza players.json (inclui nome real)\"")
+    print("  git pull --rebase origin main && git push origin main")
 
 if __name__ == "__main__":
     main()
