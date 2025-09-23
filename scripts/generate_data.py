@@ -107,9 +107,12 @@ def main():
         with open(OUT_FILE, "w", encoding="utf-8") as f:
             json.dump(out, f, ensure_ascii=False, indent=2)
         print(f"Wrote {OUT_FILE} ({len(active_sorted)} players)")
-        os.system('git add docs/index.html docs/players.json scripts/generate_data.py ranking.py .github/workflows/generate.yml')
-        os.system('git commit -m "Atualiza frontend e gera players.json"')
-        os.system('git push origin main')
+        # Não realizar git push automático. Faça commit/push manualmente:
+        print("Arquivo gerado. Para publicar, execute:")
+        print("  git add docs/players.json docs/index.html")
+        print("  git commit -m \"chore: atualiza players.json e frontend\"")
+        print("  git pull --rebase origin main   # integre remoto se necessário")
+        print("  git push origin main")
 
 if __name__ == "__main__":
     main()

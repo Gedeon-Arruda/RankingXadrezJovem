@@ -49,7 +49,7 @@
   .search input{border:0;outline:0;background:transparent;font-size:0.95rem;color:var(--text);width:220px}
   .select{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;font-size:0.95rem}
 
-  .controls-right{display:flex;align-items:center;gap:10px}
+  .controls-right{display:flex;align-items-center;gap:10px}
 
   /* Table card */
   .card{background:var(--card);border-radius:14px;padding:12px;border:1px solid var(--border);box-shadow:var(--shadow)}
@@ -277,10 +277,12 @@
       const rows = items.map((p,idx)=>{
         const rank = start + idx + 1;
         const real = p.name || p.realname || p.fullname || '';
-        const profile = p.profile || p.url || `https://lichess.org/@/${p.username||''}`;
+        const profile = (p.profile || p.url) ? (p.profile || p.url) : `https://lichess.org/@/${encodeURIComponent(p.username||'')}`;
+        const userEsc = escapeHtml(p.username||'(sem usuário)');
+        const realHtml = real ? `<span class="realname">${escapeHtml(real)}</span>` : '';
         return `<tr>
           <td class="rank">${rank}</td>
-          <td class="user"><a href="${profile}" target="_blank" rel="noopener">${escapeHtml(p.username||'(sem usuário)')}</a><span class="realname">${escapeHtml(real)}</span></td>
+          <td class="user"><a href="${profile}" target="_blank" rel="noopener">${userEsc}</a>${realHtml}</td>
           <td class="rating">${p.blitz ?? '—'}</td>
           <td class="rating">${p.bullet ?? '—'}</td>
           <td class="rating">${p.rapid ?? '—'}</td>
@@ -295,17 +297,25 @@
     items.forEach((p, idx) => {
       const rank = start + idx + 1;
       const real = p.name || p.realname || p.fullname || '';
+      const profile = (p.profile || p.url) ? (p.profile || p.url) : `https://lichess.org/@/${encodeURIComponent(p.username||'')}`;
+      const initial = escapeHtml((p.username||'').charAt(0).toUpperCase());
+      const userEsc = escapeHtml(p.username||'(sem usuário)');
+      const realEsc = escapeHtml(real);
       const html = `<div class="player-card">
         <div class="player-left">
-          <div class="avatar" aria-hidden="true">${escapeHtml((p.username||'').charAt(0).toUpperCase())}</div>
-          <div class="player-names">
-            <div class="player-nick">${rank}. ${escapeHtml(p.username||'(sem usuário)')}</div>
-            <div class="player-real">${escapeHtml(real)}</div>
-          </div>
+          <a href="${profile}" target="_blank" rel="noopener" style="display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit">
+            <div class="avatar" aria-hidden="true">${initial}</div>
+            <div class="player-names">
+              <div class="player-nick">${rank}. ${userEsc}</div>
+              <div class="player-real">${realEsc}</div>
+            </div>
+          </a>
         </div>
         <div class="player-right">
-          <div>Blitz ${p.blitz ?? '—'}</div>
-          <div style="font-size:.85rem;color:var(--muted)">${formatSeen(p.seenAt)}</div>
+          <div>Blitz: ${p.blitz ?? '—'}</div>
+          <div>Bullet: ${p.bullet ?? '—'}</div>
+          <div>Rapid: ${p.rapid ?? '—'}</div>
+          <div style="font-size:.85rem;color:var(--muted);margin-top:6px">${formatSeen(p.seenAt)}</div>
         </div>
       </div>`;
       cardList.insertAdjacentHTML('beforeend', html);
