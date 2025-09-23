@@ -130,7 +130,17 @@ def main():
             byu[key] = p
     active = [v for v in byu.values() if active_since_days(v)]
     active_sorted = sorted(active, key=lambda x: (-(x.get("blitz") or 0), -(x.get("bullet") or 0), -(x.get("rapid") or 0)))
-    out = {"generated_at": int(time.time()*1000), "count": len(active_sorted), "players": active_sorted}
+
+    # preencher nome padrão quando não encontrado
+    for p in active_sorted:
+        if not (p.get("name") or "").strip():
+            p["name"] = "Sem nome registrado"
+    
+    out = {
+        "generated_at": int(time.time()*1000),
+        "count": len(active_sorted),
+        "players": active_sorted
+    }
     os.makedirs(OUT_DIR, exist_ok=True)
     with open(OUT_FILE, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
