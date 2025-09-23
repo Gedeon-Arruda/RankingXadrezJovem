@@ -10,289 +10,354 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f7faff;
-    --card:#fff;
-    --text:#1a1f3b;
+    --bg:#f5f7fb;
+    --card:#ffffff;
     --muted:#6b7280;
-    --accent:#4f46e5;
-    --accent-light:#818cf8;
-    --gold:#f59e0b;
-    --silver:#9ca3af;
-    --bronze:#d97706;
-    --border:#e5e7eb;
+    --accent:#5b4cf6;
+    --accent-2:#8b7ef7;
+    --text:#0f1724;
+    --border:#e6e9ef;
     --radius:14px;
-    --shadow-card:0 8px 20px rgba(0,0,0,0.05);
-    --shadow-hover:0 12px 24px rgba(0,0,0,0.08);
+    --shadow: 0 10px 30px rgba(16,24,40,0.06);
   }
-
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);padding:20px;min-height:100vh;display:flex;justify-content:center;}
-  .wrap{max-width:1100px;width:100%;display:flex;flex-direction:column;gap:24px;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:linear-gradient(180deg,#f6f8ff 0%,var(--bg) 100%);color:var(--text);padding:28px;min-height:100vh;display:flex;justify-content:center;}
+  .container{max-width:1150px;width:100%;display:flex;flex-direction:column;gap:20px}
 
   /* Header */
-  header.site{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;}
-  .brand{display:flex;align-items:center;gap:16px;}
-  .logo{width:60px;height:60px;background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;font-weight:800;font-size:24px;display:flex;align-items:center;justify-content:center;border-radius:var(--radius);box-shadow:var(--shadow-card);}
-  .brand h1{font-size:1.25rem;}
-  .subtitle{font-size:0.9rem;color:var(--muted);}
-  .top-meta .badge{background:#eef2ff;color:var(--accent);padding:8px 14px;border-radius:999px;font-weight:600;font-size:0.95rem;}
+  header.site{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .brand{display:flex;align-items:center;gap:16px}
+  .logo{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:20px;box-shadow:var(--shadow)}
+  .title-group h1{font-size:1.25rem;margin-bottom:2px}
+  .subtitle{color:var(--muted);font-size:0.9rem}
 
-  /* Banner */
-  .banner{display:flex;justify-content:space-between;align-items:center;background:var(--card);border-left:4px solid var(--accent);padding:16px;border-radius:var(--radius);box-shadow:var(--shadow-card);}
-  .banner a{color:var(--accent);font-weight:600;text-decoration:none;}
-  .banner .btn{padding:10px 16px;background:linear-gradient(90deg,var(--accent),var(--accent-light));color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:600;transition:all 0.3s;}
-  .banner .btn:hover{opacity:0.9;transform:translateY(-1px);}
-  .banner .ghost{background:transparent;border:1px solid var(--border);color:var(--muted);padding:8px 12px;border-radius:10px;cursor:pointer;transition:0.2s;}
-  .banner .ghost:hover{background:#f3f4f6;}
+  .meta{display:flex;gap:10px;align-items:center}
+  .badge{background:rgba(91,76,246,0.08);color:var(--accent);padding:8px 14px;border-radius:999px;font-weight:600;font-size:.95rem;border:1px solid rgba(91,76,246,0.06)}
+
+  /* Hero */
+  .hero{background:var(--card);border-radius:var(--radius);padding:18px;border:1px solid var(--border);box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:center;gap:20px}
+  .hero .left{max-width:72%}
+  .hero p{color:var(--muted);margin-top:6px}
+  .hero .cta{display:flex;gap:10px;align-items:center}
+  .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:10px 16px;border-radius:12px;border:none;cursor:pointer;font-weight:600;box-shadow:0 6px 18px rgba(91,76,246,0.14)}
+  .btn-ghost{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer}
 
   /* Controls */
-  .controls{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;margin-bottom:12px;}
-  .search{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.8);padding:8px 12px;border-radius:10px;border:1px solid var(--border);}
-  .search input{border:none;background:transparent;outline:none;font-size:0.95rem;min-width:180px;}
-  .select{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;font-size:0.95rem;}
-  .info{color:var(--muted);font-size:0.9rem;align-self:center;}
-  .btn, .ghost{transition:all 0.2s ease;}
+  .controls{display:flex;justify-content:space-between;gap:12px;align-items:center}
+  .controls-left{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .search{display:flex;align-items:center;gap:8px;background:#fff;padding:8px 12px;border-radius:10px;border:1px solid var(--border);min-width:220px}
+  .search input{border:0;outline:0;background:transparent;font-size:0.95rem;color:var(--text);width:220px}
+  .select{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;font-size:0.95rem}
 
-  /* Table / Cards */
-  .table-wrap{border-radius:var(--radius);}
-  table{width:100%;border-collapse:collapse;min-width:720px;}
-  thead th{position:sticky;top:0;background:var(--card);padding:14px;text-align:left;font-weight:600;font-size:0.95rem;color:var(--text);border-bottom:1px solid var(--border);}
-  tbody td{padding:12px;border-bottom:1px solid var(--border);font-size:0.95rem;color:var(--text);}
-  tbody tr:hover{background:rgba(79,70,229,0.05);}
-  .rank{width:60px;font-weight:700;}
-  .user a{color:var(--accent);font-weight:600;text-decoration:none;}
-  .rating{text-align:right;font-weight:700;}
-  .seen{text-align:right;color:var(--muted);}
+  .controls-right{display:flex;align-items:center;gap:10px}
 
-  /* Medal colors top 3 */
-  .medal-gold{color:var(--gold);}
-  .medal-silver{color:var(--silver);}
-  .medal-bronze{color:var(--bronze);}
+  /* Table card */
+  .card{background:var(--card);border-radius:14px;padding:12px;border:1px solid var(--border);box-shadow:var(--shadow)}
+  table{width:100%;border-collapse:collapse}
+  thead th{background:transparent;text-align:left;padding:14px;font-weight:700;color:var(--muted);font-size:0.9rem}
+  tbody td{padding:14px;border-top:1px solid var(--border);vertical-align:middle}
+  tbody tr:hover{background:linear-gradient(90deg,rgba(91,76,246,0.03),transparent);}
 
-  /* Pager */
-  .pager{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;justify-content:flex-end;}
-  .pager button{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;cursor:pointer;transition:all 0.2s;}
-  .pager button:hover:not(:disabled){background:var(--accent-light);color:#fff;border:none;}
-  .pager button:disabled{opacity:0.5;cursor:not-allowed;}
+  .rank{width:64px;font-weight:800;color:var(--accent)}
+  .user a{color:var(--accent);font-weight:700;text-decoration:none}
+  .user .realname{display:block;color:var(--muted);font-size:0.85rem;margin-top:4px;font-weight:500}
+  .rating{text-align:right;font-weight:700}
+  .seen{text-align:right;color:var(--muted)}
 
-  /* Responsive Cards */
-  @media(max-width:768px){
-    table{display:none;}
-    .card-list{display:flex;flex-direction:column;gap:16px;}
-    .player-card{background:var(--card);border-radius:var(--radius);padding:16px;display:flex;justify-content:space-between;align-items:center;box-shadow:var(--shadow-card);transition:all 0.2s;}
-    .player-card:hover{box-shadow:var(--shadow-hover);}
-    .player-info{display:flex;flex-direction:column;}
-    .player-name{font-weight:600;color:var(--accent);font-size:1rem;}
-    .player-metrics{display:flex;gap:12px;margin-top:6px;font-size:0.9rem;color:var(--text);}
-    .player-metrics div{text-align:right;}
+  /* Mobile card list */
+  .card-list{display:none}
+  @media(max-width:880px){
+    table{display:none}
+    .card-list{display:flex;flex-direction:column;gap:12px}
+    .player-card{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--card)}
+    .player-left{display:flex;gap:12px;align-items:center}
+    .avatar{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+    .player-names{display:flex;flex-direction:column}
+    .player-nick{font-weight:700;color:var(--accent)}
+    .player-real{color:var(--muted);font-size:0.9rem}
+    .player-right{text-align:right;color:var(--muted);font-weight:700}
   }
+
+  /* pager */
+  .pager{display:flex;gap:8px;justify-content:flex-end;padding-top:10px}
+  .pager button{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:pointer}
+
+  footer{color:var(--muted);text-align:center;margin-top:6px;font-size:0.9rem}
 </style>
 </head>
 <body>
-<div class="wrap" id="app">
+<div class="container" id="app">
   <header class="site">
     <div class="brand">
-      <div class="logo" aria-hidden="true">XJES</div>
-      <div>
+      <div class="logo" aria-hidden="true">RJ</div>
+      <div class="title-group">
         <h1>Ranking Xadrez Jovem ES</h1>
         <div class="subtitle">Jogadores ativos — últimos 30 dias</div>
       </div>
     </div>
-    <div class="top-meta">
+    <div class="meta">
       <div class="badge" aria-live="polite">Ativos: <strong id="totalBadge">—</strong></div>
     </div>
   </header>
 
-  <div id="joinBanner" class="banner">
-    <div>
+  <div class="hero">
+    <div class="left">
       <strong>Quer aparecer no ranking?</strong>
-      <div class="muted" style="margin-top:6px">
-        Seja membro do time <strong>xadrezjovemes</strong> no Lichess.
-        <div style="margin-top:8px"><a href="https://lichess.org/team/xadrezjovemes" target="_blank" rel="noopener">Entrar no time</a></div>
-        <div style="margin-top:6px;font-size:0.9rem;color:var(--muted)">Aparece automaticamente após a geração diária.</div>
-      </div>
+      <p>Seja membro do time <strong>xadrezjovemes</strong> no Lichess. Aparece automaticamente após a geração diária.</p>
     </div>
-    <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
-      <a class="btn" href="https://lichess.org/team/xadrezjovemes" target="_blank" rel="noopener">Entrar no time</a>
-      <button id="dismissJoinBanner" class="ghost" aria-label="Fechar banner">Fechar</button>
+    <div class="cta">
+      <a class="btn-primary" href="https://lichess.org/team/xadrezjovemes" target="_blank" rel="noopener">Entrar no time</a>
+      <button id="dismissJoinBanner" class="btn-ghost">Fechar</button>
     </div>
   </div>
 
-  <!-- Controls -->
   <div class="controls">
-    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+    <div class="controls-left">
       <div class="search" title="Pesquisar usuário">
         <input id="q" type="search" placeholder="Buscar usuário..." aria-label="Buscar usuário">
-        <button id="clearSearch" class="ghost" title="Limpar pesquisa" style="display:none">Limpar</button>
       </div>
-      <select id="sort" class="select">
+      <select id="sort" class="select" title="Ordenar">
         <option value="blitz">Blitz</option>
         <option value="bullet">Bullet</option>
         <option value="rapid">Rapid</option>
         <option value="username">Usuário</option>
       </select>
-      <select id="order" class="select">
+      <select id="order" class="select" title="Ordem">
         <option value="desc">Desc</option>
         <option value="asc">Asc</option>
       </select>
-      <select id="perPage" class="select">
+      <select id="perPage" class="select" title="Por página">
         <option value="10">10</option>
         <option value="20" selected>20</option>
         <option value="50">50</option>
       </select>
     </div>
-    <div style="display:flex;gap:10px;align-items:center">
-      <button id="reload" class="btn">Recarregar</button>
-      <button id="exportCsv" class="ghost">Exportar CSV</button>
-      <div id="info" class="info">—</div>
+
+    <div class="controls-right">
+      <button id="reload" class="btn-ghost">Recarregar</button>
+      <button id="exportCsv" class="btn-ghost">Exportar CSV</button>
+      <div id="info" class="subtitle">—</div>
     </div>
   </div>
 
-  <!-- Table (desktop) -->
-  <div class="table-wrap" id="tableWrap">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Usuário</th>
-          <th style="text-align:right">Blitz</th>
-          <th style="text-align:right">Bullet</th>
-          <th style="text-align:right">Rapid</th>
-          <th style="text-align:right">Último login</th>
-        </tr>
-      </thead>
-      <tbody id="tbody"></tbody>
-    </table>
+  <div class="card">
+    <div style="overflow:auto">
+      <table aria-live="polite">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Usuário</th>
+            <th style="text-align:right">Blitz</th>
+            <th style="text-align:right">Bullet</th>
+            <th style="text-align:right">Rapid</th>
+            <th style="text-align:right">Último login</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="card-list" id="cardList"></div>
+
+    <div class="pager" id="pager"></div>
   </div>
 
-  <!-- Card list (mobile) -->
-  <div class="card-list" id="cardList"></div>
-
-  <div class="pager" id="pager"></div>
-
-  <footer style="text-align:center;font-size:0.9rem;color:var(--muted)">
-    Dados: Lichess · Site atualizado uma vez por dia.
-  </footer>
+  <footer>Dados: Lichess · Site atualizado uma vez por dia.</footer>
 </div>
 
 <script>
 (() => {
-  let all=[], filtered=[], page=1;
-  const qEl=document.getElementById('q'), clearBtn=document.getElementById('clearSearch');
-  const sortEl=document.getElementById('sort'), orderEl=document.getElementById('order'), perPageEl=document.getElementById('perPage');
-  const infoEl=document.getElementById('info'), totalBadge=document.getElementById('totalBadge');
-  const tbody=document.getElementById('tbody'), pager=document.getElementById('pager'), cardList=document.getElementById('cardList');
-  const reloadBtn=document.getElementById('reload'), exportBtn=document.getElementById('exportCsv');
+  let all = [], filtered = [], page = 1;
 
-  function debounce(fn, wait=300){let t; return (...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),wait);};}
-  function formatSeen(ms){if(!ms)return 'N/A'; const ts=Number(ms)||Date.parse(ms)||0; if(!ts)return 'N/A'; const diff=Date.now()-ts; if(diff<0)return 'Agora'; const days=Math.floor(diff/(24*3600*1000)); if(days===0)return 'Hoje'; if(days===1)return '1 dia'; if(days<30)return `${days} dias`; const months=Math.floor(days/30); if(months<12)return `${months} meses`; return `${Math.floor(months/12)} anos`; }
+  const qEl = document.getElementById('q');
+  const sortEl = document.getElementById('sort'), orderEl = document.getElementById('order'), perPageEl = document.getElementById('perPage');
+  const infoEl = document.getElementById('info'), totalBadge = document.getElementById('totalBadge');
+  const tbody = document.getElementById('tbody'), pager = document.getElementById('pager'), cardList = document.getElementById('cardList');
+  const reloadBtn = document.getElementById('reload'), exportBtn = document.getElementById('exportCsv');
+
+  function debounce(fn, wait=250){let t; return (...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),wait);};}
+  function formatSeen(ms){
+    if(!ms) return '—';
+    const ts = Number(ms) || Date.parse(ms) || 0; if(!ts) return '—';
+    const diff = Date.now() - ts; if(diff < 0) return 'Agora';
+    const days = Math.floor(diff/(24*3600*1000));
+    if(days === 0) return 'Hoje';
+    if(days === 1) return '1 dia';
+    if(days < 30) return `${days} dias`;
+    const months = Math.floor(days/30);
+    if(months < 12) return `${months} meses`;
+    return `${Math.floor(months/12)} anos`;
+  }
   function safeNumber(v){ return v==null||v===''?0:Number(v)||0; }
 
+  // extrai arrays do JSON e faz dedupe por username (merge de duas listas possíveis)
+  function extractPlayers(obj){
+    const found = [];
+    if(!obj) return found;
+    if(Array.isArray(obj)) return obj.slice();
+    if(Array.isArray(obj.players)) found.push(...obj.players);
+    Object.values(obj).forEach(v=>{
+      if(Array.isArray(v)) found.push(...v);
+    });
+    return found;
+  }
+
+  function dedupePlayers(list){
+    const map = new Map();
+    const score = p => safeNumber(p.blitz) + safeNumber(p.bullet) + safeNumber(p.rapid);
+    list.forEach(p=>{
+      const key = (p.username||'').toString().trim().toLowerCase();
+      if(!key){
+        const id = `__anon_${Math.random().toString(36).slice(2,9)}`;
+        map.set(id, Object.assign({},p,{username:id}));
+        return;
+      }
+      if(!map.has(key)) map.set(key, p);
+      else {
+        const existing = map.get(key);
+        if(score(p) > score(existing)) map.set(key,p);
+        else {
+          const eSeen = Date.parse(existing.seenAt||'')||0;
+          const pSeen = Date.parse(p.seenAt||'')||0;
+          if(pSeen > eSeen) map.set(key,p);
+        }
+      }
+    });
+    return Array.from(map.values());
+  }
+
   async function loadData(force=false){
-    infoEl.textContent='Carregando...';
+    infoEl.textContent = 'Carregando...';
     try{
-      const res=await fetch('./players.json',{cache:force?'no-store':'default'});
-      if(!res.ok)throw new Error('Falha ao buscar players.json');
-      const js=await res.json();
-      all=Array.isArray(js.players)?js.players:[];
-      totalBadge.textContent=all.length;
-      infoEl.textContent=`Total: ${all.length} — gerado: ${js.generated_at?new Date(js.generated_at).toLocaleString():'—'}`;
-      page=1;
+      const res = await fetch('./players.json', {cache: force ? 'no-store' : 'default'});
+      if(!res.ok) throw new Error('Falha ao buscar players.json');
+      const js = await res.json();
+      let candidates = extractPlayers(js);
+      if(candidates.length === 0 && Array.isArray(js.players)) candidates = js.players.slice();
+      all = dedupePlayers(candidates);
+      all.sort((a,b)=> (safeNumber(b.blitz) - safeNumber(a.blitz)));
+      totalBadge.textContent = all.length;
+      infoEl.textContent = `Total: ${all.length} — gerado: ${js.generated_at ? new Date(js.generated_at).toLocaleString() : '—'}`;
+      page = 1;
       applyFilters();
-    }catch(err){console.error(err);infoEl.textContent='Erro ao carregar dados';tbody.innerHTML='<tr><td colspan="6" style="padding:18px;text-align:center;color:#6b7280">Erro ao carregar players.json</td></tr>';}
+    }catch(err){
+      console.error(err);
+      infoEl.textContent = 'Erro ao carregar dados';
+      tbody.innerHTML = '<tr><td colspan="6" style="padding:18px;text-align:center;color:#6b7280">Erro ao carregar players.json</td></tr>';
+    }
   }
 
   function applyFilters(){
-    const q=qEl.value.trim().toLowerCase();
-    filtered=all.filter(p=>{if(!q)return true; return (p.username||'').toLowerCase().includes(q);});
-    const key=sortEl.value, order=orderEl.value==='asc'?1:-1;
-    filtered.sort((a,b)=>{
-      if(key==='username'){const A=(a.username||'').toLowerCase(),B=(b.username||'').toLowerCase();return (A<B?-1:A>B?1:0)*order;}
-      const va=safeNumber(a[key]),vb=safeNumber(b[key]);return (va<vb?-1:va>vb?1:0)*order;
+    const q = (qEl.value || '').trim().toLowerCase();
+    filtered = all.filter(p => {
+      if(!q) return true;
+      return (p.username||'').toString().toLowerCase().includes(q) || (p.name||p.realname||'').toString().toLowerCase().includes(q);
     });
-    page=1; renderPage(); clearBtn.style.display=q?'inline-block':'none';
+    const key = sortEl.value, ord = orderEl.value === 'asc' ? 1 : -1;
+    filtered.sort((a,b)=>{
+      if(key === 'username'){ const A=(a.username||'').toLowerCase(), B=(b.username||'').toLowerCase(); return (A < B ? -1 : A > B ? 1 : 0) * ord; }
+      const va = safeNumber(a[key]), vb = safeNumber(b[key]);
+      return (va < vb ? -1 : va > vb ? 1 : 0) * ord;
+    });
+    page = 1;
+    renderPage();
   }
 
   function renderPage(){
-    const per=Math.max(1,parseInt(perPageEl.value,10)||20), totalPages=Math.max(1,Math.ceil(filtered.length/per));
-    if(page>totalPages)page=totalPages;
-    const start=(page-1)*per, items=filtered.slice(start,start+per);
+    const per = Math.max(1, parseInt(perPageEl.value,10) || 20);
+    const totalPages = Math.max(1, Math.ceil(filtered.length / per));
+    if(page > totalPages) page = totalPages;
+    const start = (page - 1) * per;
+    const items = filtered.slice(start, start + per);
 
     // Desktop table
-    const frag=document.createDocumentFragment();
-    if(items.length===0){const tr=document.createElement('tr');tr.innerHTML='<td colspan="6" style="padding:18px;text-align:center;color:#6b7280">Nenhum jogador encontrado</td>'; frag.appendChild(tr);}
-    else{
-      items.forEach((p,idx)=>{
-        const tr=document.createElement('tr'); const rank=start+idx+1;
-        tr.innerHTML=`<td class="rank ${rank===1?'medal-gold':rank===2?'medal-silver':rank===3?'medal-bronze':''}">${rank}</td>
-        <td class="user"><a href="${p.profile||'#'}" target="_blank" rel="noopener">${p.username||'(sem usuário)'}</a></td>
-        <td class="rating">${p.blitz??'—'}</td>
-        <td class="rating">${p.bullet??'—'}</td>
-        <td class="rating">${p.rapid??'—'}</td>
-        <td class="seen">${formatSeen(p.seenAt)}</td>`;
-        frag.appendChild(tr);
-      });
+    if(items.length === 0){
+      tbody.innerHTML = '<tr><td colspan="6" style="padding:18px;text-align:center;color:#6b7280">Nenhum jogador encontrado</td></tr>';
+    } else {
+      const rows = items.map((p,idx)=>{
+        const rank = start + idx + 1;
+        const real = p.name || p.realname || p.fullname || '';
+        const profile = p.profile || p.url || `https://lichess.org/@/${p.username||''}`;
+        return `<tr>
+          <td class="rank">${rank}</td>
+          <td class="user"><a href="${profile}" target="_blank" rel="noopener">${escapeHtml(p.username||'(sem usuário)')}</a><span class="realname">${escapeHtml(real)}</span></td>
+          <td class="rating">${p.blitz ?? '—'}</td>
+          <td class="rating">${p.bullet ?? '—'}</td>
+          <td class="rating">${p.rapid ?? '—'}</td>
+          <td class="seen">${formatSeen(p.seenAt)}</td>
+        </tr>`;
+      }).join('');
+      tbody.innerHTML = rows;
     }
-    tbody.innerHTML=''; tbody.appendChild(frag);
 
     // Mobile cards
-    cardList.innerHTML='';
-    items.forEach((p,idx)=>{
-      const rank=start+idx+1;
-      const div=document.createElement('div'); div.className='player-card';
-      div.innerHTML=`<div class="player-info">
-        <div class="player-name">${rank}. ${p.username||'(sem usuário)'}</div>
-        <div class="player-metrics">
-          <div>Blitz: ${p.blitz??'—'}</div>
-          <div>Bullet: ${p.bullet??'—'}</div>
-          <div>Rapid: ${p.rapid??'—'}</div>
+    cardList.innerHTML = '';
+    items.forEach((p, idx) => {
+      const rank = start + idx + 1;
+      const real = p.name || p.realname || p.fullname || '';
+      const html = `<div class="player-card">
+        <div class="player-left">
+          <div class="avatar" aria-hidden="true">${escapeHtml((p.username||'').charAt(0).toUpperCase())}</div>
+          <div class="player-names">
+            <div class="player-nick">${rank}. ${escapeHtml(p.username||'(sem usuário)')}</div>
+            <div class="player-real">${escapeHtml(real)}</div>
+          </div>
         </div>
-      </div>
-      <div class="seen">${formatSeen(p.seenAt)}</div>`;
-      cardList.appendChild(div);
+        <div class="player-right">
+          <div>Blitz ${p.blitz ?? '—'}</div>
+          <div style="font-size:.85rem;color:var(--muted)">${formatSeen(p.seenAt)}</div>
+        </div>
+      </div>`;
+      cardList.insertAdjacentHTML('beforeend', html);
     });
 
     // Pager
-    renderPager(per,totalPages);
+    renderPager(per, totalPages);
   }
 
-  function renderPager(per,totalPages){
-    pager.innerHTML='';
-    const make=(label,p,disabled=false)=>{const b=document.createElement('button');b.textContent=label;b.disabled=disabled;b.onclick=()=>{page=p;renderPage();window.scrollTo({top:0,behavior:'smooth'});};return b;};
+  function renderPager(per, totalPages){
+    pager.innerHTML = '';
+    const make = (label, to, disabled=false) => {
+      const b = document.createElement('button'); b.textContent = label; b.disabled = disabled;
+      b.onclick = () => { page = to; renderPage(); window.scrollTo({top:0,behavior:'smooth'}); };
+      return b;
+    };
     pager.appendChild(make('«',1,page===1));
-    pager.appendChild(make('‹',Math.max(1,page-1),page===1));
-    const start=Math.max(1,page-2),end=Math.min(totalPages,page+2);
+    pager.appendChild(make('‹', Math.max(1,page-1), page===1));
+    const start = Math.max(1, page-2), end = Math.min(totalPages, page+2);
     for(let i=start;i<=end;i++){
-      const b=make(String(i),i,i===page); if(i===page){b.style.fontWeight='700';b.style.background='linear-gradient(90deg,var(--accent),var(--accent-light))';b.style.color='#fff';b.style.border='none';} pager.appendChild(b);
+      const btn = make(String(i), i, i===page);
+      if(i===page){ btn.style.fontWeight='700'; btn.style.background = 'linear-gradient(90deg,var(--accent),var(--accent-2))'; btn.style.color='#fff'; btn.style.border='none'; }
+      pager.appendChild(btn);
     }
-    pager.appendChild(make('›',Math.min(totalPages,page+1),page===totalPages));
-    pager.appendChild(make('»',totalPages,page===totalPages));
+    pager.appendChild(make('›', Math.min(totalPages, page+1), page===totalPages));
+    pager.appendChild(make('»', totalPages, page===totalPages));
   }
 
   function exportCurrentPageCsv(){
-    const per=Math.max(1,parseInt(perPageEl.value,10)||20),start=(page-1)*per,items=filtered.slice(start,start+per);
-    if(items.length===0){alert('Nenhum item para exportar');return;}
-    const headers=['#','username','profile','blitz','bullet','rapid','seenAt'];
-    const rows=items.map((p,idx)=>[start+idx+1,p.username,p.profile,p.blitz,p.bullet,p.rapid,p.seenAt]);
-    const csv=[headers.join(','),...rows.map(r=>r.map(v=>`"${v??''}"`).join(','))].join('\r\n');
-    const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download=`ranking_page${page}.csv`; a.click();
+    const per = Math.max(1, parseInt(perPageEl.value,10)||20), start = (page-1)*per;
+    const items = filtered.slice(start, start+per);
+    if(!items.length){ alert('Nenhum item para exportar'); return; }
+    const headers = ['#','username','name','profile','blitz','bullet','rapid','seenAt'];
+    const rows = items.map((p,idx)=>[start+idx+1, p.username||'', p.name||p.realname||'', p.profile||'', p.blitz||'', p.bullet||'', p.rapid||'', p.seenAt||'']);
+    const csv = [headers.join(','), ...rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','))].join('\r\n');
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download = `ranking_page${page}.csv`; a.click();
   }
 
-  const debouncedFilter=debounce(applyFilters,300);
+  function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-  qEl.addEventListener('input',debouncedFilter);
-  clearBtn.addEventListener('click',()=>{qEl.value='';applyFilters();});
-  sortEl.addEventListener('change',applyFilters);
-  orderEl.addEventListener('change',applyFilters);
-  perPageEl.addEventListener('change',renderPage);
-  reloadBtn.addEventListener('click',()=>loadData(true));
-  exportBtn.addEventListener('click',exportCurrentPageCsv);
-
-  document.getElementById('dismissJoinBanner').addEventListener('click',()=>{document.getElementById('joinBanner').style.display='none';});
+  const debouncedFilter = debounce(applyFilters, 250);
+  qEl.addEventListener('input', debouncedFilter);
+  sortEl.addEventListener('change', applyFilters);
+  orderEl.addEventListener('change', applyFilters);
+  perPageEl.addEventListener('change', renderPage);
+  reloadBtn.addEventListener('click', ()=>loadData(true));
+  exportBtn.addEventListener('click', exportCurrentPageCsv);
+  document.getElementById('dismissJoinBanner').addEventListener('click', ()=>document.querySelector('.hero').style.display='none');
 
   loadData();
 })();
 </script>
 </body>
 </html>
-<!-- deployed:  -->
+<!-- deployed: -->
