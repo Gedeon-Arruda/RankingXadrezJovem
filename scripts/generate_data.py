@@ -11,6 +11,7 @@ from urllib.parse import quote
 TEAM_ID = "xadrezjovemes"
 TEAM_URL = "https://lichess.org/api/team/{}/users"
 USER_URL = "https://lichess.org/api/user/{}"
+USER_RATING_HISTORY_URL = "https://lichess.org/api/user/{}/rating-history"
 MAX_WORKERS = 8
 REQUEST_TIMEOUT = 10
 RETRY_ATTEMPTS = 3
@@ -70,6 +71,36 @@ def extract_name_from_profile(profile, uobj):
         name = uobj.get("name") or uobj.get("fullName") or uobj.get("displayName") or ""
     return (name or "").strip()
 
+def fetch_rating_history(session, username):
+    """Retorna dict { 'blitz': diff|null, 'bullet': diff|null, 'rapid': diff|null } a partir do rating-history"""
+    out = {'blitz': None, 'bullet': None, 'rapid': None}
+    try:
+        resp = session.get(USER_RATING_HISTORY_URL.format(quote(username)), timeout=REQUEST_TIMEOUT)
+        if resp.status_code != 200:
+            return out
+        arr = resp.json()
+        for rec in arr:
+            name = (rec.get('name') or '').lower()
+            if name not in out: continue
+            pts = rec.get('points') or []
+            # pts = [[ts, rating], ...]
+            if not pts: 
+                out[name] = None
+            else:
+                if len(pts) >= 2:
+                    last = pts[-1][1]
+                    prev = pts[-2][1]
+                    try:
+                        out[name] = int(last) - int(prev)
+                    except Exception:
+                        out[name] = None
+                else:
+                    # apenas um ponto no histórico: não há diffs recentes calculáveis
+                    out[name] = None
+    except Exception:
+        return out
+    return out
+
 def fetch_user(session, username):
     try:
         resp = session.get(USER_URL.format(quote(username)), timeout=REQUEST_TIMEOUT)
@@ -84,6 +115,10 @@ def fetch_user(session, username):
         rapid = perfs.get("rapid", {}).get("rating")
         seenAt = u.get("seenAt") or u.get("lastSeenAt") or u.get("seenAtMillis") or None
         profile_url = prof.get("url") or f"https://lichess.org/@/{username}"
+
+        # tenta obter diffs diretamente do rating-history (preferência: corresponde ao que aparece no perfil)
+        history_diffs = fetch_rating_history(session, username)
+
         return {
             "username": username,
             "name": name,
@@ -91,7 +126,11 @@ def fetch_user(session, username):
             "blitz": blitz,
             "bullet": bullet,
             "rapid": rapid,
-            "seenAt": seenAt
+            "seenAt": seenAt,
+            # campos auxiliares: diffs calculados a partir do rating-history (padrão None se não disponível)
+            "recent_blitz_diff": history_diffs.get('blitz'),
+            "recent_bullet_diff": history_diffs.get('bullet'),
+            "recent_rapid_diff": history_diffs.get('rapid'),
         }
     except Exception as e:
         print(f"warning: erro ao buscar {username}: {e}")
@@ -156,9 +195,27 @@ def main():
                 return int(curr or 0) - int(prevv or 0)
             except Exception:
                 return None
-        p["blitz_diff"] = calc_diff(p.get("blitz"), prev.get("blitz") if prev else None)
-        p["bullet_diff"] = calc_diff(p.get("bullet"), prev.get("bullet") if prev else None)
-        p["rapid_diff"] = calc_diff(p.get("rapid"), prev.get("rapid") if prev else None)
+
+        # preferir diffs do rating-history (campo recent_*), senão fallback para snapshot anterior
+        if p.get("recent_blitz_diff") is not None:
+            p["blitz_diff"] = p.get("recent_blitz_diff")
+        else:
+            p["blitz_diff"] = calc_diff(p.get("blitz"), prev.get("blitz") if prev else None)
+
+        if p.get("recent_bullet_diff") is not None:
+            p["bullet_diff"] = p.get("recent_bullet_diff")
+        else:
+            p["bullet_diff"] = calc_diff(p.get("bullet"), prev.get("bullet") if prev else None)
+
+        if p.get("recent_rapid_diff") is not None:
+            p["rapid_diff"] = p.get("recent_rapid_diff")
+        else:
+            p["rapid_diff"] = calc_diff(p.get("rapid"), prev.get("rapid") if prev else None)
+
+        # remover campos auxiliares antes de salvar (opcional)
+        p.pop("recent_blitz_diff", None)
+        p.pop("recent_bullet_diff", None)
+        p.pop("recent_rapid_diff", None)
     
     out = {
         "generated_at": int(time.time()*1000),
