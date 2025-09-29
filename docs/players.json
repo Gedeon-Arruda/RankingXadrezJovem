@@ -1,5 +1,5 @@
 {
-  "generated_at": 1759040337395,
+  "generated_at": 1759126915881,
   "count": 75,
   "players": [
     {
@@ -18,7 +18,7 @@
       "blitz": 2267,
       "bullet": 2501,
       "rapid": 2227,
-      "seenAt": 1759023197939
+      "seenAt": 1759108717215
     },
     {
       "username": "thalesbond",
@@ -36,7 +36,7 @@
       "blitz": 2238,
       "bullet": 2379,
       "rapid": 1997,
-      "seenAt": 1759022787880
+      "seenAt": 1759084521794
     },
     {
       "username": "normanfrieman",
@@ -52,18 +52,18 @@
       "name": "Cleber Santos de Almeida",
       "profile": "https://lichess.org/@/cleber_x",
       "blitz": 2203,
-      "bullet": 2361,
+      "bullet": 2364,
       "rapid": 2223,
-      "seenAt": 1759015320861
+      "seenAt": 1759109525708
     },
     {
       "username": "hupp",
       "name": "Sem nome registrado",
       "profile": "https://lichess.org/@/hupp",
-      "blitz": 2179,
+      "blitz": 2197,
       "bullet": 2079,
       "rapid": 2380,
-      "seenAt": 1758914063237
+      "seenAt": 1759096344494
     },
     {
       "username": "flamenguista",
@@ -75,58 +75,49 @@
       "seenAt": 1759016878453
     },
     {
-      "username": "wendellshadow13",
-      "name": "Wendell Oliveira",
-      "profile": "https://lichess.org/@/wendellshadow13",
-      "blitz": 2162,
-      "bullet": 2505,
-      "rapid": 2288,
-      "seenAt": 1759025165555
-    },
-    {
       "username": "marcoskaparov",
       "name": "Marcos Silva",
       "profile": "https://lichess.org/@/marcoskaparov",
-      "blitz": 2137,
+      "blitz": 2156,
       "bullet": 2221,
       "rapid": 2181,
-      "seenAt": 1758942029335
+      "seenAt": 1759117794993
+    },
+    {
+      "username": "wendellshadow13",
+      "name": "Wendell Oliveira",
+      "profile": "https://lichess.org/@/wendellshadow13",
+      "blitz": 2148,
+      "bullet": 2505,
+      "rapid": 2288,
+      "seenAt": 1759109956292
     },
     {
       "username": "i_hate_chess_betinho",
       "name": "Alberto Vinicius",
       "profile": "https://lichess.org/@/i_hate_chess_betinho",
-      "blitz": 2107,
+      "blitz": 2112,
       "bullet": 2326,
       "rapid": 2244,
-      "seenAt": 1759000595506
+      "seenAt": 1759078150218
     },
     {
       "username": "overdragon",
       "name": "Deivid Braian Smarzaro",
       "profile": "https://lichess.org/@/overdragon",
       "blitz": 2105,
-      "bullet": 1873,
+      "bullet": 1867,
       "rapid": 2249,
-      "seenAt": 1758982267418
-    },
-    {
-      "username": "lvinicios777",
-      "name": "Sem nome registrado",
-      "profile": "https://lichess.org/@/lvinicios777",
-      "blitz": 2085,
-      "bullet": 1607,
-      "rapid": 2021,
-      "seenAt": 1759030416137
+      "seenAt": 1759095015575
     },
     {
       "username": "andrewsmacbeir",
       "name": "André Ribeiro",
       "profile": "https://lichess.org/@/andrewsmacbeir",
       "blitz": 2083,
-      "bullet": 2004,
+      "bullet": 2031,
       "rapid": 2292,
-      "seenAt": 1759029783082
+      "seenAt": 1759104569495
     },
     {
       "username": "onlywaltz",
@@ -135,7 +126,7 @@
       "blitz": 2073,
       "bullet": 1849,
       "rapid": 2093,
-      "seenAt": 1758964434412
+      "seenAt": 1759102255152
     },
     {
       "username": "danielfla",
@@ -169,9 +160,18 @@
       "name": "Paulo GALDINO",
       "profile": "https://lichess.org/@/leokhine",
       "blitz": 2054,
-      "bullet": 1959,
+      "bullet": 1955,
       "rapid": 1963,
-      "seenAt": 1759008374964
+      "seenAt": 1759099245367
+    },
+    {
+      "username": "lvinicios777",
+      "name": "Sem nome registrado",
+      "profile": "https://lichess.org/@/lvinicios777",
+      "blitz": 2047,
+      "bullet": 1590,
+      "rapid": 2021,
+      "seenAt": 1759102644995
     },
     {
       "username": "capasid",
@@ -264,6 +264,15 @@
       "seenAt": 1758894207478
     },
     {
+      "username": "lemosdavid",
+      "name": "David Aser",
+      "profile": "https://lichess.org/@/lemosdavid",
+      "blitz": 1935,
+      "bullet": 2091,
+      "rapid": 2085,
+      "seenAt": 1759119920146
+    },
+    {
       "username": "historiailton",
       "name": "Sem nome registrado",
       "profile": "https://lichess.org/@/historiailton",
@@ -278,26 +287,8 @@
       "profile": "https://lichess.org/@/isacrm",
       "blitz": 1931,
       "bullet": 1500,
-      "rapid": 2142,
-      "seenAt": 1759027570768
-    },
-    {
-      "username": "lemosdavid",
-      "name": "David Aser",
-      "profile": "https://lichess.org/@/lemosdavid",
-      "blitz": 1918,
-      "bullet": 2089,
-      "rapid": 2085,
-      "seenAt": 1759027581964
-    },
-    {
-      "username": "msffla",
-      "name": "Sem nome registrado",
-      "profile": "https://lichess.org/@/msffla",
-      "blitz": 1913,
-      "bullet": 1611,
-      "rapid": 2157,
-      "seenAt": 1759011003436
+      "rapid": 2137,
+      "seenAt": 1759110209266
     },
     {
       "username": "gedevon_arrudev",
@@ -309,22 +300,31 @@
       "seenAt": 1758813061646
     },
     {
+      "username": "msffla",
+      "name": "Sem nome registrado",
+      "profile": "https://lichess.org/@/msffla",
+      "blitz": 1902,
+      "bullet": 1611,
+      "rapid": 2157,
+      "seenAt": 1759093802403
+    },
+    {
       "username": "capixaba",
       "name": "antonio junior souza",
       "profile": "https://lichess.org/@/capixaba",
       "blitz": 1900,
-      "bullet": 1753,
+      "bullet": 1760,
       "rapid": 1982,
-      "seenAt": 1759020377740
+      "seenAt": 1759064112589
     },
     {
-      "username": "deannedark",
-      "name": "Deanne F.",
-      "profile": "https://lichess.org/@/deannedark",
-      "blitz": 1874,
-      "bullet": 1910,
-      "rapid": 1779,
-      "seenAt": 1759016981708
+      "username": "ale_cunha",
+      "name": "Alessandro Alves",
+      "profile": "https://lichess.org/@/ale_cunha",
+      "blitz": 1885,
+      "bullet": 1804,
+      "rapid": 2003,
+      "seenAt": 1759119722963
     },
     {
       "username": "ph_ls",
@@ -336,22 +336,22 @@
       "seenAt": 1757186837850
     },
     {
-      "username": "ale_cunha",
-      "name": "Alessandro Alves",
-      "profile": "https://lichess.org/@/ale_cunha",
-      "blitz": 1870,
-      "bullet": 1804,
-      "rapid": 1994,
-      "seenAt": 1759024529307
-    },
-    {
       "username": "rota_capixaba",
       "name": "PAULO CESAR VIEIRA",
       "profile": "https://lichess.org/@/rota_capixaba",
-      "blitz": 1859,
+      "blitz": 1858,
       "bullet": 1857,
       "rapid": 1966,
-      "seenAt": 1758951976063
+      "seenAt": 1759125841991
+    },
+    {
+      "username": "deannedark",
+      "name": "Deanne F.",
+      "profile": "https://lichess.org/@/deannedark",
+      "blitz": 1852,
+      "bullet": 1923,
+      "rapid": 1779,
+      "seenAt": 1759111390016
     },
     {
       "username": "lenhador",
@@ -368,17 +368,17 @@
       "profile": "https://lichess.org/@/capixabaiano",
       "blitz": 1840,
       "bullet": 1745,
-      "rapid": 2060,
-      "seenAt": 1759030460040
+      "rapid": 2023,
+      "seenAt": 1759117303672
     },
     {
       "username": "rob_schuina",
       "name": "Sem nome registrado",
       "profile": "https://lichess.org/@/rob_schuina",
-      "blitz": 1814,
+      "blitz": 1820,
       "bullet": 1734,
       "rapid": 1866,
-      "seenAt": 1759032044793
+      "seenAt": 1759122558827
     },
     {
       "username": "mago1",
@@ -413,8 +413,8 @@
       "profile": "https://lichess.org/@/abominevehomidasnave",
       "blitz": 1745,
       "bullet": 1765,
-      "rapid": 2094,
-      "seenAt": 1759007378524
+      "rapid": 2003,
+      "seenAt": 1759099100116
     },
     {
       "username": "littlebirdmaiorqz11",
@@ -468,7 +468,7 @@
       "blitz": 1689,
       "bullet": 1567,
       "rapid": 1915,
-      "seenAt": 1759007447775
+      "seenAt": 1759103962608
     },
     {
       "username": "capucho",
@@ -483,10 +483,10 @@
       "username": "gilberticm",
       "name": "Gilbert Oliveira Santos",
       "profile": "https://lichess.org/@/gilberticm",
-      "blitz": 1666,
+      "blitz": 1655,
       "bullet": 1545,
       "rapid": 1690,
-      "seenAt": 1759010606412
+      "seenAt": 1759114617845
     },
     {
       "username": "herleydias",
@@ -528,10 +528,10 @@
       "username": "leoferri007",
       "name": "Leonardo Ferri",
       "profile": "https://lichess.org/@/leoferri007",
-      "blitz": 1523,
-      "bullet": 1316,
-      "rapid": 1848,
-      "seenAt": 1759023648506
+      "blitz": 1521,
+      "bullet": 1319,
+      "rapid": 1843,
+      "seenAt": 1759091334209
     },
     {
       "username": "emanuelpedro",
@@ -555,10 +555,10 @@
       "username": "kiritoking",
       "name": "Cristiano Carrafa Benfica",
       "profile": "https://lichess.org/@/kiritoking",
-      "blitz": 1378,
+      "blitz": 1384,
       "bullet": 1268,
       "rapid": 1531,
-      "seenAt": 1759001502419
+      "seenAt": 1759094063518
     },
     {
       "username": "cleber39",
@@ -591,10 +591,10 @@
       "username": "patolimpico",
       "name": "Sem nome registrado",
       "profile": "https://lichess.org/@/patolimpico",
-      "blitz": 1308,
-      "bullet": 804,
+      "blitz": 1307,
+      "bullet": 890,
       "rapid": 1121,
-      "seenAt": 1759001182480
+      "seenAt": 1759109855466
     },
     {
       "username": "elvisfcardoso",
