@@ -1,5 +1,5 @@
 {
-  "generated_at": 1759174709982,
+  "generated_at": 1759175341257,
   "count": 75,
   "players": [
     {
@@ -10,8 +10,8 @@
       "bullet": 2178,
       "rapid": 2200,
       "seenAt": 1758567815705,
-      "blitz_diff": 0,
-      "bullet_diff": 0,
+      "blitz_diff": 1,
+      "bullet_diff": 1,
       "rapid_diff": 0
     },
     {
@@ -23,7 +23,7 @@
       "rapid": 2227,
       "seenAt": 1759108717215,
       "blitz_diff": 0,
-      "bullet_diff": 0,
+      "bullet_diff": 1,
       "rapid_diff": 0
     },
     {
@@ -46,7 +46,7 @@
       "bullet": 2390,
       "rapid": 1997,
       "seenAt": 1759171008989,
-      "blitz_diff": 0,
+      "blitz_diff": 1,
       "bullet_diff": 0,
       "rapid_diff": 0
     },
@@ -60,7 +60,7 @@
       "seenAt": 1759031340474,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 5
     },
     {
       "username": "cleber_x",
@@ -84,7 +84,7 @@
       "seenAt": 1759167656676,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 3
     },
     {
       "username": "flamenguista",
@@ -95,8 +95,8 @@
       "rapid": 2046,
       "seenAt": 1759016878453,
       "blitz_diff": 0,
-      "bullet_diff": 0,
-      "rapid_diff": 0
+      "bullet_diff": 2,
+      "rapid_diff": 4
     },
     {
       "username": "marcoskaparov",
@@ -107,7 +107,7 @@
       "rapid": 2181,
       "seenAt": 1759117794993,
       "blitz_diff": 0,
-      "bullet_diff": 0,
+      "bullet_diff": 1,
       "rapid_diff": 0
     },
     {
@@ -119,8 +119,8 @@
       "rapid": 2288,
       "seenAt": 1759163038211,
       "blitz_diff": 0,
-      "bullet_diff": 0,
-      "rapid_diff": 0
+      "bullet_diff": 1,
+      "rapid_diff": -3
     },
     {
       "username": "i_hate_chess_betinho",
@@ -132,7 +132,7 @@
       "seenAt": 1759171964695,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 5
     },
     {
       "username": "overdragon",
@@ -142,7 +142,7 @@
       "bullet": 1874,
       "rapid": 2249,
       "seenAt": 1759172354024,
-      "blitz_diff": 0,
+      "blitz_diff": 1,
       "bullet_diff": 0,
       "rapid_diff": 0
     },
@@ -156,7 +156,7 @@
       "seenAt": 1759165744136,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": -6
     },
     {
       "username": "onlywaltz",
@@ -166,9 +166,9 @@
       "bullet": 1849,
       "rapid": 2093,
       "seenAt": 1759150330654,
-      "blitz_diff": 0,
-      "bullet_diff": 0,
-      "rapid_diff": 0
+      "blitz_diff": 3,
+      "bullet_diff": 1,
+      "rapid_diff": -7
     },
     {
       "username": "danielfla",
@@ -180,7 +180,7 @@
       "seenAt": 1759166963301,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 2
     },
     {
       "username": "hericybr2",
@@ -188,7 +188,7 @@
       "profile": "https://lichess.org/@/hericybr2",
       "blitz": 2066,
       "bullet": 2179,
-      "rapid": 2137,
+      "rapid": 2131,
       "seenAt": 1759174429769,
       "blitz_diff": 0,
       "bullet_diff": 0,
@@ -202,9 +202,9 @@
       "bullet": 1946,
       "rapid": 1963,
       "seenAt": 1759156449479,
-      "blitz_diff": 0,
+      "blitz_diff": 2,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 4
     },
     {
       "username": "lvinicios777",
@@ -216,7 +216,7 @@
       "seenAt": 1759165906416,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 4
     },
     {
       "username": "capasid",
@@ -226,9 +226,9 @@
       "bullet": 2238,
       "rapid": 2250,
       "seenAt": 1757945723009,
-      "blitz_diff": 0,
-      "bullet_diff": 0,
-      "rapid_diff": 0
+      "blitz_diff": -9,
+      "bullet_diff": 1,
+      "rapid_diff": 2
     },
     {
       "username": "sesi_senai",
@@ -237,9 +237,9 @@
       "blitz": 2040,
       "bullet": 2208,
       "rapid": 2122,
-      "seenAt": 1759173829644,
+      "seenAt": 1759175119506,
       "blitz_diff": 0,
-      "bullet_diff": 0,
+      "bullet_diff": 1,
       "rapid_diff": 0
     },
     {
@@ -262,8 +262,8 @@
       "bullet": 1920,
       "rapid": 2166,
       "seenAt": 1757713574475,
-      "blitz_diff": 0,
-      "bullet_diff": 0,
+      "blitz_diff": 5,
+      "bullet_diff": 1,
       "rapid_diff": 0
     },
     {
@@ -274,9 +274,9 @@
       "bullet": 2303,
       "rapid": 2211,
       "seenAt": 1757617289684,
-      "blitz_diff": 0,
-      "bullet_diff": 0,
-      "rapid_diff": 0
+      "blitz_diff": 1,
+      "bullet_diff": 1,
+      "rapid_diff": 1
     },
     {
       "username": "cavaloderocha",
@@ -287,7 +287,7 @@
       "rapid": 2302,
       "seenAt": 1758666745411,
       "blitz_diff": 0,
-      "bullet_diff": 0,
+      "bullet_diff": 6,
       "rapid_diff": 0
     },
     {
@@ -298,9 +298,9 @@
       "bullet": 1930,
       "rapid": 1927,
       "seenAt": 1758534751896,
-      "blitz_diff": 0,
-      "bullet_diff": 0,
-      "rapid_diff": 0
+      "blitz_diff": 1,
+      "bullet_diff": 3,
+      "rapid_diff": 3
     },
     {
       "username": "pablo_mn",
@@ -311,8 +311,8 @@
       "rapid": 2020,
       "seenAt": 1756750499404,
       "blitz_diff": 0,
-      "bullet_diff": 0,
-      "rapid_diff": 0
+      "bullet_diff": 1,
+      "rapid_diff": -4
     },
     {
       "username": "or1onchess",
@@ -335,8 +335,8 @@
       "rapid": 2139,
       "seenAt": 1758084641718,
       "blitz_diff": 0,
-      "bullet_diff": 0,
-      "rapid_diff": 0
+      "bullet_diff": 1,
+      "rapid_diff": 3
     },
     {
       "username": "dcm77",
@@ -348,7 +348,7 @@
       "seenAt": 1759156635720,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 1
     },
     {
       "username": "lemosdavid",
@@ -360,7 +360,7 @@
       "seenAt": 1759119920146,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 3
     },
     {
       "username": "historiailton",
@@ -370,9 +370,9 @@
       "bullet": 1531,
       "rapid": 2100,
       "seenAt": 1758305953855,
-      "blitz_diff": 0,
-      "bullet_diff": 0,
-      "rapid_diff": 0
+      "blitz_diff": 1,
+      "bullet_diff": -11,
+      "rapid_diff": 2
     },
     {
       "username": "isacrm",
@@ -382,7 +382,7 @@
       "bullet": 1500,
       "rapid": 2138,
       "seenAt": 1759148071289,
-      "blitz_diff": 0,
+      "blitz_diff": -4,
       "bullet_diff": 0,
       "rapid_diff": 0
     },
@@ -393,7 +393,7 @@
       "blitz": 1912,
       "bullet": 2001,
       "rapid": 1500,
-      "seenAt": 1759174567111,
+      "seenAt": 1759175192782,
       "blitz_diff": 0,
       "bullet_diff": 0,
       "rapid_diff": 0
@@ -420,7 +420,7 @@
       "seenAt": 1759160641417,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 6
     },
     {
       "username": "ale_cunha",
@@ -442,9 +442,9 @@
       "bullet": 1864,
       "rapid": 1875,
       "seenAt": 1759162566602,
-      "blitz_diff": 0,
+      "blitz_diff": 4,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 2
     },
     {
       "username": "rota_capixaba",
@@ -455,7 +455,7 @@
       "rapid": 1966,
       "seenAt": 1759125841991,
       "blitz_diff": 0,
-      "bullet_diff": 0,
+      "bullet_diff": 3,
       "rapid_diff": 0
     },
     {
@@ -468,7 +468,7 @@
       "seenAt": 1759144364606,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 3
     },
     {
       "username": "lenhador",
@@ -480,7 +480,7 @@
       "seenAt": 1758938734721,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 4
     },
     {
       "username": "capixabaiano",
@@ -490,8 +490,8 @@
       "bullet": 1745,
       "rapid": 2023,
       "seenAt": 1759117303672,
-      "blitz_diff": 0,
-      "bullet_diff": 0,
+      "blitz_diff": 2,
+      "bullet_diff": -3,
       "rapid_diff": 0
     },
     {
@@ -515,7 +515,7 @@
       "rapid": 2073,
       "seenAt": 1757909064999,
       "blitz_diff": 0,
-      "bullet_diff": 0,
+      "bullet_diff": 5,
       "rapid_diff": 0
     },
     {
@@ -526,9 +526,9 @@
       "bullet": 1780,
       "rapid": 1962,
       "seenAt": 1758828369352,
-      "blitz_diff": 0,
+      "blitz_diff": 5,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 2
     },
     {
       "username": "claudiogp",
@@ -538,8 +538,8 @@
       "bullet": 1556,
       "rapid": 1789,
       "seenAt": 1756653595948,
-      "blitz_diff": 0,
-      "bullet_diff": 0,
+      "blitz_diff": 1,
+      "bullet_diff": -9,
       "rapid_diff": 0
     },
     {
@@ -563,7 +563,7 @@
       "rapid": 1813,
       "seenAt": 1758907720027,
       "blitz_diff": 0,
-      "bullet_diff": 0,
+      "bullet_diff": 1,
       "rapid_diff": 0
     },
     {
@@ -576,7 +576,7 @@
       "seenAt": 1758333620672,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 1
     },
     {
       "username": "hsdb",
@@ -587,7 +587,7 @@
       "rapid": 1933,
       "seenAt": 1759014686839,
       "blitz_diff": 0,
-      "bullet_diff": 0,
+      "bullet_diff": 5,
       "rapid_diff": 0
     },
     {
@@ -600,7 +600,7 @@
       "seenAt": 1758934658000,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 8
     },
     {
       "username": "ja178",
@@ -610,9 +610,9 @@
       "bullet": 1529,
       "rapid": 2003,
       "seenAt": 1759159177776,
-      "blitz_diff": 0,
+      "blitz_diff": 1,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": -8
     },
     {
       "username": "paulo_rodrigues",
@@ -634,9 +634,9 @@
       "bullet": 1500,
       "rapid": 1297,
       "seenAt": 1757104385020,
-      "blitz_diff": 0,
+      "blitz_diff": 1,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": -1
     },
     {
       "username": "gilberticm",
@@ -647,8 +647,8 @@
       "rapid": 1690,
       "seenAt": 1759163431662,
       "blitz_diff": 0,
-      "bullet_diff": 0,
-      "rapid_diff": 0
+      "bullet_diff": -11,
+      "rapid_diff": -8
     },
     {
       "username": "herleydias",
@@ -659,8 +659,8 @@
       "rapid": 1979,
       "seenAt": 1756682081480,
       "blitz_diff": 0,
-      "bullet_diff": 0,
-      "rapid_diff": 0
+      "bullet_diff": 1,
+      "rapid_diff": 1
     },
     {
       "username": "neemiasmartins",
@@ -671,8 +671,8 @@
       "rapid": 1503,
       "seenAt": 1756664604560,
       "blitz_diff": 0,
-      "bullet_diff": 0,
-      "rapid_diff": 0
+      "bullet_diff": 2,
+      "rapid_diff": 1
     },
     {
       "username": "vicsinist",
@@ -683,8 +683,8 @@
       "rapid": 1701,
       "seenAt": 1758828983881,
       "blitz_diff": 0,
-      "bullet_diff": 0,
-      "rapid_diff": 0
+      "bullet_diff": 4,
+      "rapid_diff": -3
     },
     {
       "username": "furieri",
@@ -695,7 +695,7 @@
       "rapid": 1846,
       "seenAt": 1758989707578,
       "blitz_diff": 0,
-      "bullet_diff": 0,
+      "bullet_diff": 7,
       "rapid_diff": 0
     },
     {
@@ -718,9 +718,9 @@
       "bullet": 1454,
       "rapid": 1525,
       "seenAt": 1759003630634,
-      "blitz_diff": 0,
-      "bullet_diff": 0,
-      "rapid_diff": 0
+      "blitz_diff": -7,
+      "bullet_diff": -1,
+      "rapid_diff": 1
     },
     {
       "username": "miguel2024",
@@ -732,7 +732,7 @@
       "seenAt": 1759159515147,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 1
     },
     {
       "username": "kiritoking",
@@ -743,8 +743,8 @@
       "rapid": 1531,
       "seenAt": 1759149913922,
       "blitz_diff": 0,
-      "bullet_diff": 0,
-      "rapid_diff": 0
+      "bullet_diff": -2,
+      "rapid_diff": 4
     },
     {
       "username": "cleber39",
@@ -755,8 +755,8 @@
       "rapid": 1555,
       "seenAt": 1758478709747,
       "blitz_diff": 0,
-      "bullet_diff": 0,
-      "rapid_diff": 0
+      "bullet_diff": -4,
+      "rapid_diff": 9
     },
     {
       "username": "hpasti",
@@ -767,8 +767,8 @@
       "rapid": 1364,
       "seenAt": 1758960549183,
       "blitz_diff": 0,
-      "bullet_diff": 0,
-      "rapid_diff": 0
+      "bullet_diff": 1,
+      "rapid_diff": 6
     },
     {
       "username": "lilti",
@@ -778,9 +778,9 @@
       "bullet": 818,
       "rapid": 1624,
       "seenAt": 1757070685786,
-      "blitz_diff": 0,
+      "blitz_diff": 1,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 3
     },
     {
       "username": "patolimpico",
@@ -791,8 +791,8 @@
       "rapid": 1121,
       "seenAt": 1759158543307,
       "blitz_diff": 0,
-      "bullet_diff": 0,
-      "rapid_diff": 0
+      "bullet_diff": 3,
+      "rapid_diff": 1
     },
     {
       "username": "elvisfcardoso",
@@ -802,8 +802,8 @@
       "bullet": 1320,
       "rapid": 1662,
       "seenAt": 1758005262159,
-      "blitz_diff": 0,
-      "bullet_diff": 0,
+      "blitz_diff": 1,
+      "bullet_diff": 3,
       "rapid_diff": 0
     },
     {
@@ -814,8 +814,8 @@
       "bullet": 1064,
       "rapid": 1624,
       "seenAt": 1758562413999,
-      "blitz_diff": 0,
-      "bullet_diff": 0,
+      "blitz_diff": 1,
+      "bullet_diff": 4,
       "rapid_diff": 0
     },
     {
@@ -826,8 +826,8 @@
       "bullet": 995,
       "rapid": 1265,
       "seenAt": 1758666357128,
-      "blitz_diff": 0,
-      "bullet_diff": 0,
+      "blitz_diff": -4,
+      "bullet_diff": 8,
       "rapid_diff": 0
     },
     {
@@ -839,7 +839,7 @@
       "rapid": 1524,
       "seenAt": 1758718821873,
       "blitz_diff": 0,
-      "bullet_diff": 0,
+      "bullet_diff": -2,
       "rapid_diff": 0
     },
     {
@@ -875,8 +875,8 @@
       "rapid": 1508,
       "seenAt": 1759037745530,
       "blitz_diff": 0,
-      "bullet_diff": 0,
-      "rapid_diff": 0
+      "bullet_diff": 3,
+      "rapid_diff": 2
     },
     {
       "username": "paulo-faccin",
@@ -887,7 +887,7 @@
       "rapid": 1238,
       "seenAt": 1758910091934,
       "blitz_diff": 0,
-      "bullet_diff": 0,
+      "bullet_diff": 1,
       "rapid_diff": 0
     },
     {
