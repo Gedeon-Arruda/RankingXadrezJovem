@@ -528,15 +528,22 @@ function renderPage(){
     const rank = start + idx + 1;
     // Mostrar username como link e name abaixo (com fallback pedido)
     const displayName = p.name || 'Nome não encontrato';
+    const formatDiff = d => {
+      if(d == null) return '';
+      const sign = d > 0 ? '+' : '';
+      const color = d > 0 ? 'green' : (d < 0 ? 'crimson' : 'gray');
+      return ` <span style="font-size:0.9rem;color:${color};margin-left:6px">(${sign}${d})</span>`;
+    };
+
     tr.innerHTML = `
       <td class="rank">${rank}</td>
       <td class="user">
         <a href="${p.profile}" target="_blank" rel="noopener">${escapeHtml(p.username)}</a>
         <span class="small">${escapeHtml(displayName)}</span>
       </td>
-      <td class="rating">${p.blitz}</td>
-      <td class="rating">${p.bullet}</td>
-      <td class="rating">${p.rapid}</td>
+      <td class="rating">${p.blitz ?? '—'}${formatDiff(p.blitz_diff)}</td>
+      <td class="rating">${p.bullet ?? '—'}${formatDiff(p.bullet_diff)}</td>
+      <td class="rating">${p.rapid ?? '—'}${formatDiff(p.rapid_diff)}</td>
       <td class="seen">${formatSeen(p.seenAt)}</td>
     `;
     tbody.appendChild(tr);
