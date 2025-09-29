@@ -131,10 +131,34 @@ def main():
     active = [v for v in byu.values() if active_since_days(v)]
     active_sorted = sorted(active, key=lambda x: (-(x.get("blitz") or 0), -(x.get("bullet") or 0), -(x.get("rapid") or 0)))
 
-    # preencher nome padrão quando não encontrado
+    # carregar snapshot anterior para calcular diffs
+    prev_map = {}
+    try:
+        if os.path.exists(OUT_FILE):
+            with open(OUT_FILE, "r", encoding="utf-8") as f:
+                prev = json.load(f)
+            for pp in (prev.get("players") or []):
+                uname = (pp.get("username") or "").strip().lower()
+                if uname:
+                    prev_map[uname] = pp
+    except Exception:
+        pass
+
+    # preencher nome padrão e calcular diffs
     for p in active_sorted:
         if not (p.get("name") or "").strip():
             p["name"] = "Sem nome registrado"
+        key = (p.get("username") or "").strip().lower()
+        prev = prev_map.get(key)
+        def calc_diff(curr, prevv):
+            try:
+                if prevv is None: return None
+                return int(curr or 0) - int(prevv or 0)
+            except Exception:
+                return None
+        p["blitz_diff"] = calc_diff(p.get("blitz"), prev.get("blitz") if prev else None)
+        p["bullet_diff"] = calc_diff(p.get("bullet"), prev.get("bullet") if prev else None)
+        p["rapid_diff"] = calc_diff(p.get("rapid"), prev.get("rapid") if prev else None)
     
     out = {
         "generated_at": int(time.time()*1000),
@@ -148,3 +172,22 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    const formatDiff = d => {
+      if(d == null) return '';
+      const sign = d > 0 ? '+' : '';
+      const color = d > 0 ? 'green' : (d < 0 ? 'crimson' : 'gray');
+      return ` <span style="font-size:0.9rem;color:${color};margin-left:6px">(${sign}${d})</span>`;
+    };
+
+    tr.innerHTML = `
+      <td class="rank">${rank}</td>
+      <td class="user">
+        <a href="${p.profile}" target="_blank" rel="noopener">${escapeHtml(p.username)}</a>
+        <span class="small">${escapeHtml(displayName)}</span>
+      </td>
+      <td class="rating">${p.blitz ?? '—'}${formatDiff(p.blitz_diff)}</td>
+      <td class="rating">${p.bullet ?? '—'}${formatDiff(p.bullet_diff)}</td>
+      <td class="rating">${p.rapid ?? '—'}${formatDiff(p.rapid_diff)}</td>
+      <td class="seen">${formatSeen(p.seenAt)}</td>
+    `;
