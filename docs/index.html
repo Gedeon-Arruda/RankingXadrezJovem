@@ -7,62 +7,71 @@
 <meta http-equiv="pragma" content="no-cache">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Ranking Xadrez Jovem ES</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f5f7fb;
+    --bg:#f4f6fb;
     --card:#ffffff;
-    --muted:#6b7280;
-    --accent:#5b4cf6;
-    --accent-2:#8b7ef7;
-    --text:#0f1724;
-    --border:#e6e9ef;
-    --radius:14px;
-    --shadow: 0 10px 30px rgba(16,24,40,0.06);
+    --muted:#667085;
+    --accent:#3b82f6;
+    --accent-2:#7c3aed;
+    --text:#0b1220;
+    --border:rgba(15,23,36,0.06);
+    --radius:16px;
+    --shadow-lg: 0 20px 50px rgba(16,24,40,0.08);
+    --shadow-sm: 0 6px 18px rgba(16,24,40,0.06);
+    --glass: rgba(255,255,255,0.7);
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:linear-gradient(180deg,#f6f8ff 0%,var(--bg) 100%);color:var(--text);padding:28px;min-height:100vh;display:flex;justify-content:center;}
-  .container{max-width:1150px;width:100%;display:flex;flex-direction:column;gap:20px}
+  body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:linear-gradient(180deg,#eef2ff 0%,var(--bg) 100%);color:var(--text);padding:36px;min-height:100vh;display:flex;justify-content:center;}
+  .container{max-width:1150px;width:100%;display:flex;flex-direction:column;gap:22px}
 
   /* Header */
-  header.site{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  header.site{display:flex;align-items:center;justify-content:space-between;gap:16px}
   .brand{display:flex;align-items:center;gap:16px}
-  .logo{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:20px;box-shadow:var(--shadow)}
+  .logo{width:72px;height:72px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:22px;box-shadow:var(--shadow-lg)}
   .title-group h1{font-size:1.25rem;margin-bottom:2px}
-  .subtitle{color:var(--muted);font-size:0.9rem}
+  .subtitle{color:var(--muted);font-size:0.95rem}
 
   .meta{display:flex;gap:10px;align-items:center}
-  .badge{background:rgba(91,76,246,0.08);color:var(--accent);padding:8px 14px;border-radius:999px;font-weight:600;font-size:.95rem;border:1px solid rgba(91,76,246,0.06)}
+  .badge{background:linear-gradient(90deg,rgba(59,130,246,0.06),transparent);color:var(--accent);padding:8px 14px;border-radius:999px;font-weight:700;font-size:.95rem;border:1px solid rgba(59,130,246,0.08);box-shadow:var(--shadow-sm)}
 
   /* Hero */
-  .hero{background:var(--card);border-radius:var(--radius);padding:18px;border:1px solid var(--border);box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:center;gap:20px}
+  .hero{background:linear-gradient(180deg,rgba(255,255,255,0.7),var(--card));border-radius:var(--radius);padding:18px;border:1px solid var(--border);box-shadow:var(--shadow-sm);display:flex;justify-content:space-between;align-items:center;gap:18px}
   .hero .left{max-width:72%}
   .hero p{color:var(--muted);margin-top:6px}
   .hero .cta{display:flex;gap:10px;align-items:center}
-  .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:10px 16px;border-radius:12px;border:none;cursor:pointer;font-weight:600;box-shadow:0 6px 18px rgba(91,76,246,0.14)}
+  .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:10px 16px;border-radius:12px;border:none;cursor:pointer;font-weight:700;box-shadow:0 10px 30px rgba(59,130,246,0.12)}
   .btn-ghost{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer}
 
   /* Controls */
   .controls{display:flex;justify-content:space-between;gap:12px;align-items:center}
   .controls-left{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-  .search{display:flex;align-items:center;gap:8px;background:#fff;padding:8px 12px;border-radius:10px;border:1px solid var(--border);min-width:220px}
-  .search input{border:0;outline:0;background:transparent;font-size:0.95rem;color:var(--text);width:220px}
+  .search{display:flex;align-items:center;gap:8px;background:linear-gradient(180deg,#fff,rgba(255,255,255,0.9));padding:8px 12px;border-radius:12px;border:1px solid var(--border);min-width:260px;box-shadow:var(--shadow-sm)}
+  .search input{border:0;outline:0;background:transparent;font-size:0.95rem;color:var(--text);width:260px}
   .select{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;font-size:0.95rem}
 
   .controls-right{display:flex;align-items:center;gap:10px}
 
   /* Table card */
-  .card{background:var(--card);border-radius:14px;padding:12px;border:1px solid var(--border);box-shadow:var(--shadow)}
+  .card{background:var(--card);border-radius:18px;padding:14px;border:1px solid var(--border);box-shadow:var(--shadow-lg)}
   table{width:100%;border-collapse:collapse}
-  thead th{background:transparent;text-align:left;padding:14px;font-weight:700;color:var(--muted);font-size:0.9rem}
+  thead th{background:transparent;text-align:left;padding:16px;font-weight:700;color:var(--muted);font-size:0.95rem}
   tbody td{padding:14px;border-top:1px solid var(--border);vertical-align:middle}
-  tbody tr:hover{background:linear-gradient(90deg,rgba(91,76,246,0.03),transparent);}
+  tbody tr{transition:background .18s, transform .12s}
+  tbody tr:hover{background:linear-gradient(90deg,rgba(124,58,237,0.03),transparent);transform:translateY(-2px);}
 
-  .rank{width:64px;font-weight:800;color:var(--accent)}
+  .rank{width:64px;font-weight:800;color:var(--accent);font-size:0.95rem}
   .user a{color:var(--accent);font-weight:700;text-decoration:none}
-  .user .realname{display:block;color:var(--muted);font-size:0.85rem;margin-top:4px;font-weight:500}
-  .rating{text-align:right;font-weight:700}
-  .seen{text-align:right;color:var(--muted)}
+  .user .realname{display:block;color:var(--muted);font-size:0.86rem;margin-top:4px;font-weight:600}
+  .rating{text-align:right;font-weight:800}
+  .seen{text-align:right;color:var(--muted);font-weight:600}
+
+  /* diff badges */
+  .diff{font-size:0.85rem;margin-left:8px;padding:4px 8px;border-radius:999px;font-weight:700}
+  .diff-pos{background:rgba(16,185,129,0.12);color:#10b981;border:1px solid rgba(16,185,129,0.16)}
+  .diff-neg{background:rgba(239,68,68,0.08);color:#ef4444;border:1px solid rgba(239,68,68,0.12)}
+  .diff-zero{background:rgba(99,102,241,0.06);color:#6366f1;border:1px solid rgba(99,102,241,0.08)}
 
   /* Mobile card list */
   .card-list{display:none}
@@ -71,11 +80,12 @@
     .card-list{display:flex;flex-direction:column;gap:12px}
     .player-card{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--card)}
     .player-left{display:flex;gap:12px;align-items:center}
-    .avatar{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+    .avatar{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
     .player-names{display:flex;flex-direction:column}
-    .player-nick{font-weight:700;color:var(--accent)}
-    .player-real{color:var(--muted);font-size:0.9rem}
+    .player-nick{font-weight:800;color:var(--accent)}
+    .player-real{color:var(--muted);font-size:0.92rem;font-weight:600}
     .player-right{text-align:right;color:var(--muted);font-weight:700}
+    .player-right .diff{display:inline-block;margin-top:6px}
   }
 
   /* pager */
@@ -134,7 +144,6 @@
     </div>
 
     <div class="controls-right">
-      <button id="reload" class="btn-ghost">Recarregar</button>
       <button id="exportCsv" class="btn-ghost">Exportar CSV</button>
       <div id="info" class="subtitle">—</div>
     </div>
@@ -173,7 +182,7 @@
   const sortEl = document.getElementById('sort'), orderEl = document.getElementById('order'), perPageEl = document.getElementById('perPage');
   const infoEl = document.getElementById('info'), totalBadge = document.getElementById('totalBadge');
   const tbody = document.getElementById('tbody'), pager = document.getElementById('pager'), cardList = document.getElementById('cardList');
-  const reloadBtn = document.getElementById('reload'), exportBtn = document.getElementById('exportCsv');
+  const exportBtn = document.getElementById('exportCsv');
 
   function debounce(fn, wait=250){let t; return (...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),wait);};}
   function formatSeen(ms){
@@ -189,6 +198,15 @@
     return `${Math.floor(months/12)} anos`;
   }
   function safeNumber(v){ return v==null||v===''?0:Number(v)||0; }
+
+  function formatDiff(d){
+    if(d == null || d === '') return '';
+    const n = Number(d);
+    if(Number.isNaN(n)) return '';
+    const sign = n > 0 ? '+' : '';
+    const cls = n > 0 ? 'diff diff-pos' : (n < 0 ? 'diff diff-neg' : 'diff diff-zero');
+    return `<span class="${cls}">(${sign}${n})</span>`;
+  }
 
   // extrai arrays do JSON e faz dedupe por username (merge de duas listas possíveis)
   function extractPlayers(obj){
@@ -279,13 +297,13 @@
         const real = p.name || p.realname || p.fullname || '';
         const profile = (p.profile || p.url) ? (p.profile || p.url) : `https://lichess.org/@/${encodeURIComponent(p.username||'')}`;
         const userEsc = escapeHtml(p.username||'(sem usuário)');
-        const realHtml = real ? `<span class="realname">${escapeHtml(real)}</span>` : '';
+        const realHtml = real ? `<span class="realname">${escapeHtml(real)}</span>` : `<span class="realname">Sem nome registrado</span>`;
         return `<tr>
           <td class="rank">${rank}</td>
           <td class="user"><a href="${profile}" target="_blank" rel="noopener">${userEsc}</a>${realHtml}</td>
-          <td class="rating">${p.blitz ?? '—'}</td>
-          <td class="rating">${p.bullet ?? '—'}</td>
-          <td class="rating">${p.rapid ?? '—'}</td>
+          <td class="rating">${p.blitz ?? '—'}${formatDiff(p.blitz_diff)}</td>
+          <td class="rating">${p.bullet ?? '—'}${formatDiff(p.bullet_diff)}</td>
+          <td class="rating">${p.rapid ?? '—'}${formatDiff(p.rapid_diff)}</td>
           <td class="seen">${formatSeen(p.seenAt)}</td>
         </tr>`;
       }).join('');
@@ -296,7 +314,7 @@
     cardList.innerHTML = '';
     items.forEach((p, idx) => {
       const rank = start + idx + 1;
-      const real = p.name || p.realname || p.fullname || '';
+      const real = p.name || p.realname || p.fullname || 'Sem nome registrado';
       const profile = (p.profile || p.url) ? (p.profile || p.url) : `https://lichess.org/@/${encodeURIComponent(p.username||'')}`;
       const initial = escapeHtml((p.username||'').charAt(0).toUpperCase());
       const userEsc = escapeHtml(p.username||'(sem usuário)');
@@ -312,9 +330,9 @@
           </a>
         </div>
         <div class="player-right">
-          <div>Blitz: ${p.blitz ?? '—'}</div>
-          <div>Bullet: ${p.bullet ?? '—'}</div>
-          <div>Rapid: ${p.rapid ?? '—'}</div>
+          <div>Blitz: ${p.blitz ?? '—'} ${formatDiff(p.blitz_diff)}</div>
+          <div>Bullet: ${p.bullet ?? '—'} ${formatDiff(p.bullet_diff)}</div>
+          <div>Rapid: ${p.rapid ?? '—'} ${formatDiff(p.rapid_diff)}</div>
           <div style="font-size:.85rem;color:var(--muted);margin-top:6px">${formatSeen(p.seenAt)}</div>
         </div>
       </div>`;
@@ -361,7 +379,6 @@
   sortEl.addEventListener('change', applyFilters);
   orderEl.addEventListener('change', applyFilters);
   perPageEl.addEventListener('change', renderPage);
-  reloadBtn.addEventListener('click', ()=>loadData(true));
   exportBtn.addEventListener('click', exportCurrentPageCsv);
   document.getElementById('dismissJoinBanner').addEventListener('click', ()=>document.querySelector('.hero').style.display='none');
 
