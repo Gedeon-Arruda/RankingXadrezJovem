@@ -1,5 +1,5 @@
 {
-  "generated_at": 1759173827813,
+  "generated_at": 1759174139864,
   "count": 75,
   "players": [
     {
@@ -47,7 +47,7 @@
       "rapid": 1997,
       "seenAt": 1759171008989,
       "blitz_diff": 0,
-      "bullet_diff": 11,
+      "bullet_diff": 0,
       "rapid_diff": 0
     },
     {
@@ -71,7 +71,7 @@
       "rapid": 2223,
       "seenAt": 1759171879539,
       "blitz_diff": 0,
-      "bullet_diff": -30,
+      "bullet_diff": 0,
       "rapid_diff": 0
     },
     {
@@ -82,7 +82,7 @@
       "bullet": 2079,
       "rapid": 2380,
       "seenAt": 1759167656676,
-      "blitz_diff": -16,
+      "blitz_diff": 0,
       "bullet_diff": 0,
       "rapid_diff": 0
     },
@@ -130,7 +130,7 @@
       "bullet": 2326,
       "rapid": 2244,
       "seenAt": 1759171964695,
-      "blitz_diff": 10,
+      "blitz_diff": 0,
       "bullet_diff": 0,
       "rapid_diff": 0
     },
@@ -143,7 +143,7 @@
       "rapid": 2249,
       "seenAt": 1759172354024,
       "blitz_diff": 0,
-      "bullet_diff": 7,
+      "bullet_diff": 0,
       "rapid_diff": 0
     },
     {
@@ -155,7 +155,7 @@
       "rapid": 2292,
       "seenAt": 1759165744136,
       "blitz_diff": 0,
-      "bullet_diff": -5,
+      "bullet_diff": 0,
       "rapid_diff": 0
     },
     {
@@ -187,12 +187,12 @@
       "name": "...",
       "profile": "https://lichess.org/@/hericybr2",
       "blitz": 2066,
-      "bullet": 2178,
+      "bullet": 2179,
       "rapid": 2137,
       "seenAt": 1759173752919,
       "blitz_diff": 0,
-      "bullet_diff": 12,
-      "rapid_diff": -12
+      "bullet_diff": 1,
+      "rapid_diff": 0
     },
     {
       "username": "leokhine",
@@ -203,7 +203,7 @@
       "rapid": 1963,
       "seenAt": 1759156449479,
       "blitz_diff": 0,
-      "bullet_diff": -9,
+      "bullet_diff": 0,
       "rapid_diff": 0
     },
     {
@@ -215,7 +215,7 @@
       "rapid": 2021,
       "seenAt": 1759165906416,
       "blitz_diff": 0,
-      "bullet_diff": 12,
+      "bullet_diff": 0,
       "rapid_diff": 0
     },
     {
@@ -237,8 +237,8 @@
       "blitz": 2040,
       "bullet": 2208,
       "rapid": 2122,
-      "seenAt": 1759170271200,
-      "blitz_diff": -25,
+      "seenAt": 1759173829644,
+      "blitz_diff": 0,
       "bullet_diff": 0,
       "rapid_diff": 0
     },
@@ -384,7 +384,7 @@
       "seenAt": 1759148071289,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 1
+      "rapid_diff": 0
     },
     {
       "username": "gedevon_arrudev",
@@ -419,7 +419,7 @@
       "rapid": 1982,
       "seenAt": 1759160641417,
       "blitz_diff": 0,
-      "bullet_diff": -3,
+      "bullet_diff": 0,
       "rapid_diff": 0
     },
     {
@@ -430,9 +430,9 @@
       "bullet": 1804,
       "rapid": 2014,
       "seenAt": 1759167374071,
-      "blitz_diff": 2,
+      "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 11
+      "rapid_diff": 0
     },
     {
       "username": "ph_ls",
@@ -443,7 +443,7 @@
       "rapid": 1875,
       "seenAt": 1759162566602,
       "blitz_diff": 0,
-      "bullet_diff": -12,
+      "bullet_diff": 0,
       "rapid_diff": 0
     },
     {
@@ -466,8 +466,8 @@
       "bullet": 1929,
       "rapid": 1779,
       "seenAt": 1759144364606,
-      "blitz_diff": -5,
-      "bullet_diff": 6,
+      "blitz_diff": 0,
+      "bullet_diff": 0,
       "rapid_diff": 0
     },
     {
@@ -502,7 +502,7 @@
       "bullet": 1734,
       "rapid": 1866,
       "seenAt": 1759163302109,
-      "blitz_diff": 2,
+      "blitz_diff": 0,
       "bullet_diff": 0,
       "rapid_diff": 0
     },
@@ -646,7 +646,7 @@
       "bullet": 1545,
       "rapid": 1690,
       "seenAt": 1759163431662,
-      "blitz_diff": 6,
+      "blitz_diff": 0,
       "bullet_diff": 0,
       "rapid_diff": 0
     },
@@ -730,7 +730,7 @@
       "bullet": 1266,
       "rapid": 1090,
       "seenAt": 1759159515147,
-      "blitz_diff": -7,
+      "blitz_diff": 0,
       "bullet_diff": 0,
       "rapid_diff": 0
     },
@@ -742,7 +742,7 @@
       "bullet": 1268,
       "rapid": 1531,
       "seenAt": 1759149913922,
-      "blitz_diff": 6,
+      "blitz_diff": 0,
       "bullet_diff": 0,
       "rapid_diff": 0
     },
