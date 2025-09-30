@@ -1,5 +1,5 @@
 {
-  "generated_at": 1759238361099,
+  "generated_at": 1759238840389,
   "count": 75,
   "players": [
     {
@@ -637,9 +637,9 @@
       "name": "antonio junior souza",
       "profile": "https://lichess.org/@/capixaba",
       "blitz": 1900,
-      "bullet": 1751,
+      "bullet": 1757,
       "rapid": 1982,
-      "seenAt": 1759184424998,
+      "seenAt": 1759238456465,
       "blitz_diff": 0,
       "bullet_diff": 0,
       "rapid_diff": 6,
@@ -1179,7 +1179,7 @@
       "blitz": 1313,
       "bullet": 890,
       "rapid": 1121,
-      "seenAt": 1759197089611,
+      "seenAt": 1759238478482,
       "blitz_diff": 0,
       "bullet_diff": 3,
       "rapid_diff": 1,
