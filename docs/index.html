@@ -21,6 +21,10 @@
     --shadow-lg: 0 20px 50px rgba(16,24,40,0.08);
     --shadow-sm: 0 6px 18px rgba(16,24,40,0.06);
     --glass: rgba(255,255,255,0.7);
+    --green:#10b981;
+    --red:#ef4444;
+    --violet:#6366f1;
+    --gray:#9ca3af;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:linear-gradient(180deg,#eef2ff 0%,var(--bg) 100%);color:var(--text);padding:36px;min-height:100vh;display:flex;justify-content:center;}
@@ -62,6 +66,7 @@
   tbody tr:hover{background:linear-gradient(90deg,rgba(124,58,237,0.03),transparent);transform:translateY(-2px);}
 
   .rank{width:64px;font-weight:800;color:var(--accent);font-size:0.95rem}
+  .pos-col{width:72px;text-align:center;font-weight:800}
   .user a{color:var(--accent);font-weight:700;text-decoration:none}
   .user .realname{display:block;color:var(--muted);font-size:0.86rem;margin-top:4px;font-weight:600}
   .rating{text-align:right;font-weight:800}
@@ -69,9 +74,22 @@
 
   /* diff badges */
   .diff{font-size:0.85rem;margin-left:8px;padding:4px 8px;border-radius:999px;font-weight:700}
-  .diff-pos{background:rgba(16,185,129,0.12);color:#10b981;border:1px solid rgba(16,185,129,0.16)}
-  .diff-neg{background:rgba(239,68,68,0.08);color:#ef4444;border:1px solid rgba(239,68,68,0.12)}
-  .diff-zero{background:rgba(99,102,241,0.06);color:#6366f1;border:1px solid rgba(99,102,241,0.08)}
+  .diff-pos{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.16)}
+  .diff-neg{background:rgba(239,68,68,0.08);color:var(--red);border:1px solid rgba(239,68,68,0.12)}
+  .diff-zero{background:rgba(99,102,241,0.06);color:var(--violet);border:1px solid rgba(99,102,241,0.08)}
+
+  /* status badges (subiu/caiu/manteve) */
+  .status{font-size:0.75rem;padding:4px 8px;border-radius:999px;font-weight:700;margin-left:8px;display:inline-block}
+  .status-up{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.16)}
+  .status-down{background:rgba(239,68,68,0.08);color:var(--red);border:1px solid rgba(239,68,68,0.12)}
+  .status-same{background:rgba(99,102,241,0.06);color:var(--violet);border:1px solid rgba(99,102,241,0.08)}
+  .status-none{background:transparent;color:var(--gray);border:1px solid rgba(15,23,36,0.04)}
+
+  /* position arrows */
+  .pos-arrow {font-weight:900;margin-right:6px}
+  .pos-up{color:var(--green)}
+  .pos-down{color:var(--red)}
+  .pos-same{color:var(--gray)}
 
   /* Mobile card list */
   .card-list{display:none}
@@ -93,6 +111,11 @@
   .pager button{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:pointer}
 
   footer{color:var(--muted);text-align:center;margin-top:6px;font-size:0.9rem}
+
+  /* legend */
+  .legend{display:flex;gap:12px;align-items:center;margin-top:8px;color:var(--muted);font-size:0.9rem}
+  .legend .item{display:flex;align-items:center;gap:8px}
+  .legend .sw{width:14px;height:14px;border-radius:6px}
 </style>
 </head>
 <body>
@@ -130,6 +153,7 @@
         <option value="blitz">Blitz</option>
         <option value="bullet">Bullet</option>
         <option value="rapid">Rapid</option>
+        <option value="position">Posição</option>
         <option value="username">Usuário</option>
       </select>
       <select id="order" class="select" title="Ordem">
@@ -155,6 +179,7 @@
         <thead>
           <tr>
             <th>#</th>
+            <th class="pos-col">Δ</th>
             <th>Usuário</th>
             <th style="text-align:right">Blitz</th>
             <th style="text-align:right">Bullet</th>
@@ -167,6 +192,12 @@
     </div>
 
     <div class="card-list" id="cardList"></div>
+
+    <div class="legend" aria-hidden="true">
+      <div class="item"><span class="sw" style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.16)"></span>Subiu</div>
+      <div class="item"><span class="sw" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.12)"></span>Caiu</div>
+      <div class="item"><span class="sw" style="background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.08)"></span>Manteve</div>
+    </div>
 
     <div class="pager" id="pager"></div>
   </div>
@@ -206,6 +237,22 @@
     const sign = n > 0 ? '+' : '';
     const cls = n > 0 ? 'diff diff-pos' : (n < 0 ? 'diff diff-neg' : 'diff diff-zero');
     return `<span class="${cls}">(${sign}${n})</span>`;
+  }
+
+  function statusBadge(s){
+    if(!s) return '<span class="status status-none">—</span>';
+    if(s === 'subiu') return '<span class="status status-up">subiu</span>';
+    if(s === 'caiu') return '<span class="status status-down">caiu</span>';
+    if(s === 'manteve') return '<span class="status status-same">manteve</span>';
+    return `<span class="status status-none">${escapeHtml(s)}</span>`;
+  }
+
+  function posBadge(p){
+    if(!p || p.position_arrow == null) return '';
+    const arrow = p.position_arrow;
+    const change = (typeof p.position_change === 'number') ? Math.abs(p.position_change) : '';
+    const cls = arrow === '▲' ? 'pos-up' : (arrow === '▼' ? 'pos-down' : 'pos-same');
+    return `<div style="display:flex;align-items:center;justify-content:center"><span class="pos-arrow ${cls}">${escapeHtml(arrow)}</span>${change ? `<span style="font-weight:700">${change}</span>` : ''}</div>`;
   }
 
   // extrai arrays do JSON e faz dedupe por username (merge de duas listas possíveis)
@@ -253,7 +300,13 @@
       let candidates = extractPlayers(js);
       if(candidates.length === 0 && Array.isArray(js.players)) candidates = js.players.slice();
       all = dedupePlayers(candidates);
-      all.sort((a,b)=> (safeNumber(b.blitz) - safeNumber(a.blitz)));
+      // se existir campo position no arquivo, manter ordem por position (caso queira), senão ordenar por blitz
+      if(all.length && all[0].position != null){
+        all.sort((a,b)=> (safeNumber(a.position) - safeNumber(b.position))); // posição já é 1-based no snapshot, menor = melhor
+      }else{
+        all.sort((a,b)=> (safeNumber(b.blitz) - safeNumber(a.blitz)));
+      }
+
       totalBadge.textContent = all.length;
       infoEl.textContent = `Total: ${all.length} — gerado: ${js.generated_at ? new Date(js.generated_at).toLocaleString() : '—'}`;
       page = 1;
@@ -261,7 +314,7 @@
     }catch(err){
       console.error(err);
       infoEl.textContent = 'Erro ao carregar dados';
-      tbody.innerHTML = '<tr><td colspan="6" style="padding:18px;text-align:center;color:#6b7280">Erro ao carregar players.json</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" style="padding:18px;text-align:center;color:#6b7280">Erro ao carregar players.json</td></tr>';
     }
   }
 
@@ -271,9 +324,15 @@
       if(!q) return true;
       return (p.username||'').toString().toLowerCase().includes(q) || (p.name||p.realname||'').toString().toLowerCase().includes(q);
     });
+
     const key = sortEl.value, ord = orderEl.value === 'asc' ? 1 : -1;
     filtered.sort((a,b)=>{
       if(key === 'username'){ const A=(a.username||'').toLowerCase(), B=(b.username||'').toLowerCase(); return (A < B ? -1 : A > B ? 1 : 0) * ord; }
+      if(key === 'position'){
+        const pa = a.position == null ? Infinity : Number(a.position);
+        const pb = b.position == null ? Infinity : Number(b.position);
+        return (pa < pb ? -1 : pa > pb ? 1 : 0) * ord;
+      }
       const va = safeNumber(a[key]), vb = safeNumber(b[key]);
       return (va < vb ? -1 : va > vb ? 1 : 0) * ord;
     });
@@ -290,7 +349,7 @@
 
     // Desktop table
     if(items.length === 0){
-      tbody.innerHTML = '<tr><td colspan="6" style="padding:18px;text-align:center;color:#6b7280">Nenhum jogador encontrado</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" style="padding:18px;text-align:center;color:#6b7280">Nenhum jogador encontrado</td></tr>';
     } else {
       const rows = items.map((p,idx)=>{
         const rank = start + idx + 1;
@@ -300,10 +359,11 @@
         const realHtml = real ? `<span class="realname">${escapeHtml(real)}</span>` : `<span class="realname">Sem nome registrado</span>`;
         return `<tr>
           <td class="rank">${rank}</td>
+          <td class="pos-col">${posBadge(p)}</td>
           <td class="user"><a href="${profile}" target="_blank" rel="noopener">${userEsc}</a>${realHtml}</td>
-          <td class="rating">${p.blitz ?? '—'}${formatDiff(p.blitz_diff)}</td>
-          <td class="rating">${p.bullet ?? '—'}${formatDiff(p.bullet_diff)}</td>
-          <td class="rating">${p.rapid ?? '—'}${formatDiff(p.rapid_diff)}</td>
+          <td class="rating">${p.blitz ?? '—'} ${formatDiff(p.blitz_diff)} ${statusBadge(p.blitz_status)}</td>
+          <td class="rating">${p.bullet ?? '—'} ${formatDiff(p.bullet_diff)} ${statusBadge(p.bullet_status)}</td>
+          <td class="rating">${p.rapid ?? '—'} ${formatDiff(p.rapid_diff)} ${statusBadge(p.rapid_status)}</td>
           <td class="seen">${formatSeen(p.seenAt)}</td>
         </tr>`;
       }).join('');
@@ -330,9 +390,10 @@
           </a>
         </div>
         <div class="player-right">
-          <div>Blitz: ${p.blitz ?? '—'} ${formatDiff(p.blitz_diff)}</div>
-          <div>Bullet: ${p.bullet ?? '—'} ${formatDiff(p.bullet_diff)}</div>
-          <div>Rapid: ${p.rapid ?? '—'} ${formatDiff(p.rapid_diff)}</div>
+          <div>Pos: ${p.position ?? rank} ${p.position_arrow ? `<span class="pos-arrow ${p.position_arrow==='▲'?'pos-up':p.position_arrow==='▼'?'pos-down':'pos-same'}">${p.position_arrow}</span>` : ''}</div>
+          <div>Blitz: ${p.blitz ?? '—'} ${formatDiff(p.blitz_diff)} ${statusBadge(p.blitz_status)}</div>
+          <div>Bullet: ${p.bullet ?? '—'} ${formatDiff(p.bullet_diff)} ${statusBadge(p.bullet_status)}</div>
+          <div>Rapid: ${p.rapid ?? '—'} ${formatDiff(p.rapid_diff)} ${statusBadge(p.rapid_status)}</div>
           <div style="font-size:.85rem;color:var(--muted);margin-top:6px">${formatSeen(p.seenAt)}</div>
         </div>
       </div>`;
@@ -366,8 +427,26 @@
     const per = Math.max(1, parseInt(perPageEl.value,10)||20), start = (page-1)*per;
     const items = filtered.slice(start, start+per);
     if(!items.length){ alert('Nenhum item para exportar'); return; }
-    const headers = ['#','username','name','profile','blitz','bullet','rapid','seenAt'];
-    const rows = items.map((p,idx)=>[start+idx+1, p.username||'', p.name||p.realname||'', p.profile||'', p.blitz||'', p.bullet||'', p.rapid||'', p.seenAt||'']);
+    const headers = ['#','username','name','profile','position','position_change','position_arrow','blitz','blitz_diff','blitz_status','bullet','bullet_diff','bullet_status','rapid','rapid_diff','rapid_status','seenAt'];
+    const rows = items.map((p,idx)=>[
+      start+idx+1,
+      p.username||'',
+      p.name||p.realname||'',
+      p.profile||'',
+      p.position ?? '',
+      (p.position_change != null ? p.position_change : ''),
+      p.position_arrow || '',
+      p.blitz || '',
+      p.blitz_diff != null ? p.blitz_diff : '',
+      p.blitz_status || '',
+      p.bullet || '',
+      p.bullet_diff != null ? p.bullet_diff : '',
+      p.bullet_status || '',
+      p.rapid || '',
+      p.rapid_diff != null ? p.rapid_diff : '',
+      p.rapid_status || '',
+      p.seenAt || ''
+    ]);
     const csv = [headers.join(','), ...rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','))].join('\r\n');
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download = `ranking_page${page}.csv`; a.click();
   }
@@ -387,4 +466,3 @@
 </script>
 </body>
 </html>
-<!-- deployed: -->
