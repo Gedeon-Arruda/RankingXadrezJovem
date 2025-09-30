@@ -1,5 +1,5 @@
 {
-  "generated_at": 1759238840389,
+  "generated_at": 1759239305792,
   "count": 75,
   "players": [
     {
@@ -189,7 +189,7 @@
       "blitz": 2139,
       "bullet": 2326,
       "rapid": 2244,
-      "seenAt": 1759232962616,
+      "seenAt": 1759239116636,
       "blitz_diff": 0,
       "bullet_diff": 0,
       "rapid_diff": 5,
@@ -639,7 +639,7 @@
       "blitz": 1900,
       "bullet": 1757,
       "rapid": 1982,
-      "seenAt": 1759238456465,
+      "seenAt": 1759239072392,
       "blitz_diff": 0,
       "bullet_diff": 0,
       "rapid_diff": 6,
@@ -1176,10 +1176,10 @@
       "username": "patolimpico",
       "name": "Sem nome registrado",
       "profile": "https://lichess.org/@/patolimpico",
-      "blitz": 1313,
+      "blitz": 1320,
       "bullet": 890,
       "rapid": 1121,
-      "seenAt": 1759238478482,
+      "seenAt": 1759239128905,
       "blitz_diff": 0,
       "bullet_diff": 3,
       "rapid_diff": 1,
