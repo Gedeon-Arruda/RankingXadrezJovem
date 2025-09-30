@@ -1,5 +1,5 @@
 {
-  "generated_at": 1759238050003,
+  "generated_at": 1759238361099,
   "count": 75,
   "players": [
     {
@@ -158,8 +158,8 @@
       "bullet_diff": 1,
       "rapid_diff": 0,
       "position": 9,
-      "position_change": 1,
-      "position_arrow": "▲",
+      "position_change": 0,
+      "position_arrow": "→",
       "blitz_status": "manteve",
       "bullet_status": "subiu",
       "rapid_status": "manteve"
@@ -176,8 +176,8 @@
       "bullet_diff": 1,
       "rapid_diff": -3,
       "position": 10,
-      "position_change": 1,
-      "position_arrow": "▲",
+      "position_change": 0,
+      "position_arrow": "→",
       "blitz_status": "manteve",
       "bullet_status": "subiu",
       "rapid_status": "caiu"
@@ -194,8 +194,8 @@
       "bullet_diff": 0,
       "rapid_diff": 5,
       "position": 11,
-      "position_change": -2,
-      "position_arrow": "▼",
+      "position_change": 0,
+      "position_arrow": "→",
       "blitz_status": "manteve",
       "bullet_status": "manteve",
       "rapid_status": "subiu"
