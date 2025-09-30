@@ -1,5 +1,5 @@
 {
-  "generated_at": 1759213342579,
+  "generated_at": 1759238050003,
   "count": 75,
   "players": [
     {
@@ -12,7 +12,13 @@
       "seenAt": 1759175762111,
       "blitz_diff": 1,
       "bullet_diff": 1,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 1,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "subiu",
+      "bullet_status": "subiu",
+      "rapid_status": "manteve"
     },
     {
       "username": "rafinhagod",
@@ -24,7 +30,13 @@
       "seenAt": 1759108717215,
       "blitz_diff": 0,
       "bullet_diff": 1,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 2,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "subiu",
+      "rapid_status": "manteve"
     },
     {
       "username": "thalesbond",
@@ -33,10 +45,16 @@
       "blitz": 2254,
       "bullet": 2240,
       "rapid": 2500,
-      "seenAt": 1759178171710,
+      "seenAt": 1759237540683,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 3,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "manteve"
     },
     {
       "username": "zborjaoimbativel",
@@ -48,7 +66,13 @@
       "seenAt": 1759177961070,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 4,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "manteve"
     },
     {
       "username": "normanfrieman",
@@ -60,19 +84,31 @@
       "seenAt": 1759196493043,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 5
+      "rapid_diff": 5,
+      "position": 5,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "subiu"
     },
     {
       "username": "cleber_x",
       "name": "Cleber Santos de Almeida",
       "profile": "https://lichess.org/@/cleber_x",
       "blitz": 2203,
-      "bullet": 2301,
+      "bullet": 2309,
       "rapid": 2223,
-      "seenAt": 1759202275763,
+      "seenAt": 1759230635939,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 6,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "manteve"
     },
     {
       "username": "hupp",
@@ -84,7 +120,13 @@
       "seenAt": 1759185759183,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 3
+      "rapid_diff": 3,
+      "position": 7,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "subiu"
     },
     {
       "username": "flamenguista",
@@ -96,19 +138,13 @@
       "seenAt": 1759016878453,
       "blitz_diff": 0,
       "bullet_diff": 2,
-      "rapid_diff": 4
-    },
-    {
-      "username": "i_hate_chess_betinho",
-      "name": "Alberto Vinicius",
-      "profile": "https://lichess.org/@/i_hate_chess_betinho",
-      "blitz": 2158,
-      "bullet": 2326,
-      "rapid": 2244,
-      "seenAt": 1759201643944,
-      "blitz_diff": 0,
-      "bullet_diff": 0,
-      "rapid_diff": 5
+      "rapid_diff": 4,
+      "position": 8,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "subiu",
+      "rapid_status": "subiu"
     },
     {
       "username": "marcoskaparov",
@@ -120,7 +156,13 @@
       "seenAt": 1759200768230,
       "blitz_diff": 0,
       "bullet_diff": 1,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 9,
+      "position_change": 1,
+      "position_arrow": "▲",
+      "blitz_status": "manteve",
+      "bullet_status": "subiu",
+      "rapid_status": "manteve"
     },
     {
       "username": "wendellshadow13",
@@ -132,7 +174,31 @@
       "seenAt": 1759203370081,
       "blitz_diff": 0,
       "bullet_diff": 1,
-      "rapid_diff": -3
+      "rapid_diff": -3,
+      "position": 10,
+      "position_change": 1,
+      "position_arrow": "▲",
+      "blitz_status": "manteve",
+      "bullet_status": "subiu",
+      "rapid_status": "caiu"
+    },
+    {
+      "username": "i_hate_chess_betinho",
+      "name": "Alberto Vinicius",
+      "profile": "https://lichess.org/@/i_hate_chess_betinho",
+      "blitz": 2139,
+      "bullet": 2326,
+      "rapid": 2244,
+      "seenAt": 1759232962616,
+      "blitz_diff": 0,
+      "bullet_diff": 0,
+      "rapid_diff": 5,
+      "position": 11,
+      "position_change": -2,
+      "position_arrow": "▼",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "subiu"
     },
     {
       "username": "overdragon",
@@ -144,7 +210,13 @@
       "seenAt": 1759179334273,
       "blitz_diff": 1,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 12,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "subiu",
+      "bullet_status": "manteve",
+      "rapid_status": "manteve"
     },
     {
       "username": "andrewsmacbeir",
@@ -156,7 +228,13 @@
       "seenAt": 1759165744136,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": -6
+      "rapid_diff": -6,
+      "position": 13,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "caiu"
     },
     {
       "username": "onlywaltz",
@@ -168,7 +246,13 @@
       "seenAt": 1759150330654,
       "blitz_diff": 3,
       "bullet_diff": 1,
-      "rapid_diff": -7
+      "rapid_diff": -7,
+      "position": 14,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "subiu",
+      "bullet_status": "subiu",
+      "rapid_status": "caiu"
     },
     {
       "username": "danielfla",
@@ -180,7 +264,13 @@
       "seenAt": 1759166963301,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 2
+      "rapid_diff": 2,
+      "position": 15,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "subiu"
     },
     {
       "username": "hericybr2",
@@ -192,19 +282,31 @@
       "seenAt": 1759186045669,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 16,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "manteve"
     },
     {
       "username": "leokhine",
       "name": "Paulo GALDINO",
       "profile": "https://lichess.org/@/leokhine",
       "blitz": 2054,
-      "bullet": 1941,
+      "bullet": 1935,
       "rapid": 1963,
-      "seenAt": 1759204365166,
+      "seenAt": 1759232957584,
       "blitz_diff": 2,
       "bullet_diff": 0,
-      "rapid_diff": 4
+      "rapid_diff": 4,
+      "position": 17,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "subiu",
+      "bullet_status": "manteve",
+      "rapid_status": "subiu"
     },
     {
       "username": "pedro070408",
@@ -216,19 +318,31 @@
       "seenAt": 1759191098919,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 18,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "manteve"
     },
     {
       "username": "lvinicios777",
       "name": "Sem nome registrado",
       "profile": "https://lichess.org/@/lvinicios777",
       "blitz": 2047,
-      "bullet": 1595,
+      "bullet": 1600,
       "rapid": 2021,
-      "seenAt": 1759212934196,
+      "seenAt": 1759236157574,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 4
+      "rapid_diff": 4,
+      "position": 19,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "subiu"
     },
     {
       "username": "capasid",
@@ -240,7 +354,13 @@
       "seenAt": 1757945723009,
       "blitz_diff": -9,
       "bullet_diff": 1,
-      "rapid_diff": 2
+      "rapid_diff": 2,
+      "position": 20,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "caiu",
+      "bullet_status": "subiu",
+      "rapid_status": "subiu"
     },
     {
       "username": "sesi_senai",
@@ -252,7 +372,13 @@
       "seenAt": 1759197193194,
       "blitz_diff": 0,
       "bullet_diff": 1,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 21,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "subiu",
+      "rapid_status": "manteve"
     },
     {
       "username": "sanzio23",
@@ -264,7 +390,13 @@
       "seenAt": 1757713574475,
       "blitz_diff": 5,
       "bullet_diff": 1,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 22,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "subiu",
+      "bullet_status": "subiu",
+      "rapid_status": "manteve"
     },
     {
       "username": "xandynpm",
@@ -276,7 +408,13 @@
       "seenAt": 1757617289684,
       "blitz_diff": 1,
       "bullet_diff": 1,
-      "rapid_diff": 1
+      "rapid_diff": 1,
+      "position": 23,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "subiu",
+      "bullet_status": "subiu",
+      "rapid_status": "subiu"
     },
     {
       "username": "cavaloderocha",
@@ -288,7 +426,13 @@
       "seenAt": 1758666745411,
       "blitz_diff": 0,
       "bullet_diff": 6,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 24,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "subiu",
+      "rapid_status": "manteve"
     },
     {
       "username": "severochess18",
@@ -300,7 +444,13 @@
       "seenAt": 1758534751896,
       "blitz_diff": 1,
       "bullet_diff": 3,
-      "rapid_diff": 3
+      "rapid_diff": 3,
+      "position": 25,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "subiu",
+      "bullet_status": "subiu",
+      "rapid_status": "subiu"
     },
     {
       "username": "pablo_mn",
@@ -312,7 +462,13 @@
       "seenAt": 1756750499404,
       "blitz_diff": 0,
       "bullet_diff": 1,
-      "rapid_diff": -4
+      "rapid_diff": -4,
+      "position": 26,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "subiu",
+      "rapid_status": "caiu"
     },
     {
       "username": "or1onchess",
@@ -324,7 +480,13 @@
       "seenAt": 1758839378134,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 27,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "manteve"
     },
     {
       "username": "alisson2brayer",
@@ -336,7 +498,13 @@
       "seenAt": 1758084641718,
       "blitz_diff": 0,
       "bullet_diff": 1,
-      "rapid_diff": 3
+      "rapid_diff": 3,
+      "position": 28,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "subiu",
+      "rapid_status": "subiu"
     },
     {
       "username": "dcm77",
@@ -348,7 +516,13 @@
       "seenAt": 1759156635720,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 1
+      "rapid_diff": 1,
+      "position": 29,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "subiu"
     },
     {
       "username": "lemosdavid",
@@ -360,7 +534,13 @@
       "seenAt": 1759201250523,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 3
+      "rapid_diff": 3,
+      "position": 30,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "subiu"
     },
     {
       "username": "historiailton",
@@ -372,7 +552,13 @@
       "seenAt": 1758305953855,
       "blitz_diff": 1,
       "bullet_diff": -11,
-      "rapid_diff": 2
+      "rapid_diff": 2,
+      "position": 31,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "subiu",
+      "bullet_status": "caiu",
+      "rapid_status": "subiu"
     },
     {
       "username": "isacrm",
@@ -384,7 +570,13 @@
       "seenAt": 1759177979590,
       "blitz_diff": -4,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 32,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "caiu",
+      "bullet_status": "manteve",
+      "rapid_status": "manteve"
     },
     {
       "username": "rota_capixaba",
@@ -396,7 +588,13 @@
       "seenAt": 1759212487977,
       "blitz_diff": 0,
       "bullet_diff": 3,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 33,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "subiu",
+      "rapid_status": "manteve"
     },
     {
       "username": "msffla",
@@ -408,7 +606,13 @@
       "seenAt": 1759093802403,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 34,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "manteve"
     },
     {
       "username": "gedevon_arrudev",
@@ -420,7 +624,13 @@
       "seenAt": 1759211798358,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 35,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "manteve"
     },
     {
       "username": "capixaba",
@@ -432,7 +642,13 @@
       "seenAt": 1759184424998,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 6
+      "rapid_diff": 6,
+      "position": 36,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "subiu"
     },
     {
       "username": "ph_ls",
@@ -444,7 +660,13 @@
       "seenAt": 1759162566602,
       "blitz_diff": 4,
       "bullet_diff": 0,
-      "rapid_diff": 2
+      "rapid_diff": 2,
+      "position": 37,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "subiu",
+      "bullet_status": "manteve",
+      "rapid_status": "subiu"
     },
     {
       "username": "ale_cunha",
@@ -456,7 +678,13 @@
       "seenAt": 1759200279335,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 38,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "manteve"
     },
     {
       "username": "deannedark",
@@ -465,10 +693,16 @@
       "blitz": 1845,
       "bullet": 1929,
       "rapid": 1779,
-      "seenAt": 1759184980290,
+      "seenAt": 1759232936416,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 3
+      "rapid_diff": 3,
+      "position": 39,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "subiu"
     },
     {
       "username": "lenhador",
@@ -477,10 +711,16 @@
       "blitz": 1844,
       "bullet": 1932,
       "rapid": 1946,
-      "seenAt": 1758938734721,
+      "seenAt": 1759222363663,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 4
+      "rapid_diff": 4,
+      "position": 40,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "subiu"
     },
     {
       "username": "capixabaiano",
@@ -489,10 +729,16 @@
       "blitz": 1840,
       "bullet": 1745,
       "rapid": 2010,
-      "seenAt": 1759197268295,
+      "seenAt": 1759231350964,
       "blitz_diff": 2,
       "bullet_diff": -3,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 41,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "subiu",
+      "bullet_status": "caiu",
+      "rapid_status": "manteve"
     },
     {
       "username": "mago1",
@@ -504,19 +750,31 @@
       "seenAt": 1757909064999,
       "blitz_diff": 0,
       "bullet_diff": 5,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 42,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "subiu",
+      "rapid_status": "manteve"
     },
     {
       "username": "rob_schuina",
       "name": "Sem nome registrado",
       "profile": "https://lichess.org/@/rob_schuina",
-      "blitz": 1803,
+      "blitz": 1792,
       "bullet": 1734,
       "rapid": 1866,
-      "seenAt": 1759203734754,
+      "seenAt": 1759236929641,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 43,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "manteve"
     },
     {
       "username": "draank1",
@@ -528,7 +786,13 @@
       "seenAt": 1758828369352,
       "blitz_diff": 5,
       "bullet_diff": 0,
-      "rapid_diff": 2
+      "rapid_diff": 2,
+      "position": 44,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "subiu",
+      "bullet_status": "manteve",
+      "rapid_status": "subiu"
     },
     {
       "username": "claudiogp",
@@ -540,7 +804,13 @@
       "seenAt": 1756653595948,
       "blitz_diff": 1,
       "bullet_diff": -9,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 45,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "subiu",
+      "bullet_status": "caiu",
+      "rapid_status": "manteve"
     },
     {
       "username": "abominevehomidasnave",
@@ -552,7 +822,13 @@
       "seenAt": 1759099100116,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 46,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "manteve"
     },
     {
       "username": "littlebirdmaiorqz11",
@@ -564,7 +840,13 @@
       "seenAt": 1758907720027,
       "blitz_diff": 0,
       "bullet_diff": 1,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 47,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "subiu",
+      "rapid_status": "manteve"
     },
     {
       "username": "restritah",
@@ -576,7 +858,13 @@
       "seenAt": 1758333620672,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 1
+      "rapid_diff": 1,
+      "position": 48,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "subiu"
     },
     {
       "username": "hsdb",
@@ -588,7 +876,13 @@
       "seenAt": 1759184251957,
       "blitz_diff": 0,
       "bullet_diff": 5,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 49,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "subiu",
+      "rapid_status": "manteve"
     },
     {
       "username": "fpfreitas",
@@ -600,7 +894,13 @@
       "seenAt": 1758934658000,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 8
+      "rapid_diff": 8,
+      "position": 50,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "subiu"
     },
     {
       "username": "ja178",
@@ -612,7 +912,13 @@
       "seenAt": 1759193821254,
       "blitz_diff": 1,
       "bullet_diff": 0,
-      "rapid_diff": -8
+      "rapid_diff": -8,
+      "position": 51,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "subiu",
+      "bullet_status": "manteve",
+      "rapid_status": "caiu"
     },
     {
       "username": "paulo_rodrigues",
@@ -624,7 +930,13 @@
       "seenAt": 1759186549787,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 52,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "manteve"
     },
     {
       "username": "capucho",
@@ -636,7 +948,13 @@
       "seenAt": 1757104385020,
       "blitz_diff": 1,
       "bullet_diff": 0,
-      "rapid_diff": -1
+      "rapid_diff": -1,
+      "position": 53,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "subiu",
+      "bullet_status": "manteve",
+      "rapid_status": "caiu"
     },
     {
       "username": "gilberticm",
@@ -648,7 +966,13 @@
       "seenAt": 1759199967582,
       "blitz_diff": 0,
       "bullet_diff": -11,
-      "rapid_diff": -8
+      "rapid_diff": -8,
+      "position": 54,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "caiu",
+      "rapid_status": "caiu"
     },
     {
       "username": "herleydias",
@@ -660,7 +984,13 @@
       "seenAt": 1756682081480,
       "blitz_diff": 0,
       "bullet_diff": 1,
-      "rapid_diff": 1
+      "rapid_diff": 1,
+      "position": 55,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "subiu",
+      "rapid_status": "subiu"
     },
     {
       "username": "neemiasmartins",
@@ -672,7 +1002,13 @@
       "seenAt": 1756664604560,
       "blitz_diff": 0,
       "bullet_diff": 2,
-      "rapid_diff": 1
+      "rapid_diff": 1,
+      "position": 56,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "subiu",
+      "rapid_status": "subiu"
     },
     {
       "username": "vicsinist",
@@ -684,7 +1020,13 @@
       "seenAt": 1758828983881,
       "blitz_diff": 0,
       "bullet_diff": 4,
-      "rapid_diff": -3
+      "rapid_diff": -3,
+      "position": 57,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "subiu",
+      "rapid_status": "caiu"
     },
     {
       "username": "furieri",
@@ -696,7 +1038,13 @@
       "seenAt": 1758989707578,
       "blitz_diff": 0,
       "bullet_diff": 7,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 58,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "subiu",
+      "rapid_status": "manteve"
     },
     {
       "username": "leoferri007",
@@ -708,7 +1056,13 @@
       "seenAt": 1759091334209,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 59,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "manteve"
     },
     {
       "username": "emanuelpedro",
@@ -720,7 +1074,13 @@
       "seenAt": 1759003630634,
       "blitz_diff": -7,
       "bullet_diff": -1,
-      "rapid_diff": 1
+      "rapid_diff": 1,
+      "position": 60,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "caiu",
+      "bullet_status": "caiu",
+      "rapid_status": "subiu"
     },
     {
       "username": "miguel2024",
@@ -732,7 +1092,13 @@
       "seenAt": 1759183322970,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 1
+      "rapid_diff": 1,
+      "position": 61,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "subiu"
     },
     {
       "username": "kiritoking",
@@ -744,7 +1110,13 @@
       "seenAt": 1759192368703,
       "blitz_diff": 0,
       "bullet_diff": -2,
-      "rapid_diff": 4
+      "rapid_diff": 4,
+      "position": 62,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "caiu",
+      "rapid_status": "subiu"
     },
     {
       "username": "cleber39",
@@ -756,19 +1128,31 @@
       "seenAt": 1758478709747,
       "blitz_diff": 0,
       "bullet_diff": -4,
-      "rapid_diff": 9
+      "rapid_diff": 9,
+      "position": 63,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "caiu",
+      "rapid_status": "subiu"
     },
     {
       "username": "hpasti",
       "name": "Heitor Pasti",
       "profile": "https://lichess.org/@/hpasti",
-      "blitz": 1364,
+      "blitz": 1358,
       "bullet": 1096,
       "rapid": 1364,
-      "seenAt": 1759186812174,
+      "seenAt": 1759224963139,
       "blitz_diff": 0,
       "bullet_diff": 1,
-      "rapid_diff": 6
+      "rapid_diff": 6,
+      "position": 64,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "subiu",
+      "rapid_status": "subiu"
     },
     {
       "username": "lilti",
@@ -780,7 +1164,13 @@
       "seenAt": 1757070685786,
       "blitz_diff": 1,
       "bullet_diff": 0,
-      "rapid_diff": 3
+      "rapid_diff": 3,
+      "position": 65,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "subiu",
+      "bullet_status": "manteve",
+      "rapid_status": "subiu"
     },
     {
       "username": "patolimpico",
@@ -792,7 +1182,13 @@
       "seenAt": 1759197089611,
       "blitz_diff": 0,
       "bullet_diff": 3,
-      "rapid_diff": 1
+      "rapid_diff": 1,
+      "position": 66,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "subiu",
+      "rapid_status": "subiu"
     },
     {
       "username": "elvisfcardoso",
@@ -804,7 +1200,13 @@
       "seenAt": 1758005262159,
       "blitz_diff": 1,
       "bullet_diff": 3,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 67,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "subiu",
+      "bullet_status": "subiu",
+      "rapid_status": "manteve"
     },
     {
       "username": "radamandes",
@@ -816,7 +1218,13 @@
       "seenAt": 1758562413999,
       "blitz_diff": 1,
       "bullet_diff": 4,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 68,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "subiu",
+      "bullet_status": "subiu",
+      "rapid_status": "manteve"
     },
     {
       "username": "diwandrey",
@@ -828,7 +1236,13 @@
       "seenAt": 1758666357128,
       "blitz_diff": -4,
       "bullet_diff": 8,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 69,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "caiu",
+      "bullet_status": "subiu",
+      "rapid_status": "manteve"
     },
     {
       "username": "guissn",
@@ -840,7 +1254,13 @@
       "seenAt": 1758718821873,
       "blitz_diff": 0,
       "bullet_diff": -2,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 70,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "caiu",
+      "rapid_status": "manteve"
     },
     {
       "username": "ringowl",
@@ -852,7 +1272,13 @@
       "seenAt": 1757781518180,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 71,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "manteve"
     },
     {
       "username": "ztnilz",
@@ -864,7 +1290,13 @@
       "seenAt": 1759177341079,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 72,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "manteve"
     },
     {
       "username": "omeninoprodigio",
@@ -876,7 +1308,13 @@
       "seenAt": 1759037745530,
       "blitz_diff": 0,
       "bullet_diff": 3,
-      "rapid_diff": 2
+      "rapid_diff": 2,
+      "position": 73,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "subiu",
+      "rapid_status": "subiu"
     },
     {
       "username": "paulo-faccin",
@@ -888,7 +1326,13 @@
       "seenAt": 1758910091934,
       "blitz_diff": 0,
       "bullet_diff": 1,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 74,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "subiu",
+      "rapid_status": "manteve"
     },
     {
       "username": "izaquehuhn",
@@ -900,7 +1344,13 @@
       "seenAt": 1758874415625,
       "blitz_diff": 0,
       "bullet_diff": 0,
-      "rapid_diff": 0
+      "rapid_diff": 0,
+      "position": 75,
+      "position_change": 0,
+      "position_arrow": "→",
+      "blitz_status": "manteve",
+      "bullet_status": "manteve",
+      "rapid_status": "manteve"
     }
   ]
 }
