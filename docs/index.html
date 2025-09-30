@@ -78,13 +78,6 @@
   .diff-neg{background:rgba(239,68,68,0.08);color:var(--red);border:1px solid rgba(239,68,68,0.12)}
   .diff-zero{background:rgba(99,102,241,0.06);color:var(--violet);border:1px solid rgba(99,102,241,0.08)}
 
-  /* status badges (subiu/caiu/manteve) */
-  .status{font-size:0.75rem;padding:4px 8px;border-radius:999px;font-weight:700;margin-left:8px;display:inline-block}
-  .status-up{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.16)}
-  .status-down{background:rgba(239,68,68,0.08);color:var(--red);border:1px solid rgba(239,68,68,0.12)}
-  .status-same{background:rgba(99,102,241,0.06);color:var(--violet);border:1px solid rgba(99,102,241,0.08)}
-  .status-none{background:transparent;color:var(--gray);border:1px solid rgba(15,23,36,0.04)}
-
   /* position arrows */
   .pos-arrow {font-weight:900;margin-right:6px}
   .pos-up{color:var(--green)}
@@ -230,21 +223,13 @@
   }
   function safeNumber(v){ return v==null||v===''?0:Number(v)||0; }
 
+  // novo: formatDiff sempre retorna um parêntese com o valor,
+  // positivo com +, negativo com - (natural) e 0 quando não houver/nenhuma mudança.
   function formatDiff(d){
-    if(d == null || d === '') return '';
-    const n = Number(d);
-    if(Number.isNaN(n)) return '';
+    const n = (d === null || d === undefined || d === '') ? 0 : Number(d);
+    if(Number.isNaN(n)) return '(0)';
     const sign = n > 0 ? '+' : '';
-    const cls = n > 0 ? 'diff diff-pos' : (n < 0 ? 'diff diff-neg' : 'diff diff-zero');
-    return `<span class="${cls}">(${sign}${n})</span>`;
-  }
-
-  function statusBadge(s){
-    if(!s) return '<span class="status status-none">—</span>';
-    if(s === 'subiu') return '<span class="status status-up">subiu</span>';
-    if(s === 'caiu') return '<span class="status status-down">caiu</span>';
-    if(s === 'manteve') return '<span class="status status-same">manteve</span>';
-    return `<span class="status status-none">${escapeHtml(s)}</span>`;
+    return `(${sign}${n})`;
   }
 
   function posBadge(p){
@@ -294,21 +279,27 @@
   async function loadData(force=false){
     infoEl.textContent = 'Carregando...';
     try{
-      const res = await fetch('./players.json', {cache: force ? 'no-store' : 'default'});
-      if(!res.ok) throw new Error('Falha ao buscar players.json');
+      // cache-busting
+      const url = './players.json?v=' + Date.now();
+      const res = await fetch(url, {cache: 'no-store'});
+      if(!res.ok) throw new Error('Falha ao buscar players.json: ' + res.status);
       const js = await res.json();
+      console.log('players.json carregado:', js);
+
       let candidates = extractPlayers(js);
       if(candidates.length === 0 && Array.isArray(js.players)) candidates = js.players.slice();
       all = dedupePlayers(candidates);
-      // se existir campo position no arquivo, manter ordem por position (caso queira), senão ordenar por blitz
+
+      // se existir campo position no arquivo, manter ordem por position (menor = melhor), senão ordenar por blitz
       if(all.length && all[0].position != null){
-        all.sort((a,b)=> (safeNumber(a.position) - safeNumber(b.position))); // posição já é 1-based no snapshot, menor = melhor
+        all.sort((a,b)=> (safeNumber(a.position) - safeNumber(b.position)));
       }else{
         all.sort((a,b)=> (safeNumber(b.blitz) - safeNumber(a.blitz)));
       }
 
       totalBadge.textContent = all.length;
-      infoEl.textContent = `Total: ${all.length} — gerado: ${js.generated_at ? new Date(js.generated_at).toLocaleString() : '—'}`;
+      const gen = js.generated_at ? new Date(Number(js.generated_at)).toLocaleString() : '—';
+      infoEl.textContent = `Total: ${all.length} — gerado: ${gen}`;
       page = 1;
       applyFilters();
     }catch(err){
@@ -361,9 +352,9 @@
           <td class="rank">${rank}</td>
           <td class="pos-col">${posBadge(p)}</td>
           <td class="user"><a href="${profile}" target="_blank" rel="noopener">${userEsc}</a>${realHtml}</td>
-          <td class="rating">${p.blitz ?? '—'} ${formatDiff(p.blitz_diff)} ${statusBadge(p.blitz_status)}</td>
-          <td class="rating">${p.bullet ?? '—'} ${formatDiff(p.bullet_diff)} ${statusBadge(p.bullet_status)}</td>
-          <td class="rating">${p.rapid ?? '—'} ${formatDiff(p.rapid_diff)} ${statusBadge(p.rapid_status)}</td>
+          <td class="rating">${p.blitz ?? '—'} <span class="${(p.blitz_diff>0)?'diff diff-pos':(p.blitz_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.blitz_diff)}</span></td>
+          <td class="rating">${p.bullet ?? '—'} <span class="${(p.bullet_diff>0)?'diff diff-pos':(p.bullet_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.bullet_diff)}</span></td>
+          <td class="rating">${p.rapid ?? '—'} <span class="${(p.rapid_diff>0)?'diff diff-pos':(p.rapid_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.rapid_diff)}</span></td>
           <td class="seen">${formatSeen(p.seenAt)}</td>
         </tr>`;
       }).join('');
@@ -379,6 +370,7 @@
       const initial = escapeHtml((p.username||'').charAt(0).toUpperCase());
       const userEsc = escapeHtml(p.username||'(sem usuário)');
       const realEsc = real ? escapeHtml(real) : '';
+      const posHtml = p.position_arrow ? `<span class="pos-arrow ${p.position_arrow==='▲'?'pos-up':p.position_arrow==='▼'?'pos-down':'pos-same'}">${p.position_arrow}</span>` : '';
       const html = `<div class="player-card">
         <div class="player-left">
           <a href="${profile}" target="_blank" rel="noopener" style="display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit">
@@ -390,10 +382,10 @@
           </a>
         </div>
         <div class="player-right">
-          <div>Pos: ${p.position ?? rank} ${p.position_arrow ? `<span class="pos-arrow ${p.position_arrow==='▲'?'pos-up':p.position_arrow==='▼'?'pos-down':'pos-same'}">${p.position_arrow}</span>` : ''}</div>
-          <div>Blitz: ${p.blitz ?? '—'} ${formatDiff(p.blitz_diff)} ${statusBadge(p.blitz_status)}</div>
-          <div>Bullet: ${p.bullet ?? '—'} ${formatDiff(p.bullet_diff)} ${statusBadge(p.bullet_status)}</div>
-          <div>Rapid: ${p.rapid ?? '—'} ${formatDiff(p.rapid_diff)} ${statusBadge(p.rapid_status)}</div>
+          <div>Pos: ${p.position ?? rank} ${posHtml} ${p.position_change != null ? Math.abs(p.position_change) : ''}</div>
+          <div>Blitz: ${p.blitz ?? '—'} <span class="${(p.blitz_diff>0)?'diff diff-pos':(p.blitz_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.blitz_diff)}</span></div>
+          <div>Bullet: ${p.bullet ?? '—'} <span class="${(p.bullet_diff>0)?'diff diff-pos':(p.bullet_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.bullet_diff)}</span></div>
+          <div>Rapid: ${p.rapid ?? '—'} <span class="${(p.rapid_diff>0)?'diff diff-pos':(p.rapid_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.rapid_diff)}</span></div>
           <div style="font-size:.85rem;color:var(--muted);margin-top:6px">${formatSeen(p.seenAt)}</div>
         </div>
       </div>`;
@@ -427,7 +419,7 @@
     const per = Math.max(1, parseInt(perPageEl.value,10)||20), start = (page-1)*per;
     const items = filtered.slice(start, start+per);
     if(!items.length){ alert('Nenhum item para exportar'); return; }
-    const headers = ['#','username','name','profile','position','position_change','position_arrow','blitz','blitz_diff','blitz_status','bullet','bullet_diff','bullet_status','rapid','rapid_diff','rapid_status','seenAt'];
+    const headers = ['#','username','name','profile','position','position_change','position_arrow','blitz','blitz_diff','bullet','bullet_diff','rapid','rapid_diff','seenAt'];
     const rows = items.map((p,idx)=>[
       start+idx+1,
       p.username||'',
@@ -437,14 +429,11 @@
       (p.position_change != null ? p.position_change : ''),
       p.position_arrow || '',
       p.blitz || '',
-      p.blitz_diff != null ? p.blitz_diff : '',
-      p.blitz_status || '',
+      p.blitz_diff != null ? p.blitz_diff : 0,
       p.bullet || '',
-      p.bullet_diff != null ? p.bullet_diff : '',
-      p.bullet_status || '',
+      p.bullet_diff != null ? p.bullet_diff : 0,
       p.rapid || '',
-      p.rapid_diff != null ? p.rapid_diff : '',
-      p.rapid_status || '',
+      p.rapid_diff != null ? p.rapid_diff : 0,
       p.seenAt || ''
     ]);
     const csv = [headers.join(','), ...rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','))].join('\r\n');
