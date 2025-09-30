@@ -20,6 +20,7 @@ ACTIVE_DAYS = 30
 OUT_DIR = "docs"
 OUT_FILE = f"{OUT_DIR}/players.json"
 
+
 def make_session():
     s = requests.Session()
     retries = Retry(total=RETRY_ATTEMPTS, backoff_factor=RETRY_BACKOFF, status_forcelist=(500,502,503,504))
@@ -27,6 +28,7 @@ def make_session():
     s.headers.update({"User-Agent":"xadrezjovemes-generator/1.0"})
     s.verify = certifi.where()
     return s
+
 
 def fetch_team_members(session):
     url = TEAM_URL.format(quote(TEAM_ID))
@@ -52,6 +54,7 @@ def fetch_team_members(session):
         pass
     return [u for u in users if u]
 
+
 def extract_name_from_profile(profile, uobj):
     if not profile and not isinstance(uobj, dict):
         return ""
@@ -71,6 +74,7 @@ def extract_name_from_profile(profile, uobj):
         name = uobj.get("name") or uobj.get("fullName") or uobj.get("displayName") or ""
     return (name or "").strip()
 
+
 def fetch_rating_history(session, username):
     """Retorna dict { 'blitz': diff|null, 'bullet': diff|null, 'rapid': diff|null } a partir do rating-history"""
     out = {'blitz': None, 'bullet': None, 'rapid': None}
@@ -84,7 +88,7 @@ def fetch_rating_history(session, username):
             if name not in out: continue
             pts = rec.get('points') or []
             # pts = [[ts, rating], ...]
-            if not pts: 
+            if not pts:
                 out[name] = None
             else:
                 if len(pts) >= 2:
@@ -100,6 +104,7 @@ def fetch_rating_history(session, username):
     except Exception:
         return out
     return out
+
 
 def fetch_user(session, username):
     try:
@@ -136,6 +141,7 @@ def fetch_user(session, username):
         print(f"warning: erro ao buscar {username}: {e}")
         return None
 
+
 def active_since_days(player, days=ACTIVE_DAYS):
     if not player: return False
     seen = player.get("seenAt")
@@ -147,6 +153,21 @@ def active_since_days(player, days=ACTIVE_DAYS):
         except Exception: return False
     age_days = (time.time()*1000 - ts) / (24*3600*1000)
     return age_days <= days
+
+
+def rating_status(diff):
+    if diff is None:
+        return None
+    try:
+        d = int(diff)
+    except Exception:
+        return None
+    if d > 0:
+        return "subiu"
+    if d < 0:
+        return "caiu"
+    return "manteve"
+
 
 def main():
     session = make_session()
@@ -167,19 +188,23 @@ def main():
         if not key: continue
         if key not in byu or score(p) > score(byu[key]) or (p.get("seenAt") or 0) > (byu[key].get("seenAt") or 0):
             byu[key] = p
+
     active = [v for v in byu.values() if active_since_days(v)]
     active_sorted = sorted(active, key=lambda x: (-(x.get("blitz") or 0), -(x.get("bullet") or 0), -(x.get("rapid") or 0)))
 
-    # carregar snapshot anterior para calcular diffs
+    # carregar snapshot anterior para calcular diffs e posição
     prev_map = {}
+    prev_rank_map = {}
     try:
         if os.path.exists(OUT_FILE):
             with open(OUT_FILE, "r", encoding="utf-8") as f:
                 prev = json.load(f)
-            for pp in (prev.get("players") or []):
+            for idx, pp in enumerate((prev.get("players") or [])):
                 uname = (pp.get("username") or "").strip().lower()
                 if uname:
                     prev_map[uname] = pp
+                    # posição anterior (1-based)
+                    prev_rank_map[uname] = idx + 1
     except Exception:
         pass
 
@@ -216,7 +241,32 @@ def main():
         p.pop("recent_blitz_diff", None)
         p.pop("recent_bullet_diff", None)
         p.pop("recent_rapid_diff", None)
-    
+
+    # adicionar posição atual, mudança de posição (comparado ao snapshot anterior) e status textual/semântico do rating
+    for idx, p in enumerate(active_sorted):
+        current_pos = idx + 1
+        p["position"] = current_pos
+        key = (p.get("username") or "").strip().lower()
+        prev_pos = prev_rank_map.get(key)
+        if prev_pos is None:
+            p["position_change"] = None
+            p["position_arrow"] = None
+        else:
+            # positive -> subiu (ganhou posições), negative -> caiu
+            change = prev_pos - current_pos
+            p["position_change"] = change
+            if change > 0:
+                p["position_arrow"] = "▲"
+            elif change < 0:
+                p["position_arrow"] = "▼"
+            else:
+                p["position_arrow"] = "→"
+
+        # status textual baseado nos diffs calculados
+        p["blitz_status"] = rating_status(p.get("blitz_diff"))
+        p["bullet_status"] = rating_status(p.get("bullet_diff"))
+        p["rapid_status"] = rating_status(p.get("rapid_diff"))
+
     out = {
         "generated_at": int(time.time()*1000),
         "count": len(active_sorted),
