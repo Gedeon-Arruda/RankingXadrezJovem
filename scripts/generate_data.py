@@ -121,7 +121,7 @@ def fetch_user(session, username):
         seenAt = u.get("seenAt") or u.get("lastSeenAt") or u.get("seenAtMillis") or None
         profile_url = prof.get("url") or f"https://lichess.org/@/{username}"
 
-        # tenta obter diffs diretamente do rating-history (preferência: corresponde ao que aparece no perfil)
+        # tenta obter diffs diretamente do rating-history (usado apenas como fallback agora)
         history_diffs = fetch_rating_history(session, username)
 
         return {
@@ -214,28 +214,26 @@ def main():
             p["name"] = "Sem nome registrado"
         key = (p.get("username") or "").strip().lower()
         prev = prev_map.get(key)
-        def calc_diff(curr, prevv):
+
+        # preferir diffs calculados a partir do snapshot anterior
+        if prev:
             try:
-                if prevv is None: return None
-                return int(curr or 0) - int(prevv or 0)
+                p["blitz_diff"] = int(p.get("blitz") or 0) - int(prev.get("blitz") or 0)
             except Exception:
-                return None
-
-        # preferir diffs do rating-history (campo recent_*), senão fallback para snapshot anterior
-        if p.get("recent_blitz_diff") is not None:
-            p["blitz_diff"] = p.get("recent_blitz_diff")
+                p["blitz_diff"] = 0
+            try:
+                p["bullet_diff"] = int(p.get("bullet") or 0) - int(prev.get("bullet") or 0)
+            except Exception:
+                p["bullet_diff"] = 0
+            try:
+                p["rapid_diff"] = int(p.get("rapid") or 0) - int(prev.get("rapid") or 0)
+            except Exception:
+                p["rapid_diff"] = 0
         else:
-            p["blitz_diff"] = calc_diff(p.get("blitz"), prev.get("blitz") if prev else None)
-
-        if p.get("recent_bullet_diff") is not None:
-            p["bullet_diff"] = p.get("recent_bullet_diff")
-        else:
-            p["bullet_diff"] = calc_diff(p.get("bullet"), prev.get("bullet") if prev else None)
-
-        if p.get("recent_rapid_diff") is not None:
-            p["rapid_diff"] = p.get("recent_rapid_diff")
-        else:
-            p["rapid_diff"] = calc_diff(p.get("rapid"), prev.get("rapid") if prev else None)
+            # fallback: usar recent_* quando disponível, caso contrário 0
+            p["blitz_diff"] = p.get("recent_blitz_diff") if p.get("recent_blitz_diff") is not None else 0
+            p["bullet_diff"] = p.get("recent_bullet_diff") if p.get("recent_bullet_diff") is not None else 0
+            p["rapid_diff"] = p.get("recent_rapid_diff") if p.get("recent_rapid_diff") is not None else 0
 
         # remover campos auxiliares antes de salvar (opcional)
         p.pop("recent_blitz_diff", None)
@@ -262,7 +260,7 @@ def main():
             else:
                 p["position_arrow"] = "→"
 
-        # status textual baseado nos diffs calculados
+        # status textual baseado nos diffs calculados (mantido, mas front-end pode ignorar)
         p["blitz_status"] = rating_status(p.get("blitz_diff"))
         p["bullet_status"] = rating_status(p.get("bullet_diff"))
         p["rapid_status"] = rating_status(p.get("rapid_diff"))
