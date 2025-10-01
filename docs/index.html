@@ -121,8 +121,16 @@
         <div class="subtitle">Jogadores ativos — últimos 30 dias</div>
       </div>
     </div>
+
     <div class="meta">
       <div class="badge" aria-live="polite">Ativos: <strong id="totalBadge">—</strong></div>
+
+      <!-- VISIT COUNTER DISPLAY -->
+      <div style="padding:8px 12px;border-radius:12px;border:1px solid var(--border);background:linear-gradient(180deg,#fff,rgba(255,255,255,0.95));display:flex;flex-direction:column;align-items:flex-end;min-width:160px;margin-left:8px">
+        <div style="font-size:0.85rem;color:var(--muted)">Visitas</div>
+        <div id="visitCounter" style="font-weight:800">—</div>
+        <div style="font-size:0.75rem;color:var(--muted)">Hoje / Mês / Ano / Total</div>
+      </div>
     </div>
   </header>
 
@@ -207,6 +215,7 @@
   const infoEl = document.getElementById('info'), totalBadge = document.getElementById('totalBadge');
   const tbody = document.getElementById('tbody'), pager = document.getElementById('pager'), cardList = document.getElementById('cardList');
   const exportBtn = document.getElementById('exportCsv');
+  const visitEl = document.getElementById('visitCounter');
 
   function debounce(fn, wait=250){let t; return (...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),wait);};}
   function formatSeen(ms){
@@ -223,8 +232,6 @@
   }
   function safeNumber(v){ return v==null||v===''?0:Number(v)||0; }
 
-  // novo: formatDiff sempre retorna um parêntese com o valor,
-  // positivo com +, negativo com - (natural) e 0 quando não houver/nenhuma mudança.
   function formatDiff(d){
     const n = (d === null || d === undefined || d === '') ? 0 : Number(d);
     if(Number.isNaN(n)) return '(0)';
@@ -240,7 +247,6 @@
     return `<div style="display:flex;align-items:center;justify-content:center"><span class="pos-arrow ${cls}">${escapeHtml(arrow)}</span>${change ? `<span style="font-weight:700">${change}</span>` : ''}</div>`;
   }
 
-  // extrai arrays do JSON e faz dedupe por username (merge de duas listas possíveis)
   function extractPlayers(obj){
     const found = [];
     if(!obj) return found;
@@ -276,21 +282,50 @@
     return Array.from(map.values());
   }
 
+  // envia um ping ao servidor para contar a visita (usa sendBeacon quando possível)
+  function sendVisitPing(){
+    try {
+      const payload = JSON.stringify({ path: window.location.pathname || '/' });
+      if (navigator.sendBeacon) {
+        // sendBeacon aceita ArrayBufferView, Blob, FormData — enviamos como Blob
+        const blob = new Blob([payload], { type: 'application/json' });
+        navigator.sendBeacon('/visit', blob);
+        return;
+      }
+      // fallback: fetch com keepalive
+      fetch('/visit', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: payload,
+        keepalive: true
+      }).catch(()=>{/*ignore*/});
+    } catch(e){}
+  }
+
+  // busca estatísticas e atualiza o display
+  function fetchVisitStats(){
+    const path = window.location.pathname || '/';
+    fetch('/stats?path=' + encodeURIComponent(path))
+      .then(r => r.ok ? r.json() : Promise.reject(r))
+      .then(json => {
+        if(json && typeof json.today !== 'undefined' && visitEl){
+          visitEl.textContent = `${json.today} / ${json.month} / ${json.year} / ${json.total}`;
+        }
+      }).catch(()=>{/*ignore*/});
+  }
+
   async function loadData(force=false){
     infoEl.textContent = 'Carregando...';
     try{
-      // cache-busting
       const url = './players.json?v=' + Date.now();
       const res = await fetch(url, {cache: 'no-store'});
       if(!res.ok) throw new Error('Falha ao buscar players.json: ' + res.status);
       const js = await res.json();
-      console.log('players.json carregado:', js);
 
       let candidates = extractPlayers(js);
       if(candidates.length === 0 && Array.isArray(js.players)) candidates = js.players.slice();
       all = dedupePlayers(candidates);
 
-      // se existir campo position no arquivo, manter ordem por position (menor = melhor), senão ordenar por blitz
       if(all.length && all[0].position != null){
         all.sort((a,b)=> (safeNumber(a.position) - safeNumber(b.position)));
       }else{
@@ -302,6 +337,9 @@
       infoEl.textContent = `Total: ${all.length} — gerado: ${gen}`;
       page = 1;
       applyFilters();
+
+      // atualiza contador depois que os dados carregaram
+      fetchVisitStats();
     }catch(err){
       console.error(err);
       infoEl.textContent = 'Erro ao carregar dados';
@@ -338,7 +376,6 @@
     const start = (page - 1) * per;
     const items = filtered.slice(start, start + per);
 
-    // Desktop table
     if(items.length === 0){
       tbody.innerHTML = '<tr><td colspan="7" style="padding:18px;text-align:center;color:#6b7280">Nenhum jogador encontrado</td></tr>';
     } else {
@@ -361,7 +398,6 @@
       tbody.innerHTML = rows;
     }
 
-    // Mobile cards
     cardList.innerHTML = '';
     items.forEach((p, idx) => {
       const rank = start + idx + 1;
@@ -392,7 +428,6 @@
       cardList.insertAdjacentHTML('beforeend', html);
     });
 
-    // Pager
     renderPager(per, totalPages);
   }
 
@@ -450,6 +485,8 @@
   exportBtn.addEventListener('click', exportCurrentPageCsv);
   document.getElementById('dismissJoinBanner').addEventListener('click', ()=>document.querySelector('.hero').style.display='none');
 
+  // enviar ping de visita e carregar dados
+  sendVisitPing();
   loadData();
 })();
 </script>
