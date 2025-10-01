@@ -5,7 +5,7 @@
 <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="expires" content="0">
 <meta http-equiv="pragma" content="no-cache">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Ranking Xadrez Jovem ES</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -17,7 +17,7 @@
     --accent-2:#7c3aed;
     --text:#0b1220;
     --border:rgba(15,23,36,0.06);
-    --radius:16px;
+    --radius:14px;
     --shadow-lg: 0 20px 50px rgba(16,24,40,0.08);
     --shadow-sm: 0 6px 18px rgba(16,24,40,0.06);
     --glass: rgba(255,255,255,0.7);
@@ -27,43 +27,45 @@
     --gray:#9ca3af;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:linear-gradient(180deg,#eef2ff 0%,var(--bg) 100%);color:var(--text);padding:36px;min-height:100vh;display:flex;justify-content:center;}
-  .container{max-width:1150px;width:100%;display:flex;flex-direction:column;gap:22px}
+  html,body{height:100%}
+  body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:linear-gradient(180deg,#eef2ff 0%,var(--bg) 100%);color:var(--text);padding:28px;min-height:100vh;display:flex;justify-content:center}
+  .container{max-width:1150px;width:100%;display:flex;flex-direction:column;gap:18px}
 
   /* Header */
-  header.site{display:flex;align-items:center;justify-content:space-between;gap:16px}
-  .brand{display:flex;align-items:center;gap:16px}
-  .logo{width:72px;height:72px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:22px;box-shadow:var(--shadow-lg)}
-  .title-group h1{font-size:1.25rem;margin-bottom:2px}
-  .subtitle{color:var(--muted);font-size:0.95rem}
+  header.site{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:64px;height:64px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:20px;box-shadow:var(--shadow-lg);flex-shrink:0}
+  .title-group h1{font-size:1.15rem;margin-bottom:2px}
+  .subtitle{color:var(--muted);font-size:0.9rem}
 
   .meta{display:flex;gap:10px;align-items:center}
-  .badge{background:linear-gradient(90deg,rgba(59,130,246,0.06),transparent);color:var(--accent);padding:8px 14px;border-radius:999px;font-weight:700;font-size:.95rem;border:1px solid rgba(59,130,246,0.08);box-shadow:var(--shadow-sm)}
+  .badge{background:linear-gradient(90deg,rgba(59,130,246,0.06),transparent);color:var(--accent);padding:8px 12px;border-radius:999px;font-weight:700;font-size:.9rem;border:1px solid rgba(59,130,246,0.08);box-shadow:var(--shadow-sm);min-width:92px;text-align:center}
 
   /* Hero */
-  .hero{background:linear-gradient(180deg,rgba(255,255,255,0.7),var(--card));border-radius:var(--radius);padding:18px;border:1px solid var(--border);box-shadow:var(--shadow-sm);display:flex;justify-content:space-between;align-items:center;gap:18px}
-  .hero .left{max-width:72%}
-  .hero p{color:var(--muted);margin-top:6px}
+  .hero{background:linear-gradient(180deg,rgba(255,255,255,0.7),var(--card));border-radius:var(--radius);padding:14px;border:1px solid var(--border);box-shadow:var(--shadow-sm);display:flex;justify-content:space-between;align-items:center;gap:14px}
+  .hero .left{max-width:70%}
+  .hero p{color:var(--muted);margin-top:6px;font-size:0.95rem}
   .hero .cta{display:flex;gap:10px;align-items:center}
-  .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:10px 16px;border-radius:12px;border:none;cursor:pointer;font-weight:700;box-shadow:0 10px 30px rgba(59,130,246,0.12)}
+  .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:10px 14px;border-radius:12px;border:none;cursor:pointer;font-weight:700;box-shadow:0 10px 30px rgba(59,130,246,0.12);text-decoration:none}
   .btn-ghost{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer}
 
   /* Controls */
   .controls{display:flex;justify-content:space-between;gap:12px;align-items:center}
   .controls-left{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-  .search{display:flex;align-items:center;gap:8px;background:linear-gradient(180deg,#fff,rgba(255,255,255,0.9));padding:8px 12px;border-radius:12px;border:1px solid var(--border);min-width:260px;box-shadow:var(--shadow-sm)}
-  .search input{border:0;outline:0;background:transparent;font-size:0.95rem;color:var(--text);width:260px}
+  .search{display:flex;align-items:center;gap:8px;background:linear-gradient(180deg,#fff,rgba(255,255,255,0.95));padding:8px 12px;border-radius:12px;border:1px solid var(--border);min-width:260px;box-shadow:var(--shadow-sm);flex:0 1 320px}
+  .search input{border:0;outline:0;background:transparent;font-size:0.95rem;color:var(--text);width:100%}
   .select{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;font-size:0.95rem}
 
   .controls-right{display:flex;align-items:center;gap:10px}
 
   /* Table card */
-  .card{background:var(--card);border-radius:18px;padding:14px;border:1px solid var(--border);box-shadow:var(--shadow-lg)}
-  table{width:100%;border-collapse:collapse}
-  thead th{background:transparent;text-align:left;padding:16px;font-weight:700;color:var(--muted);font-size:0.95rem}
-  tbody td{padding:14px;border-top:1px solid var(--border);vertical-align:middle}
+  .card{background:var(--card);border-radius:18px;padding:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg)}
+  .table-wrap{overflow:auto;width:100%;border-radius:12px}
+  table{width:100%;border-collapse:collapse;min-width:720px}
+  thead th{background:transparent;text-align:left;padding:14px;font-weight:700;color:var(--muted);font-size:0.95rem;white-space:nowrap}
+  tbody td{padding:12px;border-top:1px solid var(--border);vertical-align:middle}
   tbody tr{transition:background .18s, transform .12s}
-  tbody tr:hover{background:linear-gradient(90deg,rgba(124,58,237,0.03),transparent);transform:translateY(-2px);}
+  tbody tr:hover{background:linear-gradient(90deg,rgba(124,58,237,0.03),transparent);transform:translateY(-2px)}
 
   .rank{width:64px;font-weight:800;color:var(--accent);font-size:0.95rem}
   .pos-col{width:72px;text-align:center;font-weight:800}
@@ -73,7 +75,7 @@
   .seen{text-align:right;color:var(--muted);font-weight:600}
 
   /* diff badges */
-  .diff{font-size:0.85rem;margin-left:8px;padding:4px 8px;border-radius:999px;font-weight:700}
+  .diff{font-size:0.82rem;margin-left:8px;padding:4px 8px;border-radius:999px;font-weight:700;white-space:nowrap}
   .diff-pos{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.16)}
   .diff-neg{background:rgba(239,68,68,0.08);color:var(--red);border:1px solid rgba(239,68,68,0.12)}
   .diff-zero{background:rgba(99,102,241,0.06);color:var(--violet);border:1px solid rgba(99,102,241,0.08)}
@@ -87,16 +89,51 @@
   /* Mobile card list */
   .card-list{display:none}
   @media(max-width:880px){
+    header.site{flex-direction:column;align-items:flex-start;gap:10px}
+    .title-group h1{font-size:1.05rem}
+    .meta{width:100%;display:flex;justify-content:space-between}
+
+    .hero{flex-direction:column;align-items:flex-start}
+    .hero .left{max-width:100%}
+
+    .controls{flex-direction:column;align-items:stretch}
+    .controls-left{width:100%;align-items:center}
+    .search{flex:1;min-width:unset;width:100%}
+    .select{flex:0 0 auto}
+    .controls-right{width:100%;justify-content:space-between}
+
+    /* show card list and hide large table visually but keep for accessibility with overflow fallback */
     table{display:none}
     .card-list{display:flex;flex-direction:column;gap:12px}
-    .player-card{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--card)}
-    .player-left{display:flex;gap:12px;align-items:center}
-    .avatar{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
-    .player-names{display:flex;flex-direction:column}
-    .player-nick{font-weight:800;color:var(--accent)}
-    .player-real{color:var(--muted);font-size:0.92rem;font-weight:600}
-    .player-right{text-align:right;color:var(--muted);font-weight:700}
+    .player-card{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow-sm)}
+    .player-left{display:flex;gap:12px;align-items:center;min-width:0}
+    .avatar{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;flex-shrink:0}
+    .player-names{display:flex;flex-direction:column;min-width:0}
+    .player-nick{font-weight:800;color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .player-real{color:var(--muted);font-size:0.92rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .player-right{text-align:right;color:var(--muted);font-weight:700;display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:110px}
     .player-right .diff{display:inline-block;margin-top:6px}
+
+    .pager{justify-content:center;flex-wrap:wrap;gap:8px}
+    .pager button{min-width:44px;padding:8px 10px}
+
+    .card{padding:10px}
+  }
+
+  /* Extra small screens */
+  @media(max-width:480px){
+    body{padding:18px}
+    .logo{width:52px;height:52px;font-size:18px}
+    .avatar{width:48px;height:48px}
+    .player-right{min-width:90px}
+    .badge{padding:6px 10px;font-size:0.85rem}
+    .btn-primary{padding:8px 12px;font-size:0.9rem}
+    .search{padding:6px 10px}
+    .select{padding:6px 8px}
+    .hero p{font-size:0.9rem}
+    .player-card{flex-direction:column;align-items:flex-start}
+    .player-right{align-items:flex-start;text-align:left}
+    .player-nick{font-size:0.98rem}
   }
 
   /* pager */
@@ -106,9 +143,13 @@
   footer{color:var(--muted);text-align:center;margin-top:6px;font-size:0.9rem}
 
   /* legend */
-  .legend{display:flex;gap:12px;align-items:center;margin-top:8px;color:var(--muted);font-size:0.9rem}
+  .legend{display:flex;gap:12px;align-items:center;margin-top:8px;color:var(--muted);font-size:0.9rem;flex-wrap:wrap}
   .legend .item{display:flex;align-items:center;gap:8px}
   .legend .sw{width:14px;height:14px;border-radius:6px}
+
+  /* small utilities */
+  .truncate{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  a.button-like{text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
 </style>
 </head>
 <body>
@@ -127,9 +168,9 @@
 
       <!-- VISIT COUNTER DISPLAY -->
       <div style="padding:8px 12px;border-radius:12px;border:1px solid var(--border);background:linear-gradient(180deg,#fff,rgba(255,255,255,0.95));display:flex;flex-direction:column;align-items:flex-end;min-width:160px;margin-left:8px">
-        <div style="font-size:0.85rem;color:var(--muted)">Visitas</div>
+        <div style="font-size:0.75rem;color:var(--muted)">Visitas</div>
         <div id="visitCounter" style="font-weight:800">—</div>
-        <div style="font-size:0.75rem;color:var(--muted)">Hoje / Mês / Ano / Total</div>
+        <div style="font-size:0.65rem;color:var(--muted)">Hoje / Mês / Ano / Total</div>
       </div>
     </div>
   </header>
@@ -175,7 +216,7 @@
   </div>
 
   <div class="card">
-    <div style="overflow:auto">
+    <div class="table-wrap" aria-hidden="false">
       <table aria-live="polite">
         <thead>
           <tr>
@@ -192,7 +233,7 @@
       </table>
     </div>
 
-    <div class="card-list" id="cardList"></div>
+    <div class="card-list" id="cardList" aria-hidden="true"></div>
 
     <div class="legend" aria-hidden="true">
       <div class="item"><span class="sw" style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.16)"></span>Subiu</div>
@@ -287,12 +328,10 @@
     try {
       const payload = JSON.stringify({ path: window.location.pathname || '/' });
       if (navigator.sendBeacon) {
-        // sendBeacon aceita ArrayBufferView, Blob, FormData — enviamos como Blob
         const blob = new Blob([payload], { type: 'application/json' });
         navigator.sendBeacon('/visit', blob);
         return;
       }
-      // fallback: fetch com keepalive
       fetch('/visit', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -376,6 +415,7 @@
     const start = (page - 1) * per;
     const items = filtered.slice(start, start + per);
 
+    // render desktop table (kept for accessibility) - will be visually hidden on mobile
     if(items.length === 0){
       tbody.innerHTML = '<tr><td colspan="7" style="padding:18px;text-align:center;color:#6b7280">Nenhum jogador encontrado</td></tr>';
     } else {
@@ -398,6 +438,7 @@
       tbody.innerHTML = rows;
     }
 
+    // render mobile card list
     cardList.innerHTML = '';
     items.forEach((p, idx) => {
       const rank = start + idx + 1;
@@ -407,28 +448,33 @@
       const userEsc = escapeHtml(p.username||'(sem usuário)');
       const realEsc = real ? escapeHtml(real) : '';
       const posHtml = p.position_arrow ? `<span class="pos-arrow ${p.position_arrow==='▲'?'pos-up':p.position_arrow==='▼'?'pos-down':'pos-same'}">${p.position_arrow}</span>` : '';
-      const html = `<div class="player-card">
+      const html = `<div class="player-card" role="group" aria-label="Jogador ${userEsc}">
         <div class="player-left">
-          <a href="${profile}" target="_blank" rel="noopener" style="display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit">
+          <a href="${profile}" target="_blank" rel="noopener" style="display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit;width:100%">
             <div class="avatar" aria-hidden="true">${initial}</div>
             <div class="player-names">
-              <div class="player-nick">${rank}. ${userEsc}</div>
-              <div class="player-real">${realEsc}</div>
+              <div class="player-nick truncate">${rank}. ${userEsc}</div>
+              <div class="player-real truncate">${realEsc}</div>
             </div>
           </a>
         </div>
         <div class="player-right">
-          <div>Pos: ${p.position ?? rank} ${posHtml} ${p.position_change != null ? Math.abs(p.position_change) : ''}</div>
-          <div>Blitz: ${p.blitz ?? '—'} <span class="${(p.blitz_diff>0)?'diff diff-pos':(p.blitz_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.blitz_diff)}</span></div>
-          <div>Bullet: ${p.bullet ?? '—'} <span class="${(p.bullet_diff>0)?'diff diff-pos':(p.bullet_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.bullet_diff)}</span></div>
-          <div>Rapid: ${p.rapid ?? '—'} <span class="${(p.rapid_diff>0)?'diff diff-pos':(p.rapid_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.rapid_diff)}</span></div>
-          <div style="font-size:.85rem;color:var(--muted);margin-top:6px">${formatSeen(p.seenAt)}</div>
+          <div style="font-weight:700">Pos: ${p.position ?? rank} ${posHtml} ${p.position_change != null ? Math.abs(p.position_change) : ''}</div>
+          <div style="font-size:0.95rem">Blitz: ${p.blitz ?? '—'} <span class="${(p.blitz_diff>0)?'diff diff-pos':(p.blitz_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.blitz_diff)}</span></div>
+          <div style="font-size:0.95rem">Bullet: ${p.bullet ?? '—'} <span class="${(p.bullet_diff>0)?'diff diff-pos':(p.bullet_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.bullet_diff)}</span></div>
+          <div style="font-size:0.95rem">Rapid: ${p.rapid ?? '—'} <span class="${(p.rapid_diff>0)?'diff diff-pos':(p.rapid_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.rapid_diff)}</span></div>
+          <div style="font-size:0.85rem;color:var(--muted);margin-top:6px">${formatSeen(p.seenAt)}</div>
         </div>
       </div>`;
       cardList.insertAdjacentHTML('beforeend', html);
     });
 
     renderPager(per, totalPages);
+
+    // set aria-hidden flags correctly for accessibility
+    const isMobile = window.matchMedia('(max-width:880px)').matches;
+    document.querySelector('.table-wrap').setAttribute('aria-hidden', String(isMobile));
+    document.getElementById('cardList').setAttribute('aria-hidden', String(!isMobile));
   }
 
   function renderPager(per, totalPages){
@@ -471,11 +517,11 @@
       p.rapid_diff != null ? p.rapid_diff : 0,
       p.seenAt || ''
     ]);
-    const csv = [headers.join(','), ...rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','))].join('\r\n');
+    const csv = [headers.join(','), ...rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""') }"`).join(','))].join('\r\n');
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download = `ranking_page${page}.csv`; a.click();
   }
 
-  function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c])); }
 
   const debouncedFilter = debounce(applyFilters, 250);
   qEl.addEventListener('input', debouncedFilter);
@@ -485,9 +531,14 @@
   exportBtn.addEventListener('click', exportCurrentPageCsv);
   document.getElementById('dismissJoinBanner').addEventListener('click', ()=>document.querySelector('.hero').style.display='none');
 
-  // enviar ping de visita e carregar dados
+  // envia ping e carrega dados
   sendVisitPing();
   loadData();
+
+  // re-render quando viewport muda (para alternar tabela/cards)
+  const mql = window.matchMedia('(max-width:880px)');
+  mql.addEventListener('change', ()=>{ renderPage(); });
+
 })();
 </script>
 </body>
