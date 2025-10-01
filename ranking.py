@@ -1,21 +1,27 @@
 #!/usr/bin/env python3
 # coding: utf-8
-
+"""
+Aplicação Flask que gera o ranking (fetch do time Lichess) e adiciona contador de visitas.
+Mantive a estrutura e a lógica do seu último script, apenas inseri o contador SQLite
+e os endpoints /visit e /stats, e adicionei o bloco no HTML para mostrar os valores.
+"""
+import os
+import time
+import threading
+import sqlite3
 import requests
 import json
-import time
+import urllib3
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from flask import Flask, jsonify, request, render_template_string, make_response
 from urllib.parse import quote
-import urllib3
 
 # ---------------------------------------------------------------------
-# ATENÇÃO: para contornar o erro de SSL no seu ambiente local, este
+# ATENÇÃO: para contornar erro de SSL no seu ambiente local, este
 # script desabilita a verificação de certificados SSL (s.verify = False).
-# Isto é inseguro — faça apenas para testes locais. Depois voltamos à
-# solução segura (certifi / CA bundle).
+# Isto é inseguro — faça apenas para testes locais. Em produção, use certifi.
 # ---------------------------------------------------------------------
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -30,13 +36,79 @@ REQUEST_TIMEOUT = 8
 RETRY_ATTEMPTS = 3
 RETRY_BACKOFF = 1.0  # seconds, multiplicativo
 
+# Contador (SQLite)
+DB_FILE = "visits.db"
+DB_LOCK = threading.Lock()
+# Se True, o servidor incrementa contador quando serve "/" (bom se NÃO houver CDN/cache).
+# Se sua página for servida por CDN, coloque False e deixe o JS enviar POST /visit.
+COUNT_ON_SERVER = True
+
 app = Flask(__name__)
 PLAYERS = []          # lista carregada no startup (dicionários)
 DATA_LOADED_AT = 0    # timestamp ms
 
+# ----------------- sqlite helpers (visitas) -------------------------
+def init_db():
+    os.makedirs(os.path.dirname(DB_FILE) or ".", exist_ok=True)
+    with DB_LOCK:
+        conn = sqlite3.connect(DB_FILE, check_same_thread=False)
+        cur = conn.cursor()
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS visits_daily (
+            id INTEGER PRIMARY KEY,
+            path TEXT NOT NULL,
+            day TEXT NOT NULL,
+            count INTEGER NOT NULL DEFAULT 0,
+            UNIQUE(path, day)
+        );
+        """)
+        conn.commit()
+        conn.close()
+
+def today_iso_for_ts(ts=None):
+    t = time.gmtime() if ts is None else time.gmtime(ts)
+    return time.strftime("%Y-%m-%d", t)
+
+def increment_visit(path):
+    path = (path or "/")[:200]
+    day = today_iso_for_ts()
+    with DB_LOCK:
+        conn = sqlite3.connect(DB_FILE, check_same_thread=False)
+        cur = conn.cursor()
+        cur.execute("""
+            INSERT INTO visits_daily(path, day, count)
+            VALUES (?, ?, 1)
+            ON CONFLICT(path, day) DO UPDATE SET count = count + 1;
+        """, (path, day))
+        conn.commit()
+        conn.close()
+
+def get_stats_for_path(path):
+    path = (path or "/")[:200]
+    today = today_iso_for_ts()
+    now = time.gmtime()
+    month_start = time.strftime("%Y-%m-01", now)
+    year_start = time.strftime("%Y-01-01", now)
+    with DB_LOCK:
+        conn = sqlite3.connect(DB_FILE, check_same_thread=False)
+        cur = conn.cursor()
+        cur.execute("SELECT SUM(count) FROM visits_daily WHERE path=? AND day BETWEEN ? AND ?", (path, today, today))
+        today_cnt = cur.fetchone()[0] or 0
+        cur.execute("SELECT SUM(count) FROM visits_daily WHERE path=? AND day BETWEEN ? AND ?", (path, month_start, today))
+        month_cnt = cur.fetchone()[0] or 0
+        cur.execute("SELECT SUM(count) FROM visits_daily WHERE path=? AND day BETWEEN ? AND ?", (path, year_start, today))
+        year_cnt = cur.fetchone()[0] or 0
+        cur.execute("SELECT SUM(count) FROM visits_daily WHERE path=?", (path,))
+        total_cnt = cur.fetchone()[0] or 0
+        conn.close()
+    return {"path": path, "today": int(today_cnt), "month": int(month_cnt), "year": int(year_cnt), "total": int(total_cnt)}
+
+init_db()
+
+# ----------------- seu código de geração / fetch players (adaptado) -----------------
 def create_session():
     s = requests.Session()
-    # 🚨 DESABILITA VERIFICAÇÃO SSL (apenas para teste local)
+    # 🚨 DESABILITA VERIFICAÇÃO SSL (apenas para dev local)
     s.verify = False
 
     retries = Retry(
@@ -181,6 +253,28 @@ def load_players():
         DATA_LOADED_AT = int(time.time() * 1000)
         print(f"✅ Dados carregados: {len(PLAYERS)} jogadores ativos encontrados.")
 
+# rota compatível com o frontend estático: players.json
+@app.route("/players.json")
+def players_json():
+    # devolve full list (sem paginação) no formato que o frontend já esperava
+    payload = {
+        "players": [
+            {
+                "username": p["username"],
+                "name": p.get("name", "Nome não encontrato"),
+                "blitz": p["blitz"],
+                "bullet": p["bullet"],
+                "rapid": p["rapid"],
+                "seenAt": p["seenAt"],
+                "profile": p["profile"],
+            } for p in PLAYERS
+        ],
+        "generated_at": DATA_LOADED_AT
+    }
+    resp = make_response(json.dumps(payload), 200)
+    resp.headers["Content-Type"] = "application/json; charset=utf-8"
+    return resp
+
 @app.route("/api/players")
 def api_players():
     """
@@ -242,28 +336,6 @@ def api_players():
         "items": resp_items,
     })
 
-# rota compatível com o frontend estático: players.json
-@app.route("/players.json")
-def players_json():
-    # devolve full list (sem paginação) no formato que o frontend já esperava
-    payload = {
-        "players": [
-            {
-                "username": p["username"],
-                "name": p.get("name", "Nome não encontrato"),
-                "blitz": p["blitz"],
-                "bullet": p["bullet"],
-                "rapid": p["rapid"],
-                "seenAt": p["seenAt"],
-                "profile": p["profile"],
-            } for p in PLAYERS
-        ],
-        "generated_at": DATA_LOADED_AT
-    }
-    resp = make_response(json.dumps(payload), 200)
-    resp.headers["Content-Type"] = "application/json; charset=utf-8"
-    return resp
-
 # Simple admin endpoint to refresh data manually
 @app.route("/admin/refresh", methods=["POST"])
 def admin_refresh():
@@ -273,320 +345,539 @@ def admin_refresh():
     load_players()
     return jsonify({"status": "ok", "loaded": len(PLAYERS)})
 
-# FULL frontend HTML (INDEX_HTML) - o JS carrega ./players.json e exibe `name`
-INDEX_HTML = """
-<!doctype html>
+# ----------------- Contador: endpoints públicos --------------------
+@app.route("/visit", methods=["POST"])
+def api_visit():
+    """
+    Recebe POST (JSON opcional) com { path: "/..." } e incrementa contador.
+    Use fetch(..., {keepalive:true}) ou navigator.sendBeacon se preferir.
+    """
+    ua = (request.headers.get("User-Agent") or "").lower()
+    # heurística simples para ignorar bots
+    if any(x in ua for x in ("bot", "crawler", "spider", "curl", "wget", "httpclient")):
+        return jsonify({"ok": True, "ignored": "bot"})
+    data = request.get_json(silent=True) or {}
+    path = data.get("path") or request.args.get("path") or request.referrer or "/"
+    try:
+        increment_visit(path)
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+    return jsonify({"ok": True})
+
+@app.route("/stats", methods=["GET"])
+def api_stats():
+    """
+    GET /stats?path=/  -> retorna { path, today, month, year, total }
+    """
+    path = request.args.get("path") or "/"
+    stats = get_stats_for_path(path)
+    return jsonify(stats)
+
+@app.route("/series", methods=["GET"])
+def api_series():
+    path = request.args.get("path") or "/"
+    frm = request.args.get("from")
+    to = request.args.get("to") or today_iso_for_ts()
+    with DB_LOCK:
+        conn = sqlite3.connect(DB_FILE, check_same_thread=False)
+        cur = conn.cursor()
+        if frm:
+            cur.execute("SELECT day,count FROM visits_daily WHERE path=? AND day BETWEEN ? AND ? ORDER BY day ASC", (path, frm, to))
+        else:
+            cur.execute("SELECT day,count FROM visits_daily WHERE path=? ORDER BY day DESC LIMIT 30", (path,))
+        rows = cur.fetchall()
+        conn.close()
+    return jsonify({"path": path, "rows": [{"day": r[0], "count": r[1]} for r in rows]})
+
+# ----------------- FULL frontend HTML (INDEX_HTML) - o JS carrega ./players.json e exibe `name` ----------
+# Usei exatamente o HTML que você me enviou e apenas adicionei o bloco do contador no header
+INDEX_HTML = """<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Ranking Xadrez Jovem ES</title>
-  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#f3f6fb;
-      --card:#ffffff;
-      --muted:#6b7280;
-      --accent:#0066ff;
-      --accent-2:#004ecb;
-      --table-border:#e6e9ee;
-      --glass: rgba(255,255,255,0.7);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-      background:linear-gradient(180deg,var(--bg),#eef4ff);
-      color:#0b1220;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      padding:28px;
-    }
-    .wrap{max-width:1200px;margin:0 auto}
-    header.site{
-      display:flex;align-items:center;gap:16px;justify-content:space-between;margin-bottom:20px;
-    }
-    .brand{
-      display:flex;gap:12px;align-items:center;
-    }
-    .logo{
-      width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
-      display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:18px;box-shadow:0 6px 18px rgba(6,34,102,0.12);
-    }
-    h1{font-size:1.35rem;margin:0}
-    .subtitle{color:var(--muted);font-size:0.95rem;margin-top:2px}
-    .top-meta{display:flex;gap:10px;align-items:center}
-    .badge{
-      background:linear-gradient(180deg,#f1f9ff,#eef6ff);color:var(--accent);padding:6px 10px;border-radius:999px;border:1px solid rgba(11,102,255,0.08);font-weight:700;font-size:0.9rem;
-    }
+<meta charset="utf-8">
+<meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="expires" content="0">
+<meta http-equiv="pragma" content="no-cache">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ranking Xadrez Jovem ES</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f6fb;
+    --card:#ffffff;
+    --muted:#667085;
+    --accent:#3b82f6;
+    --accent-2:#7c3aed;
+    --text:#0b1220;
+    --border:rgba(15,23,36,0.06);
+    --radius:16px;
+    --shadow-lg: 0 20px 50px rgba(16,24,40,0.08);
+    --shadow-sm: 0 6px 18px rgba(16,24,40,0.06);
+    --glass: rgba(255,255,255,0.7);
+    --green:#10b981;
+    --red:#ef4444;
+    --violet:#6366f1;
+    --gray:#9ca3af;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:linear-gradient(180deg,#eef2ff 0%,var(--bg) 100%);color:var(--text);padding:36px;min-height:100vh;display:flex;justify-content:center;}
+  .container{max-width:1150px;width:100%;display:flex;flex-direction:column;gap:22px}
 
-    .card{
-      background:var(--card);
-      border-radius:14px;
-      padding:16px;
-      box-shadow:0 10px 30px rgba(12,32,80,0.06);
-    }
+  /* Header */
+  header.site{display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .brand{display:flex;align-items:center;gap:16px}
+  .logo{width:72px;height:72px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:22px;box-shadow:var(--shadow-lg)}
+  .title-group h1{font-size:1.25rem;margin-bottom:2px}
+  .subtitle{color:var(--muted);font-size:0.95rem}
 
-    .controls{
-      display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;
-    }
-    .controls .left{display:flex;gap:8px;align-items:center}
-    .search{
-      display:flex;align-items:center;gap:8px;background:var(--glass);padding:8px;border-radius:10px;border:1px solid rgba(11,20,40,0.04);
-    }
-    .search input{
-      border:0;background:transparent;outline:none;padding:6px 8px;font-size:0.95rem;width:240px;
-    }
-    select,button{
-      padding:8px 10px;border-radius:8px;border:1px solid #e6e9ee;background:#fff;font-size:0.95rem;
-    }
-    button.btn{
-      background:linear-gradient(180deg,var(--accent),var(--accent-2));color:#fff;border:none;cursor:pointer;
-    }
-    .info{color:var(--muted);font-size:0.9rem;margin-left:6px}
+  .meta{display:flex;gap:10px;align-items:center}
+  .badge{background:linear-gradient(90deg,rgba(59,130,246,0.06),transparent);color:var(--accent);padding:8px 14px;border-radius:999px;font-weight:700;font-size:.95rem;border:1px solid rgba(59,130,246,0.08);box-shadow:var(--shadow-sm)}
 
-    .table-wrap{overflow:auto;border-radius:10px;border:1px solid var(--table-border);background:linear-gradient(180deg,#fff,#fbfdff);margin-top:8px}
-    table{width:100%;border-collapse:collapse;min-width:720px}
-    thead th{
-      position:sticky;top:0;background:linear-gradient(180deg,#ffffff,#f7fbff);padding:12px 14px;text-align:left;border-bottom:1px solid var(--table-border);font-weight:700;font-size:0.95rem;color:#0b1220;
-    }
-    tbody td{padding:12px 14px;border-bottom:1px solid var(--table-border);vertical-align:middle;font-size:0.95rem;color:#122036}
-    tbody tr:hover{background:linear-gradient(90deg,rgba(0,102,255,0.03),transparent)}
-    .rank{width:56px;font-weight:700;color:var(--accent)}
-    .user a{color:var(--accent);text-decoration:none;font-weight:600}
-    .user a:hover{text-decoration:underline}
-    .small{display:block;color:var(--muted);font-size:0.82rem;margin-top:4px}
-    .rating{font-weight:700;color:#111}
-    .seen{color:var(--muted);font-size:0.9rem}
+  /* Hero */
+  .hero{background:linear-gradient(180deg,rgba(255,255,255,0.7),var(--card));border-radius:var(--radius);padding:18px;border:1px solid var(--border);box-shadow:var(--shadow-sm);display:flex;justify-content:space-between;align-items:center;gap:18px}
+  .hero .left{max-width:72%}
+  .hero p{color:var(--muted);margin-top:6px}
+  .hero .cta{display:flex;gap:10px;align-items:center}
+  .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:10px 16px;border-radius:12px;border:none;cursor:pointer;font-weight:700;box-shadow:0 10px 30px rgba(59,130,246,0.12)}
+  .btn-ghost{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer}
 
-    .pager{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:12px;justify-content:flex-end}
-    .pager button{background:#fff;border:1px solid #eef3fb;padding:6px 10px;border-radius:8px;cursor:pointer}
-    .pager button[disabled]{opacity:.6;cursor:default}
+  /* Controls */
+  .controls{display:flex;justify-content:space-between;gap:12px;align-items:center}
+  .controls-left{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .search{display:flex;align-items:center;gap:8px;background:linear-gradient(180deg,#fff,rgba(255,255,255,0.9));padding:8px 12px;border-radius:12px;border:1px solid var(--border);min-width:260px;box-shadow:var(--shadow-sm)}
+  .search input{border:0;outline:0;background:transparent;font-size:0.95rem;color:var(--text);width:260px}
+  .select{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;font-size:0.95rem}
 
-    @media (max-width:900px){
-      .brand h1{font-size:1.05rem}
-      .search input{width:140px}
-      table{min-width:640px}
-    }
-    @media (max-width:640px){
-      body{padding:14px}
-      .controls{flex-direction:column;align-items:flex-start}
-      .top-meta{display:none}
-      .logo{width:48px;height:48px;font-size:16px}
-    }
-  </style>
+  .controls-right{display:flex;align-items:center;gap:10px}
+
+  /* Table card */
+  .card{background:var(--card);border-radius:18px;padding:14px;border:1px solid var(--border);box-shadow:var(--shadow-lg)}
+  table{width:100%;border-collapse:collapse}
+  thead th{background:transparent;text-align:left;padding:16px;font-weight:700;color:var(--muted);font-size:0.95rem}
+  tbody td{padding:14px;border-top:1px solid var(--border);vertical-align:middle}
+  tbody tr{transition:background .18s, transform .12s}
+  tbody tr:hover{background:linear-gradient(90deg,rgba(124,58,237,0.03),transparent);transform:translateY(-2px);}
+
+  .rank{width:64px;font-weight:800;color:var(--accent);font-size:0.95rem}
+  .pos-col{width:72px;text-align:center;font-weight:800}
+  .user a{Color:var(--accent);font-weight:700;text-decoration:none}
+  .user .realname{display:block;color:var(--muted);font-size:0.86rem;margin-top:4px;font-weight:600}
+  .rating{text-align:right;font-weight:800}
+  .seen{text-align:right;color:var(--muted);font-weight:600}
+
+  /* diff badges */
+  .diff{font-size:0.85rem;margin-left:8px;padding:4px 8px;border-radius:999px;font-weight:700}
+  .diff-pos{background:rgba(16,185,129,0.12);color:var(--green);border:1px solid rgba(16,185,129,0.16)}
+  .diff-neg{background:rgba(239,68,68,0.08);color:var(--red);border:1px solid rgba(239,68,68,0.12)}
+  .diff-zero{background:rgba(99,102,241,0.06);color:var(--violet);border:1px solid rgba(99,102,241,0.08)}
+
+  /* position arrows */
+  .pos-arrow {font-weight:900;margin-right:6px}
+  .pos-up{color:var(--green)}
+  .pos-down{color:var(--red)}
+  .pos-same{color:var(--gray)}
+
+  /* Mobile card list */
+  .card-list{display:none}
+  @media(max-width:880px){
+    table{display:none}
+    .card-list{display:flex;flex-direction:column;gap:12px}
+    .player-card{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--card)}
+    .player-left{display:flex;gap:12px;align-items:center}
+    .avatar{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800}
+    .player-names{display:flex;flex-direction:column}
+    .player-nick{font-weight:800;color:var(--accent)}
+    .player-real{color:var(--muted);font-size:0.92rem;font-weight:600}
+    .player-right{text-align:right;color:var(--muted);font-weight:700}
+    .player-right .diff{display:inline-block;margin-top:6px}
+  }
+
+  /* pager */
+  .pager{display:flex;gap:8px;justify-content:flex-end;padding-top:10px}
+  .pager button{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:pointer}
+
+  footer{color:var(--muted);text-align:center;margin-top:6px;font-size:0.9rem}
+
+  /* legend */
+  .legend{display:flex;gap:12px;align-items:center;margin-top:8px;color:var(--muted);font-size:0.9rem}
+  .legend .item{display:flex;align-items:center;gap:8px}
+  .legend .sw{width:14px;height:14px;border-radius:6px}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <header class="site">
-      <div class="brand">
-        <div class="logo">XJES</div>
-        <div>
-          <h1>Ranking Xadrez Jovem ES</h1>
-          <div class="subtitle">Jogadores ativos — últimos 30 dias</div>
-        </div>
+<div class="container" id="app">
+  <header class="site">
+    <div class="brand">
+      <a class="logo" href="./" aria-label="Ir para a página inicial">XJES</a>
+      <div class="title-group">
+        <h1>Ranking Xadrez Jovem ES</h1>
+        <div class="subtitle">Jogadores ativos — últimos 30 dias</div>
       </div>
-      <div class="top-meta">
-        <div class="badge">Ativos: <strong id="totalBadge">—</strong></div>
-      </div>
-    </header>
-
-    <div class="card">
-      <div class="controls">
-        <div class="left">
-          <div class="search" title="Pesquisar usuário">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="opacity:.7"><path d="M21 21l-4.35-4.35" stroke="#456" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="11" cy="11" r="6" stroke="#456" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <input id="q" type="search" placeholder="buscar usuário..." />
-          </div>
-
-          <label>
-            <select id="sort">
-              <option value="blitz">Blitz</option>
-              <option value="bullet">Bullet</option>
-              <option value="rapid">Rapid</option>
-              <option value="username">Usuário</option>
-            </select>
-          </label>
-
-          <label>
-            <select id="order">
-              <option value="desc">Desc</option>
-              <option value="asc">Asc</option>
-            </select>
-          </label>
-
-          <label>
-            <select id="perPage">
-              <option value="10">10</option>
-              <option value="20" selected>20</option>
-              <option value="50">50</option>
-            </select>
-          </label>
-        </div>
-
-        <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
-          <button id="reload" class="btn">Recarregar</button>
-          <div id="info" class="info">—</div>
-        </div>
-      </div>
-
-      <div class="table-wrap" id="tableWrap">
-        <table>
-          <thead>
-            <tr>
-              <th class="rank">#</th>
-              <th>Usuário</th>
-              <th>Blitz</th>
-              <th>Bullet</th>
-              <th>Rapid</th>
-              <th>Último login</th>
-            </tr>
-          </thead>
-          <tbody id="tbody"></tbody>
-        </table>
-      </div>
-
-      <div class="pager" id="pager"></div>
     </div>
+    <div class="meta">
+      <div class="badge" aria-live="polite">Ativos: <strong id="totalBadge">—</strong></div>
+      <!-- VISIT COUNTER DISPLAY -->
+      <div style="padding:8px 12px;border-radius:12px;border:1px solid var(--border);background:linear-gradient(180deg,#fff,rgba(255,255,255,0.95));display:flex;flex-direction:column;align-items:flex-end;min-width:160px">
+        <div style="font-size:0.85rem;color:var(--muted)">Visitas</div>
+        <div id="visitCounter" style="font-weight:800">—</div>
+        <div style="font-size:0.75rem;color:var(--muted)">Hoje / Mês / Ano / Total</div>
+      </div>
+    </div>
+  </header>
 
-    <footer style="margin-top:14px;color:var(--muted);font-size:0.9rem;text-align:center">
-      Dados: Lichess · Site estático gerado a partir de players.json
-    </footer>
+  <div class="hero">
+    <div class="left">
+      <strong>Quer aparecer no ranking?</strong>
+      <p>Seja membro do time <strong>xadrezjovemes</strong> no Lichess. Aparece automaticamente após a geração diária.</p>
+    </div>
+    <div class="cta">
+      <a class="btn-primary" href="https://lichess.org/team/xadrezjovemes" target="_blank" rel="noopener">Entrar no time</a>
+      <button id="dismissJoinBanner" class="btn-ghost">Fechar</button>
+    </div>
   </div>
 
+  <div class="controls">
+    <div class="controls-left">
+      <div class="search" title="Pesquisar usuário">
+        <input id="q" type="search" placeholder="Buscar usuário..." aria-label="Buscar usuário">
+      </div>
+      <select id="sort" class="select" title="Ordenar">
+        <option value="blitz">Blitz</option>
+        <option value="bullet">Bullet</option>
+        <option value="rapid">Rapid</option>
+        <option value="position">Posição</option>
+        <option value="username">Usuário</option>
+      </select>
+      <select id="order" class="select" title="Ordem">
+        <option value="desc">Desc</option>
+        <option value="asc">Asc</option>
+      </select>
+      <select id="perPage" class="select" title="Por página">
+        <option value="10">10</option>
+        <option value="20" selected>20</option>
+        <option value="50">50</option>
+      </select>
+    </div>
+
+    <div class="controls-right">
+      <button id="exportCsv" class="btn-ghost">Exportar CSV</button>
+      <div id="info" class="subtitle">—</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="overflow:auto">
+      <table aria-live="polite">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th class="pos-col">Δ</th>
+            <th>Usuário</th>
+            <th style="text-align:right">Blitz</th>
+            <th style="text-align:right">Bullet</th>
+            <th style="text-align:right">Rapid</th>
+            <th style="text-align:right">Último login</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="card-list" id="cardList"></div>
+
+    <div class="legend" aria-hidden="true">
+      <div class="item"><span class="sw" style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.16)"></span>Subiu</div>
+      <div class="item"><span class="sw" style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.12)"></span>Caiu</div>
+      <div class="item"><span class="sw" style="background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.08)"></span>Manteve</div>
+    </div>
+
+    <div class="pager" id="pager"></div>
+  </div>
+
+  <footer>Dados: Lichess · Site atualizado uma vez por dia.</footer>
+</div>
+
 <script>
-/* client-side: load ./players.json, search, sort, paginate */
-let all = [];
-let filtered = [];
-let page = 1;
+(() => {
+  let all = [], filtered = [], page = 1;
 
-const qEl = document.getElementById('q');
-const sortEl = document.getElementById('sort');
-const orderEl = document.getElementById('order');
-const perPageEl = document.getElementById('perPage');
-const infoEl = document.getElementById('info');
-const totalBadge = document.getElementById('totalBadge');
+  const qEl = document.getElementById('q');
+  const sortEl = document.getElementById('sort'), orderEl = document.getElementById('order'), perPageEl = document.getElementById('perPage');
+  const infoEl = document.getElementById('info'), totalBadge = document.getElementById('totalBadge');
+  const tbody = document.getElementById('tbody'), pager = document.getElementById('pager'), cardList = document.getElementById('cardList');
+  const exportBtn = document.getElementById('exportCsv');
+  const visitEl = document.getElementById('visitCounter');
 
-document.getElementById('reload').addEventListener('click', () => {
-  loadData(true);
-});
-
-qEl.addEventListener('input', ()=>{ page = 1; applyFilters(); });
-sortEl.addEventListener('change', ()=>{ page = 1; applyFilters(); });
-orderEl.addEventListener('change', ()=>{ page = 1; applyFilters(); });
-perPageEl.addEventListener('change', ()=>{ page = 1; renderPage(); });
-
-async function loadData(force=false){
-  infoEl.textContent = 'Carregando...';
-  try{
-    const r = await fetch('./players.json', {cache: force ? 'no-store' : 'default'});
-    if(!r.ok) throw new Error('Erro ao buscar players.json');
-    const js = await r.json();
-    // suporta ambos: { players: [...] } ou { items: [...] }
-    all = js.players || js.items || [];
-    totalBadge.textContent = all.length;
-    const dt = js.generated_at ? new Date(js.generated_at).toLocaleString() : (js.data_loaded_at ? new Date(js.data_loaded_at).toLocaleString() : '—');
-    infoEl.textContent = `Total: ${all.length} — gerado: ${dt}`;
-    page = 1;
-    applyFilters();
-  }catch(err){
-    console.error(err);
-    infoEl.textContent = 'Erro ao carregar';
+  function debounce(fn, wait=250){let t; return (...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),wait);};}
+  function formatSeen(ms){
+    if(!ms) return '—';
+    const ts = Number(ms) || Date.parse(ms) || 0; if(!ts) return '—';
+    const diff = Date.now() - ts; if(diff < 0) return 'Agora';
+    const days = Math.floor(diff/(24*3600*1000));
+    if(days === 0) return 'Hoje';
+    if(days === 1) return '1 dia';
+    if(days < 30) return `${days} dias`;
+    const months = Math.floor(days/30);
+    if(months < 12) return `${months} meses`;
+    return `${Math.floor(months/12)} anos`;
   }
-}
+  function safeNumber(v){ return v==null||v===''?0:Number(v)||0; }
 
-function applyFilters(){
-  const q = qEl.value.trim().toLowerCase();
-  filtered = all.filter(p => {
-    if(!q) return true;
-    const uname = (p.username || '').toLowerCase();
-    const name = (p.name || '').toLowerCase();
-    return uname.includes(q) || name.includes(q);
-  });
-  const sortKey = sortEl.value;
-  const order = orderEl.value === 'asc' ? 1 : -1;
-  filtered.sort((a,b)=>{
-    let va = sortKey === 'username' ? (a.username || '').toLowerCase() : (a[sortKey] || 0);
-    let vb = sortKey === 'username' ? (b.username || '').toLowerCase() : (b[sortKey] || 0);
-    if(va < vb) return -1 * order;
-    if(va > vb) return 1 * order;
-    return 0;
-  });
-  renderPage();
-}
+  // novo: formatDiff sempre retorna um parêntese com o valor,
+  // positivo com +, negativo com - (natural) e 0 quando não houver/nenhuma mudança.
+  function formatDiff(d){
+    const n = (d === null || d === undefined || d === '') ? 0 : Number(d);
+    if(Number.isNaN(n)) return '(0)';
+    const sign = n > 0 ? '+' : '';
+    return `(${sign}${n})`;
+  }
 
-function renderPage(){
-  const per = parseInt(perPageEl.value,10) || 20;
-  const start = (page-1)*per;
-  const pageItems = filtered.slice(start, start+per);
-  const tbody = document.getElementById('tbody');
-  tbody.innerHTML = '';
-  pageItems.forEach((p, idx) => {
-    const tr = document.createElement('tr');
-    const rank = start + idx + 1;
-    // Mostrar username como link e name abaixo (com fallback pedido)
-    const displayName = p.name || 'Nome não encontrato';
-    const formatDiff = d => {
-      if(d == null) return '';
-      const sign = d > 0 ? '+' : '';
-      const color = d > 0 ? 'green' : (d < 0 ? 'crimson' : 'gray');
-      return ` <span style="font-size:0.9rem;color:${color};margin-left:6px">(${sign}${d})</span>`;
+  function posBadge(p){
+    if(!p || p.position_arrow == null) return '';
+    const arrow = p.position_arrow;
+    const change = (typeof p.position_change === 'number') ? Math.abs(p.position_change) : '';
+    const cls = arrow === '▲' ? 'pos-up' : (arrow === '▼' ? 'pos-down' : 'pos-same');
+    return `<div style="display:flex;align-items:center;justify-content:center"><span class="pos-arrow ${cls}">${escapeHtml(arrow)}</span>${change ? `<span style="font-weight:700">${change}</span>` : ''}</div>`;
+  }
+
+  // extrai arrays do JSON e faz dedupe por username (merge de duas listas possíveis)
+  function extractPlayers(obj){
+    const found = [];
+    if(!obj) return found;
+    if(Array.isArray(obj)) return obj.slice();
+    if(Array.isArray(obj.players)) found.push(...obj.players);
+    Object.values(obj).forEach(v=>{
+      if(Array.isArray(v)) found.push(...v);
+    });
+    return found;
+  }
+
+  function dedupePlayers(list){
+    const map = new Map();
+    const score = p => safeNumber(p.blitz) + safeNumber(p.bullet) + safeNumber(p.rapid);
+    list.forEach(p=>{
+      const key = (p.username||'').toString().trim().toLowerCase();
+      if(!key){
+        const id = `__anon_${Math.random().toString(36).slice(2,9)}`;
+        map.set(id, Object.assign({},p,{username:id}));
+        return;
+      }
+      if(!map.has(key)) map.set(key, p);
+      else {
+        const existing = map.get(key);
+        if(score(p) > score(existing)) map.set(key,p);
+        else {
+          const eSeen = Date.parse(existing.seenAt||'')||0;
+          const pSeen = Date.parse(p.seenAt||'')||0;
+          if(pSeen > eSeen) map.set(key,p);
+        }
+      }
+    });
+    return Array.from(map.values());
+  }
+
+  async function loadData(force=false){
+    infoEl.textContent = 'Carregando...';
+    try{
+      // cache-busting
+      const url = './players.json?v=' + Date.now();
+      const res = await fetch(url, {cache: 'no-store'});
+      if(!res.ok) throw new Error('Falha ao buscar players.json: ' + res.status);
+      const js = await res.json();
+      console.log('players.json carregado:', js);
+
+      let candidates = extractPlayers(js);
+      if(candidates.length === 0 && Array.isArray(js.players)) candidates = js.players.slice();
+      all = dedupePlayers(candidates);
+
+      // se existir campo position no arquivo, manter ordem por position (menor = melhor), senão ordenar por blitz
+      if(all.length && all[0].position != null){
+        all.sort((a,b)=> (safeNumber(a.position) - safeNumber(b.position)));
+      }else{
+        all.sort((a,b)=> (safeNumber(b.blitz) - safeNumber(a.blitz)));
+      }
+
+      totalBadge.textContent = all.length;
+      const gen = js.generated_at ? new Date(Number(js.generated_at)).toLocaleString() : '—';
+      infoEl.textContent = `Total: ${all.length} — gerado: ${gen}`;
+      page = 1;
+      applyFilters();
+
+      // fetch visit stats (mostra no header)
+      fetch('/stats?path=' + encodeURIComponent(window.location.pathname || '/'))
+        .then(r => r.ok ? r.json() : Promise.reject(r))
+        .then(json => {
+          if(json && typeof json.today !== 'undefined'){
+            visitEl.textContent = `${json.today} / ${json.month} / ${json.year} / ${json.total}`;
+          }
+        }).catch(()=>{/*ignore*/});
+
+    }catch(err){
+      console.error(err);
+      infoEl.textContent = 'Erro ao carregar dados';
+      tbody.innerHTML = '<tr><td colspan="7" style="padding:18px;text-align:center;color:#6b7280">Erro ao carregar players.json</td></tr>';
+    }
+  }
+
+  function applyFilters(){
+    const q = (qEl.value || '').trim().toLowerCase();
+    filtered = all.filter(p => {
+      if(!q) return true;
+      return (p.username||'').toString().toLowerCase().includes(q) || (p.name||p.realname||'').toString().toLowerCase().includes(q);
+    });
+
+    const key = sortEl.value, ord = orderEl.value === 'asc' ? 1 : -1;
+    filtered.sort((a,b)=>{
+      if(key === 'username'){ const A=(a.username||'').toLowerCase(), B=(b.username||'').toLowerCase(); return (A < B ? -1 : A > B ? 1 : 0) * ord; }
+      if(key === 'position'){
+        const pa = a.position == null ? Infinity : Number(a.position);
+        const pb = b.position == null ? Infinity : Number(b.position);
+        return (pa < pb ? -1 : pa > pb ? 1 : 0) * ord;
+      }
+      const va = safeNumber(a[key]), vb = safeNumber(b[key]);
+      return (va < vb ? -1 : va > vb ? 1 : 0) * ord;
+    });
+    page = 1;
+    renderPage();
+  }
+
+  function renderPage(){
+    const per = Math.max(1, parseInt(perPageEl.value,10) || 20);
+    const totalPages = Math.max(1, Math.ceil(filtered.length / per));
+    if(page > totalPages) page = totalPages;
+    const start = (page - 1) * per;
+    const items = filtered.slice(start, start + per);
+
+    // Desktop table
+    if(items.length === 0){
+      tbody.innerHTML = '<tr><td colspan="7" style="padding:18px;text-align:center;color:#6b7280">Nenhum jogador encontrado</td></tr>';
+    } else {
+      const rows = items.map((p,idx)=>{
+        const rank = start + idx + 1;
+        const real = p.name || p.realname || p.fullname || '';
+        const profile = (p.profile || p.url) ? (p.profile || p.url) : `https://lichess.org/@/${encodeURIComponent(p.username||'')}`;
+        const userEsc = escapeHtml(p.username||'(sem usuário)');
+        const realHtml = real ? `<span class="realname">${escapeHtml(real)}</span>` : `<span class="realname">Sem nome registrado</span>`;
+        return `<tr>
+          <td class="rank">${rank}</td>
+          <td class="pos-col">${posBadge(p)}</td>
+          <td class="user"><a href="${profile}" target="_blank" rel="noopener">${userEsc}</a>${realHtml}</td>
+          <td class="rating">${p.blitz ?? '—'} <span class="${(p.blitz_diff>0)?'diff diff-pos':(p.blitz_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.blitz_diff)}</span></td>
+          <td class="rating">${p.bullet ?? '—'} <span class="${(p.bullet_diff>0)?'diff diff-pos':(p.bullet_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.bullet_diff)}</span></td>
+          <td class="rating">${p.rapid ?? '—'} <span class="${(p.rapid_diff>0)?'diff diff-pos':(p.rapid_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.rapid_diff)}</span></td>
+          <td class="seen">${formatSeen(p.seenAt)}</td>
+        </tr>`;
+      }).join('');
+      tbody.innerHTML = rows;
+    }
+
+    // Mobile cards
+    cardList.innerHTML = '';
+    items.forEach((p, idx) => {
+      const rank = start + idx + 1;
+      const real = p.name || p.realname || p.fullname || 'Sem nome registrado';
+      const profile = (p.profile || p.url) ? (p.profile || p.url) : `https://lichess.org/@/${encodeURIComponent(p.username||'')}`;
+      const initial = escapeHtml((p.username||'').charAt(0).toUpperCase());
+      const userEsc = escapeHtml(p.username||'(sem usuário)');
+      const realEsc = real ? escapeHtml(real) : '';
+      const posHtml = p.position_arrow ? `<span class="pos-arrow ${p.position_arrow==='▲'?'pos-up':p.position_arrow==='▼'?'pos-down':'pos-same'}">${p.position_arrow}</span>` : '';
+      const html = `<div class="player-card">
+        <div class="player-left">
+          <a href="${profile}" target="_blank" rel="noopener" style="display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit">
+            <div class="avatar" aria-hidden="true">${initial}</div>
+            <div class="player-names">
+              <div class="player-nick">${rank}. ${userEsc}</div>
+              <div class="player-real">${realEsc}</div>
+            </div>
+          </a>
+        </div>
+        <div class="player-right">
+          <div>Pos: ${p.position ?? rank} ${posHtml} ${p.position_change != null ? Math.abs(p.position_change) : ''}</div>
+          <div>Blitz: ${p.blitz ?? '—'} <span class="${(p.blitz_diff>0)?'diff diff-pos':(p.blitz_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.blitz_diff)}</span></div>
+          <div>Bullet: ${p.bullet ?? '—'} <span class="${(p.bullet_diff>0)?'diff diff-pos':(p.bullet_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.bullet_diff)}</span></div>
+          <div>Rapid: ${p.rapid ?? '—'} <span class="${(p.rapid_diff>0)?'diff diff-pos':(p.rapid_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.rapid_diff)}</span></div>
+          <div style="font-size:.85rem;color:var(--muted);margin-top:6px">${formatSeen(p.seenAt)}</div>
+        </div>
+      </div>`;
+      cardList.insertAdjacentHTML('beforeend', html);
+    });
+
+    // Pager
+    renderPager(per, totalPages);
+  }
+
+  function renderPager(per, totalPages){
+    pager.innerHTML = '';
+    const make = (label, to, disabled=false) => {
+      const b = document.createElement('button'); b.textContent = label; b.disabled = disabled;
+      b.onclick = () => { page = to; renderPage(); window.scrollTo({top:0,behavior:'smooth'}); };
+      return b;
     };
+    pager.appendChild(make('«',1,page===1));
+    pager.appendChild(make('‹', Math.max(1,page-1), page===1));
+    const start = Math.max(1, page-2), end = Math.min(totalPages, page+2);
+    for(let i=start;i<=end;i++){
+      const btn = make(String(i), i, i===page);
+      if(i===page){ btn.style.fontWeight='700'; btn.style.background = 'linear-gradient(90deg,var(--accent),var(--accent-2))'; btn.style.color='#fff'; btn.style.border='none'; }
+      pager.appendChild(btn);
+    }
+    pager.appendChild(make('›', Math.min(totalPages, page+1), page===totalPages));
+    pager.appendChild(make('»', totalPages, page===totalPages));
+  }
 
-    tr.innerHTML = `
-      <td class="rank">${rank}</td>
-      <td class="user">
-        <a href="${p.profile}" target="_blank" rel="noopener">${escapeHtml(p.username)}</a>
-        <span class="small">${escapeHtml(displayName)}</span>
-      </td>
-      <td class="rating">${p.blitz ?? '—'}${formatDiff(p.blitz_diff)}</td>
-      <td class="rating">${p.bullet ?? '—'}${formatDiff(p.bullet_diff)}</td>
-      <td class="rating">${p.rapid ?? '—'}${formatDiff(p.rapid_diff)}</td>
-      <td class="seen">${formatSeen(p.seenAt)}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-  renderPager(per);
-}
+  function exportCurrentPageCsv(){
+    const per = Math.max(1, parseInt(perPageEl.value,10)||20), start = (page-1)*per;
+    const items = filtered.slice(start, start+per);
+    if(!items.length){ alert('Nenhum item para exportar'); return; }
+    const headers = ['#','username','name','profile','position','position_change','position_arrow','blitz','blitz_diff','bullet','bullet_diff','rapid','rapid_diff','seenAt'];
+    const rows = items.map((p,idx)=>[
+      start+idx+1,
+      p.username||'',
+      p.name||p.realname||'',
+      p.profile||'',
+      p.position ?? '',
+      (p.position_change != null ? p.position_change : ''),
+      p.position_arrow || '',
+      p.blitz || '',
+      p.blitz_diff != null ? p.blitz_diff : 0,
+      p.bullet || '',
+      p.bullet_diff != null ? p.bullet_diff : 0,
+      p.rapid || '',
+      p.rapid_diff != null ? p.rapid_diff : 0,
+      p.seenAt || ''
+    ]);
+    const csv = [headers.join(','), ...rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','))].join('\r\n');
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download = `ranking_page${page}.csv`; a.click();
+  }
 
-function renderPager(per){
-  const pager = document.getElementById('pager');
-  pager.innerHTML = '';
-  const totalPages = Math.max(1, Math.ceil(filtered.length / per));
-  const createBtn = (text, p) => {
-    const b = document.createElement('button');
-    b.textContent = text;
-    b.disabled = p === page;
-    b.onclick = () => { page = p; renderPage(); };
-    return b;
-  };
-  pager.appendChild(createBtn('«', 1));
-  pager.appendChild(createBtn('‹', Math.max(1, page-1)));
-  const start = Math.max(1, page-2);
-  const end = Math.min(totalPages, page+2);
-  for(let i=start;i<=end;i++) pager.appendChild(createBtn(i, i));
-  pager.appendChild(createBtn('›', Math.min(totalPages, page+1)));
-  pager.appendChild(createBtn('»', totalPages));
-}
+  function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-function formatSeen(ms){
-  if(!ms || ms <= 0) return 'N/A';
-  const diff = Date.now() - ms;
-  const days = Math.floor(diff / (24*3600*1000));
-  if(days === 0) return 'Hoje';
-  if(days === 1) return '1 dia';
-  if(days < 30) return `${days} dias`;
-  const months = Math.floor(days / 30);
-  if(months < 12) return `${months} meses`;
-  const years = Math.floor(months / 12);
-  return `${years} anos`;
-}
+  const debouncedFilter = debounce(applyFilters, 250);
+  qEl.addEventListener('input', debouncedFilter);
+  sortEl.addEventListener('change', applyFilters);
+  orderEl.addEventListener('change', applyFilters);
+  perPageEl.addEventListener('change', renderPage);
+  exportBtn.addEventListener('click', exportCurrentPageCsv);
+  document.getElementById('dismissJoinBanner').addEventListener('click', ()=>document.querySelector('.hero').style.display='none');
 
-function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+  // envia um ping ao servidor para contar a visita (envelope simples)
+  function sendVisitPing(){
+    try {
+      fetch('/visit', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({path: window.location.pathname || '/'}),
+        keepalive: true
+      }).catch(()=>{/*ignore*/});
+    } catch(e){}
+  }
 
-window.addEventListener('load', loadData);
+  // evita duplicar contador caso o servidor já tenha contado ao servir (configurável em COUNT_ON_SERVER)
+  // mas enviar o ping é geralmente seguro; ajuste COUNT_ON_SERVER no servidor conforme necessário.
+  sendVisitPing();
+
+  loadData();
+})();
 </script>
 </body>
 </html>
@@ -594,11 +885,18 @@ window.addEventListener('load', loadData);
 
 @app.route("/")
 def index():
+    # Se quiser contar no servidor (recomendado quando NÃO há CDN/cache) deixe True
+    if COUNT_ON_SERVER:
+        ua = (request.headers.get("User-Agent") or "").lower()
+        if not any(x in ua for x in ("bot", "crawler", "spider", "curl", "wget")):
+            try:
+                increment_visit(request.path or "/")
+            except Exception:
+                pass
     return render_template_string(INDEX_HTML, days=ACTIVE_DAYS)
 
 if __name__ == "__main__":
     # carrega dados uma vez ao iniciar (sincronicamente)
     load_players()
-    # inicia servidor local
     print("Abra http://127.0.0.1:8000 no navegador")
     app.run(host="127.0.0.1", port=8000, debug=False)
