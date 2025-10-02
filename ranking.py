@@ -1,22 +1,19 @@
 #!/usr/bin/env python3
 # coding: utf-8
 """
-Aplicação Flask que gera o ranking (fetch do time Lichess) e adiciona contador de visitas.
-Mantive a estrutura e a lógica do seu último script, apenas inseri o contador SQLite
-e os endpoints /visit e /stats, e adicionei o bloco no HTML para mostrar os valores.
+Flask app que gera o ranking (fetch do team Lichess).
+Removido contador de visitas conforme pedido.
 """
 import os
 import time
-import threading
-import sqlite3
-import requests
 import json
 import urllib3
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-from flask import Flask, jsonify, request, render_template_string, make_response
+from flask import Flask, jsonify, request, render_template_string, make_response, abort
 from urllib.parse import quote
+import requests
 
 # ---------------------------------------------------------------------
 # ATENÇÃO: para contornar erro de SSL no seu ambiente local, este
@@ -36,74 +33,12 @@ REQUEST_TIMEOUT = 8
 RETRY_ATTEMPTS = 3
 RETRY_BACKOFF = 1.0  # seconds, multiplicativo
 
-# Contador (SQLite)
-DB_FILE = "visits.db"
-DB_LOCK = threading.Lock()
-# Se True, o servidor incrementa contador quando serve "/" (bom se NÃO houver CDN/cache).
-# Se sua página for servida por CDN, coloque False e deixe o JS enviar POST /visit.
-COUNT_ON_SERVER = True
+OUT_DIR = "docs"
+OUT_FILE = f"{OUT_DIR}/players.json"
 
 app = Flask(__name__)
 PLAYERS = []          # lista carregada no startup (dicionários)
 DATA_LOADED_AT = 0    # timestamp ms
-
-# ----------------- sqlite helpers (visitas) -------------------------
-def init_db():
-    os.makedirs(os.path.dirname(DB_FILE) or ".", exist_ok=True)
-    with DB_LOCK:
-        conn = sqlite3.connect(DB_FILE, check_same_thread=False)
-        cur = conn.cursor()
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS visits_daily (
-            id INTEGER PRIMARY KEY,
-            path TEXT NOT NULL,
-            day TEXT NOT NULL,
-            count INTEGER NOT NULL DEFAULT 0,
-            UNIQUE(path, day)
-        );
-        """)
-        conn.commit()
-        conn.close()
-
-def today_iso_for_ts(ts=None):
-    t = time.gmtime() if ts is None else time.gmtime(ts)
-    return time.strftime("%Y-%m-%d", t)
-
-def increment_visit(path):
-    path = (path or "/")[:200]
-    day = today_iso_for_ts()
-    with DB_LOCK:
-        conn = sqlite3.connect(DB_FILE, check_same_thread=False)
-        cur = conn.cursor()
-        cur.execute("""
-            INSERT INTO visits_daily(path, day, count)
-            VALUES (?, ?, 1)
-            ON CONFLICT(path, day) DO UPDATE SET count = count + 1;
-        """, (path, day))
-        conn.commit()
-        conn.close()
-
-def get_stats_for_path(path):
-    path = (path or "/")[:200]
-    today = today_iso_for_ts()
-    now = time.gmtime()
-    month_start = time.strftime("%Y-%m-01", now)
-    year_start = time.strftime("%Y-01-01", now)
-    with DB_LOCK:
-        conn = sqlite3.connect(DB_FILE, check_same_thread=False)
-        cur = conn.cursor()
-        cur.execute("SELECT SUM(count) FROM visits_daily WHERE path=? AND day BETWEEN ? AND ?", (path, today, today))
-        today_cnt = cur.fetchone()[0] or 0
-        cur.execute("SELECT SUM(count) FROM visits_daily WHERE path=? AND day BETWEEN ? AND ?", (path, month_start, today))
-        month_cnt = cur.fetchone()[0] or 0
-        cur.execute("SELECT SUM(count) FROM visits_daily WHERE path=? AND day BETWEEN ? AND ?", (path, year_start, today))
-        year_cnt = cur.fetchone()[0] or 0
-        cur.execute("SELECT SUM(count) FROM visits_daily WHERE path=?", (path,))
-        total_cnt = cur.fetchone()[0] or 0
-        conn.close()
-    return {"path": path, "today": int(today_cnt), "month": int(month_cnt), "year": int(year_cnt), "total": int(total_cnt)}
-
-init_db()
 
 # ----------------- seu código de geração / fetch players (adaptado) -----------------
 def create_session():
@@ -345,52 +280,8 @@ def admin_refresh():
     load_players()
     return jsonify({"status": "ok", "loaded": len(PLAYERS)})
 
-# ----------------- Contador: endpoints públicos --------------------
-@app.route("/visit", methods=["POST"])
-def api_visit():
-    """
-    Recebe POST (JSON opcional) com { path: "/..." } e incrementa contador.
-    Use fetch(..., {keepalive:true}) ou navigator.sendBeacon se preferir.
-    """
-    ua = (request.headers.get("User-Agent") or "").lower()
-    # heurística simples para ignorar bots
-    if any(x in ua for x in ("bot", "crawler", "spider", "curl", "wget", "httpclient")):
-        return jsonify({"ok": True, "ignored": "bot"})
-    data = request.get_json(silent=True) or {}
-    path = data.get("path") or request.args.get("path") or request.referrer or "/"
-    try:
-        increment_visit(path)
-    except Exception as e:
-        return jsonify({"ok": False, "error": str(e)}), 500
-    return jsonify({"ok": True})
-
-@app.route("/stats", methods=["GET"])
-def api_stats():
-    """
-    GET /stats?path=/  -> retorna { path, today, month, year, total }
-    """
-    path = request.args.get("path") or "/"
-    stats = get_stats_for_path(path)
-    return jsonify(stats)
-
-@app.route("/series", methods=["GET"])
-def api_series():
-    path = request.args.get("path") or "/"
-    frm = request.args.get("from")
-    to = request.args.get("to") or today_iso_for_ts()
-    with DB_LOCK:
-        conn = sqlite3.connect(DB_FILE, check_same_thread=False)
-        cur = conn.cursor()
-        if frm:
-            cur.execute("SELECT day,count FROM visits_daily WHERE path=? AND day BETWEEN ? AND ? ORDER BY day ASC", (path, frm, to))
-        else:
-            cur.execute("SELECT day,count FROM visits_daily WHERE path=? ORDER BY day DESC LIMIT 30", (path,))
-        rows = cur.fetchall()
-        conn.close()
-    return jsonify({"path": path, "rows": [{"day": r[0], "count": r[1]} for r in rows]})
-
 # ----------------- FULL frontend HTML (INDEX_HTML) - o JS carrega ./players.json e exibe `name` ----------
-# Usei exatamente o HTML que você me enviou e apenas adicionei o bloco do contador no header
+# Mantive o HTML original que você enviou, mas removi todo o trecho do contador e chamadas a /visit,/stats.
 INDEX_HTML = """<!doctype html>
 <html lang="pt-BR">
 <head>
@@ -460,7 +351,7 @@ INDEX_HTML = """<!doctype html>
 
   .rank{width:64px;font-weight:800;color:var(--accent);font-size:0.95rem}
   .pos-col{width:72px;text-align:center;font-weight:800}
-  .user a{Color:var(--accent);font-weight:700;text-decoration:none}
+  .user a{color:var(--accent);font-weight:700;text-decoration:none}
   .user .realname{display:block;color:var(--muted);font-size:0.86rem;margin-top:4px;font-weight:600}
   .rating{text-align:right;font-weight:800}
   .seen{text-align:right;color:var(--muted);font-weight:600}
@@ -516,12 +407,6 @@ INDEX_HTML = """<!doctype html>
     </div>
     <div class="meta">
       <div class="badge" aria-live="polite">Ativos: <strong id="totalBadge">—</strong></div>
-      <!-- VISIT COUNTER DISPLAY -->
-      <div style="padding:8px 12px;border-radius:12px;border:1px solid var(--border);background:linear-gradient(180deg,#fff,rgba(255,255,255,0.95));display:flex;flex-direction:column;align-items:flex-end;min-width:160px">
-        <div style="font-size:0.85rem;color:var(--muted)">Visitas</div>
-        <div id="visitCounter" style="font-weight:800">—</div>
-        <div style="font-size:0.75rem;color:var(--muted)">Hoje / Mês / Ano / Total</div>
-      </div>
     </div>
   </header>
 
@@ -606,7 +491,6 @@ INDEX_HTML = """<!doctype html>
   const infoEl = document.getElementById('info'), totalBadge = document.getElementById('totalBadge');
   const tbody = document.getElementById('tbody'), pager = document.getElementById('pager'), cardList = document.getElementById('cardList');
   const exportBtn = document.getElementById('exportCsv');
-  const visitEl = document.getElementById('visitCounter');
 
   function debounce(fn, wait=250){let t; return (...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),wait);};}
   function formatSeen(ms){
@@ -623,8 +507,6 @@ INDEX_HTML = """<!doctype html>
   }
   function safeNumber(v){ return v==null||v===''?0:Number(v)||0; }
 
-  // novo: formatDiff sempre retorna um parêntese com o valor,
-  // positivo com +, negativo com - (natural) e 0 quando não houver/nenhuma mudança.
   function formatDiff(d){
     const n = (d === null || d === undefined || d === '') ? 0 : Number(d);
     if(Number.isNaN(n)) return '(0)';
@@ -640,7 +522,6 @@ INDEX_HTML = """<!doctype html>
     return `<div style="display:flex;align-items:center;justify-content:center"><span class="pos-arrow ${cls}">${escapeHtml(arrow)}</span>${change ? `<span style="font-weight:700">${change}</span>` : ''}</div>`;
   }
 
-  // extrai arrays do JSON e faz dedupe por username (merge de duas listas possíveis)
   function extractPlayers(obj){
     const found = [];
     if(!obj) return found;
@@ -684,13 +565,11 @@ INDEX_HTML = """<!doctype html>
       const res = await fetch(url, {cache: 'no-store'});
       if(!res.ok) throw new Error('Falha ao buscar players.json: ' + res.status);
       const js = await res.json();
-      console.log('players.json carregado:', js);
 
       let candidates = extractPlayers(js);
       if(candidates.length === 0 && Array.isArray(js.players)) candidates = js.players.slice();
       all = dedupePlayers(candidates);
 
-      // se existir campo position no arquivo, manter ordem por position (menor = melhor), senão ordenar por blitz
       if(all.length && all[0].position != null){
         all.sort((a,b)=> (safeNumber(a.position) - safeNumber(b.position)));
       }else{
@@ -702,16 +581,6 @@ INDEX_HTML = """<!doctype html>
       infoEl.textContent = `Total: ${all.length} — gerado: ${gen}`;
       page = 1;
       applyFilters();
-
-      // fetch visit stats (mostra no header)
-      fetch('/stats?path=' + encodeURIComponent(window.location.pathname || '/'))
-        .then(r => r.ok ? r.json() : Promise.reject(r))
-        .then(json => {
-          if(json && typeof json.today !== 'undefined'){
-            visitEl.textContent = `${json.today} / ${json.month} / ${json.year} / ${json.total}`;
-          }
-        }).catch(()=>{/*ignore*/});
-
     }catch(err){
       console.error(err);
       infoEl.textContent = 'Erro ao carregar dados';
@@ -748,7 +617,6 @@ INDEX_HTML = """<!doctype html>
     const start = (page - 1) * per;
     const items = filtered.slice(start, start + per);
 
-    // Desktop table
     if(items.length === 0){
       tbody.innerHTML = '<tr><td colspan="7" style="padding:18px;text-align:center;color:#6b7280">Nenhum jogador encontrado</td></tr>';
     } else {
@@ -771,7 +639,6 @@ INDEX_HTML = """<!doctype html>
       tbody.innerHTML = rows;
     }
 
-    // Mobile cards
     cardList.innerHTML = '';
     items.forEach((p, idx) => {
       const rank = start + idx + 1;
@@ -802,7 +669,6 @@ INDEX_HTML = """<!doctype html>
       cardList.insertAdjacentHTML('beforeend', html);
     });
 
-    // Pager
     renderPager(per, totalPages);
   }
 
@@ -860,22 +726,6 @@ INDEX_HTML = """<!doctype html>
   exportBtn.addEventListener('click', exportCurrentPageCsv);
   document.getElementById('dismissJoinBanner').addEventListener('click', ()=>document.querySelector('.hero').style.display='none');
 
-  // envia um ping ao servidor para contar a visita (envelope simples)
-  function sendVisitPing(){
-    try {
-      fetch('/visit', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({path: window.location.pathname || '/'}),
-        keepalive: true
-      }).catch(()=>{/*ignore*/});
-    } catch(e){}
-  }
-
-  // evita duplicar contador caso o servidor já tenha contado ao servir (configurável em COUNT_ON_SERVER)
-  // mas enviar o ping é geralmente seguro; ajuste COUNT_ON_SERVER no servidor conforme necessário.
-  sendVisitPing();
-
   loadData();
 })();
 </script>
@@ -885,14 +735,6 @@ INDEX_HTML = """<!doctype html>
 
 @app.route("/")
 def index():
-    # Se quiser contar no servidor (recomendado quando NÃO há CDN/cache) deixe True
-    if COUNT_ON_SERVER:
-        ua = (request.headers.get("User-Agent") or "").lower()
-        if not any(x in ua for x in ("bot", "crawler", "spider", "curl", "wget")):
-            try:
-                increment_visit(request.path or "/")
-            except Exception:
-                pass
     return render_template_string(INDEX_HTML, days=ACTIVE_DAYS)
 
 if __name__ == "__main__":
