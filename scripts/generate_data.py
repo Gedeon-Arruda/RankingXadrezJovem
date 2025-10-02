@@ -4,12 +4,10 @@ import time
 import requests
 import certifi
 import os
-import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from urllib.parse import quote
-import sqlite3
 from flask import Flask, request, jsonify, send_file, abort
 
 # ---------- sua parte existente (mantive praticamente igual) ----------
@@ -264,117 +262,88 @@ def generate_players_json():
     print(f"Wrote {OUT_FILE} ({len(active_sorted)} players)")
 # ---------- fim parte existente ----------
 
-
-# ---------- VISITS: SQLite simples e Flask server ----------
-DB_FILE = "visits.db"
-DB_LOCK = threading.Lock()
-
-def init_db():
-    with DB_LOCK:
-        conn = sqlite3.connect(DB_FILE, check_same_thread=False)
-        cur = conn.cursor()
-        cur.execute("""
-        CREATE TABLE IF NOT EXISTS visits_daily (
-            id INTEGER PRIMARY KEY,
-            path TEXT NOT NULL,
-            day TEXT NOT NULL,
-            count INTEGER NOT NULL DEFAULT 0,
-            UNIQUE(path, day)
-        );
-        """)
-        conn.commit()
-        conn.close()
-
-def today_iso(ts=None):
-    return (time.strftime("%Y-%m-%d", time.gmtime() if ts is None else time.gmtime(ts)))
-
-def increment_visit(path):
-    path = (path or "/")[:200]
-    day = today_iso()
-    with DB_LOCK:
-        conn = sqlite3.connect(DB_FILE, check_same_thread=False)
-        cur = conn.cursor()
-        # try update then insert fallback (sqlite upsert)
-        cur.execute("""
-            INSERT INTO visits_daily(path, day, count)
-            VALUES (?, ?, 1)
-            ON CONFLICT(path, day) DO UPDATE SET count = count + 1;
-        """, (path, day))
-        conn.commit()
-        conn.close()
-
-def get_stats(path):
-    path = (path or "/")[:200]
-    today = today_iso()
-    # month start (UTC)
-    now = time.gmtime()
-    month_start = time.strftime("%Y-%m-01", now)
-    year_start = time.strftime("%Y-01-01", now)
-    with DB_LOCK:
-        conn = sqlite3.connect(DB_FILE, check_same_thread=False)
-        cur = conn.cursor()
-        cur.execute("SELECT SUM(count) FROM visits_daily WHERE path=? AND day BETWEEN ? AND ?", (path, today, today))
-        today_cnt = cur.fetchone()[0] or 0
-        cur.execute("SELECT SUM(count) FROM visits_daily WHERE path=? AND day BETWEEN ? AND ?", (path, month_start, today))
-        month_cnt = cur.fetchone()[0] or 0
-        cur.execute("SELECT SUM(count) FROM visits_daily WHERE path=? AND day BETWEEN ? AND ?", (path, year_start, today))
-        year_cnt = cur.fetchone()[0] or 0
-        cur.execute("SELECT SUM(count) FROM visits_daily WHERE path=?", (path,))
-        total_cnt = cur.fetchone()[0] or 0
-        conn.close()
-    return {"path": path, "today": today_cnt, "month": month_cnt, "year": year_cnt, "total": total_cnt}
-
 app = Flask(__name__)
-init_db()
 
-# Serve the generated players.json and log a visit automatically (counts hits to the JSON)
+# Serve the generated players.json (no visit logging)
 @app.route("/players.json", methods=["GET"])
 def serve_players_json():
     if not os.path.exists(OUT_FILE):
         abort(404)
-    # opcional: ignorar bots por UA
-    ua = (request.headers.get("User-Agent") or "").lower()
-    if "bot" not in ua and "crawler" not in ua and "spider" not in ua:
-        increment_visit("/players.json")
-    # serve file
     return send_file(OUT_FILE, mimetype="application/json")
 
-# Endpoint para registrar visitas de clientes (sua página HTML pode chamar esse POST)
-@app.route("/visit", methods=["POST"])
-def api_visit():
-    data = request.get_json(silent=True) or {}
-    path = data.get("path") or request.args.get("path") or request.referrer or "/"
-    ua = (request.headers.get("User-Agent") or "").lower()
-    # opcional: ignorar bots
-    if any(x in ua for x in ("bot","crawler","spider")):
-        return jsonify({"ok": True, "ignored":"bot"})
-    increment_visit(path)
-    return jsonify({"ok": True})
+# API to return paginated players
+@app.route("/api/players", methods=["GET"])
+def api_players():
+    if not os.path.exists(OUT_FILE):
+        return jsonify({"error": "players.json not found"}), 503
+    with open(OUT_FILE, "r", encoding="utf-8") as f:
+        data = json.load(f)
+    items = data.get("players", [])
 
-# stats endpoint
-@app.route("/stats", methods=["GET"])
-def api_stats():
-    path = request.args.get("path") or "/"
-    stats = get_stats(path)
-    return jsonify(stats)
+    try:
+        page = max(1, int(request.args.get("page", 1)))
+    except Exception:
+        page = 1
+    try:
+        per_page = max(1, int(request.args.get("per_page", 20)))
+    except Exception:
+        per_page = 20
 
-# series endpoint (diário entre from..to)
-@app.route("/series", methods=["GET"])
-def api_series():
-    path = request.args.get("path") or "/"
-    frm = request.args.get("from")
-    to = request.args.get("to") or today_iso()
-    with DB_LOCK:
-        conn = sqlite3.connect(DB_FILE, check_same_thread=False)
-        cur = conn.cursor()
-        if frm:
-            cur.execute("SELECT day,count FROM visits_daily WHERE path=? AND day BETWEEN ? AND ? ORDER BY day ASC", (path, frm, to))
-        else:
-            # default last 30 dias
-            cur.execute("SELECT day,count FROM visits_daily WHERE path=? ORDER BY day DESC LIMIT 30", (path,))
-        rows = cur.fetchall()
-        conn.close()
-    return jsonify({"path": path, "rows": [{"day": r[0], "count": r[1]} for r in rows]})
+    sort = request.args.get("sort", "blitz")
+    if sort not in ("blitz", "bullet", "rapid", "username", "position"):
+        sort = "blitz"
+    order = request.args.get("order", "desc")
+    reverse = (order != "asc")
+
+    if sort == "username":
+        data_sorted = sorted(items, key=lambda x: x.get("username", "").lower(), reverse=reverse)
+    elif sort == "position":
+        data_sorted = sorted(items, key=lambda x: (x.get("position") is None, x.get("position") or float("inf")), reverse=reverse)
+    else:
+        data_sorted = sorted(items, key=lambda x: x.get(sort, 0) or 0, reverse=reverse)
+
+    total = len(data_sorted)
+    start = (page - 1) * per_page
+    page_items = data_sorted[start:start + per_page]
+
+    resp_items = [
+        {
+            "username": p.get("username"),
+            "name": p.get("name"),
+            "blitz": p.get("blitz"),
+            "bullet": p.get("bullet"),
+            "rapid": p.get("rapid"),
+            "seenAt": p.get("seenAt"),
+            "profile": p.get("profile"),
+            "position": p.get("position"),
+            "position_change": p.get("position_change"),
+            "position_arrow": p.get("position_arrow"),
+            "blitz_diff": p.get("blitz_diff"),
+            "bullet_diff": p.get("bullet_diff"),
+            "rapid_diff": p.get("rapid_diff"),
+        } for p in page_items
+    ]
+
+    return jsonify({
+        "total": total,
+        "page": page,
+        "per_page": per_page,
+        "sort": sort,
+        "order": order,
+        "items": resp_items,
+    })
+
+# Simple admin endpoint to refresh data manually
+@app.route("/admin/refresh", methods=["POST"])
+def admin_refresh():
+    # allow only local calls for safety
+    if request.remote_addr not in ("127.0.0.1", "localhost", "::1"):
+        return jsonify({"error": "forbidden"}), 403
+    try:
+        generate_players_json()
+        return jsonify({"status": "ok", "loaded": True})
+    except Exception as e:
+        return jsonify({"status": "error", "error": str(e)}), 500
 
 def run_server(host="0.0.0.0", port=3000):
     print(f"Starting server on {host}:{port}")
@@ -384,7 +353,7 @@ def run_server(host="0.0.0.0", port=3000):
 if __name__ == "__main__":
     import sys
     if "--serve" in sys.argv:
-        # opcional: gerar primeiro o players.json antes de servir
+        # optional: generate players.json before serving
         try:
             generate_players_json()
         except Exception as e:
