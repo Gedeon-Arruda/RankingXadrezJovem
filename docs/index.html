@@ -46,13 +46,16 @@
   .hero p{color:var(--muted);margin-top:6px;font-size:0.95rem}
   .hero .cta{display:flex;gap:10px;align-items:center}
   .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:10px 14px;border-radius:12px;border:none;cursor:pointer;font-weight:700;box-shadow:0 10px 30px rgba(59,130,246,0.12);text-decoration:none}
+  .btn-primary:hover{transform:translateY(-2px)}
   .btn-ghost{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer}
 
+  /* controls layout fix: prevent per-page from wrapping below */
   .controls{display:flex;justify-content:space-between;gap:12px;align-items:center}
-  .controls-left{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-  .search{display:flex;align-items:center;gap:8px;background:linear-gradient(180deg,#fff,rgba(255,255,255,0.95));padding:8px 12px;border-radius:12px;border:1px solid var(--border);min-width:260px;box-shadow:var(--shadow-sm);flex:0 1 320px}
+  .controls-left{display:flex;gap:12px;align-items:center;flex-wrap:nowrap;min-width:0}
+  .search{display:flex;align-items:center;gap:8px;background:linear-gradient(180deg,#fff,rgba(255,255,255,0.95));padding:8px 12px;border-radius:12px;border:1px solid var(--border);min-width:180px;box-shadow:var(--shadow-sm);flex:1 1 420px}
   .search input{border:0;outline:0;background:transparent;font-size:0.95rem;color:var(--text);width:100%}
-  .select{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;font-size:0.95rem}
+  .select{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:#fff;font-size:0.95rem;flex:0 0 auto;min-width:120px}
+  .select.small{min-width:86px}
 
   .controls-right{display:flex;align-items:center;gap:10px}
 
@@ -60,7 +63,7 @@
   .card{background:var(--card);border-radius:18px;padding:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg)}
   .table-wrap{overflow:auto;width:100%;border-radius:12px}
   table{width:100%;border-collapse:collapse;min-width:720px}
-  thead th{background:transparent;text-align:left;padding:14px;font-weight:700;color:var(--muted);font-size:0.95rem;white-space:nowrap}
+  thead th{background:linear-gradient(180deg,#ffffff,#fbfbff);text-align:left;padding:14px;font-weight:700;color:var(--muted);font-size:0.95rem;white-space:nowrap;position:sticky;top:0;z-index:2;border-bottom:1px solid rgba(15,23,36,0.04)}
   tbody td{padding:12px;border-top:1px solid var(--border);vertical-align:middle}
   tbody tr{transition:background .18s, transform .12s}
   tbody tr:hover{background:linear-gradient(90deg,rgba(124,58,237,0.03),transparent);transform:translateY(-2px)}
@@ -92,9 +95,10 @@
     .hero .left{max-width:100%}
 
     .controls{flex-direction:column;align-items:stretch}
-    .controls-left{width:100%;align-items:center}
+    .controls-left{width:100%;align-items:center;flex-wrap:wrap}
     .search{flex:1;min-width:unset;width:100%}
-    .select{flex:0 0 auto}
+    .select{flex:0 0 auto;min-width:120px}
+    .select.small{min-width:86px}
     .controls-right{width:100%;justify-content:space-between}
 
     table{display:none}
@@ -130,6 +134,7 @@
 
   .pager{display:flex;gap:8px;justify-content:flex-end;padding-top:10px}
   .pager button{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:pointer}
+  .pager button[disabled]{opacity:0.5;cursor:not-allowed}
 
   footer{color:var(--muted);text-align:center;margin-top:6px;font-size:0.9rem}
   .legend{display:flex;gap:12px;align-items:center;margin-top:8px;color:var(--muted);font-size:0.9rem;flex-wrap:wrap}
@@ -187,7 +192,7 @@
         <option value="desc">Desc</option>
         <option value="asc">Asc</option>
       </select>
-      <select id="perPage" class="select" title="Por página">
+      <select id="perPage" class="select small" title="Por página">
         <option value="10">10</option>
         <option value="20" selected>20</option>
         <option value="50">50</option>
@@ -234,16 +239,6 @@
 </div>
 
 <script>
-/*
-  Script principal do frontend.
-  - Faz fetch de ./players.json (espera o mesmo formato do backend)
-  - Dedupe/ordena/exibe em tabela (desktop) e cards (mobile)
-  - Exporta CSV, pesquisa, paginação e ordenação
-  Observações:
-   - Mantive código legível e com comentários em português.
-   - Não há qualquer lógica de contador/visit (removido a pedido).
-*/
-
 (() => {
   // estado
   let all = [], filtered = [], page = 1;
@@ -256,84 +251,15 @@
   const exportBtn = document.getElementById('exportCsv');
 
   /* ---------- helpers ---------- */
-
-  // debounce simples
   function debounce(fn, wait=250){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), wait); }; }
-
-  // formata timestamp (ms) para string amigável
-  function formatSeen(ms){
-    if(!ms) return '—';
-    const ts = Number(ms) || Date.parse(ms) || 0; if(!ts) return '—';
-    const diff = Date.now() - ts; if(diff < 0) return 'Agora';
-    const days = Math.floor(diff/(24*3600*1000));
-    if(days === 0) return 'Hoje';
-    if(days === 1) return '1 dia';
-    if(days < 30) return `${days} dias`;
-    const months = Math.floor(days/30);
-    if(months < 12) return `${months} meses`;
-    return `${Math.floor(months/12)} anos`;
-  }
-
-  // converte valores para número seguro
+  function formatSeen(ms){ if(!ms) return '—'; const ts = Number(ms) || Date.parse(ms) || 0; if(!ts) return '—'; const diff = Date.now() - ts; if(diff < 0) return 'Agora'; const days = Math.floor(diff/(24*3600*1000)); if(days === 0) return 'Hoje'; if(days === 1) return '1 dia'; if(days < 30) return `${days} dias`; const months = Math.floor(days/30); if(months < 12) return `${months} meses`; return `${Math.floor(months/12)} anos`; }
   function safeNumber(v){ return v==null||v===''?0:Number(v)||0; }
-
-  // format diff como "(+n)" / "(-n)" / "(0)"
-  function formatDiff(d){
-    const n = (d === null || d === undefined || d === '') ? 0 : Number(d);
-    if(Number.isNaN(n)) return '(0)';
-    const sign = n > 0 ? '+' : '';
-    return `(${sign}${n})`;
-  }
-
-  // badge de posição com seta
-  function posBadge(p){
-    if(!p || p.position_arrow == null) return '';
-    const arrow = p.position_arrow;
-    const change = (typeof p.position_change === 'number') ? Math.abs(p.position_change) : '';
-    const cls = arrow === '▲' ? 'pos-up' : (arrow === '▼' ? 'pos-down' : 'pos-same');
-    return `<div style="display:flex;align-items:center;justify-content:center"><span class="pos-arrow ${cls}">${escapeHtml(arrow)}</span>${change ? `<span style="font-weight:700">${change}</span>` : ''}</div>`;
-  }
-
-  // extrai arrays do JSON e normaliza input possível
-  function extractPlayers(obj){
-    const found = [];
-    if(!obj) return found;
-    if(Array.isArray(obj)) return obj.slice();
-    if(Array.isArray(obj.players)) found.push(...obj.players);
-    Object.values(obj).forEach(v=>{
-      if(Array.isArray(v)) found.push(...v);
-    });
-    return found;
-  }
-
-  // dedupe por username (mantém o melhor por soma de ratings ou último seen)
-  function dedupePlayers(list){
-    const map = new Map();
-    const score = p => safeNumber(p.blitz) + safeNumber(p.bullet) + safeNumber(p.rapid);
-    list.forEach(p=>{
-      const key = (p.username||'').toString().trim().toLowerCase();
-      if(!key){
-        const id = `__anon_${Math.random().toString(36).slice(2,9)}`;
-        map.set(id, Object.assign({},p,{username:id}));
-        return;
-      }
-      if(!map.has(key)) map.set(key, p);
-      else {
-        const existing = map.get(key);
-        if(score(p) > score(existing)) map.set(key,p);
-        else {
-          const eSeen = Date.parse(existing.seenAt||'')||0;
-          const pSeen = Date.parse(p.seenAt||'')||0;
-          if(pSeen > eSeen) map.set(key,p);
-        }
-      }
-    });
-    return Array.from(map.values());
-  }
+  function formatDiff(d){ const n = (d === null || d === undefined || d === '') ? 0 : Number(d); if(Number.isNaN(n)) return '(0)'; const sign = n > 0 ? '+' : ''; return `(${sign}${n})`; }
+  function posBadge(p){ if(!p || p.position_arrow == null) return ''; const arrow = p.position_arrow; const change = (typeof p.position_change === 'number') ? Math.abs(p.position_change) : ''; const cls = arrow === '▲' ? 'pos-up' : (arrow === '▼' ? 'pos-down' : 'pos-same'); return `<div style="display:flex;align-items:center;justify-content:center"><span class="pos-arrow ${cls}">${escapeHtml(arrow)}</span>${change ? `<span style="font-weight:700">${change}</span>` : ''}</div>`; }
+  function extractPlayers(obj){ const found = []; if(!obj) return found; if(Array.isArray(obj)) return obj.slice(); if(Array.isArray(obj.players)) found.push(...obj.players); Object.values(obj).forEach(v=>{ if(Array.isArray(v)) found.push(...v); }); return found; }
+  function dedupePlayers(list){ const map = new Map(); const score = p => safeNumber(p.blitz) + safeNumber(p.bullet) + safeNumber(p.rapid); list.forEach(p=>{ const key = (p.username||'').toString().trim().toLowerCase(); if(!key){ const id = `__anon_${Math.random().toString(36).slice(2,9)}`; map.set(id, Object.assign({},p,{username:id})); return; } if(!map.has(key)) map.set(key, p); else { const existing = map.get(key); if(score(p) > score(existing)) map.set(key,p); else { const eSeen = Date.parse(existing.seenAt||'')||0; const pSeen = Date.parse(p.seenAt||'')||0; if(pSeen > eSeen) map.set(key,p); } } }); return Array.from(map.values()); }
 
   /* ---------- carregamento e render ---------- */
-
-  // carrega players.json e inicializa UI
   async function loadData(force=false){
     infoEl.textContent = 'Carregando...';
     try{
@@ -346,12 +272,8 @@
       if(candidates.length === 0 && Array.isArray(js.players)) candidates = js.players.slice();
       all = dedupePlayers(candidates);
 
-      // ordenação padrão: por position se existir, senão por blitz
-      if(all.length && all[0].position != null){
-        all.sort((a,b)=> (safeNumber(a.position) - safeNumber(b.position)));
-      }else{
-        all.sort((a,b)=> (safeNumber(b.blitz) - safeNumber(a.blitz)));
-      }
+      if(all.length && all[0].position != null){ all.sort((a,b)=> (safeNumber(a.position) - safeNumber(b.position))); }
+      else{ all.sort((a,b)=> (safeNumber(b.blitz) - safeNumber(a.blitz))); }
 
       totalBadge.textContent = all.length;
       const gen = js.generated_at ? new Date(Number(js.generated_at)).toLocaleString() : '—';
@@ -365,30 +287,20 @@
     }
   }
 
-  // aplica busca/ordenação e mostra primeira página
   function applyFilters(){
     const q = (qEl.value || '').trim().toLowerCase();
-    filtered = all.filter(p => {
-      if(!q) return true;
-      return (p.username||'').toString().toLowerCase().includes(q) || (p.name||p.realname||'').toString().toLowerCase().includes(q);
-    });
+    filtered = all.filter(p => { if(!q) return true; return (p.username||'').toString().toLowerCase().includes(q) || (p.name||p.realname||'').toString().toLowerCase().includes(q); });
 
     const key = sortEl.value, ord = orderEl.value === 'asc' ? 1 : -1;
     filtered.sort((a,b)=>{
       if(key === 'username'){ const A=(a.username||'').toLowerCase(), B=(b.username||'').toLowerCase(); return (A < B ? -1 : A > B ? 1 : 0) * ord; }
-      if(key === 'position'){
-        const pa = a.position == null ? Infinity : Number(a.position);
-        const pb = b.position == null ? Infinity : Number(b.position);
-        return (pa < pb ? -1 : pa > pb ? 1 : 0) * ord;
-      }
-      const va = safeNumber(a[key]), vb = safeNumber(b[key]);
-      return (va < vb ? -1 : va > vb ? 1 : 0) * ord;
+      if(key === 'position'){ const pa = a.position == null ? Infinity : Number(a.position); const pb = b.position == null ? Infinity : Number(b.position); return (pa < pb ? -1 : pa > pb ? 1 : 0) * ord; }
+      const va = safeNumber(a[key]), vb = safeNumber(b[key]); return (va < vb ? -1 : va > vb ? 1 : 0) * ord;
     });
     page = 1;
     renderPage();
   }
 
-  // renderiza página atual (tabela desktop + cards mobile)
   function renderPage(){
     const per = Math.max(1, parseInt(perPageEl.value,10) || 20);
     const totalPages = Math.max(1, Math.ceil(filtered.length / per));
@@ -479,8 +391,6 @@
   }
 
   /* ---------- utilitários ---------- */
-
-  // exporta página atual para CSV (download)
   function exportCurrentPageCsv(){
     const per = Math.max(1, parseInt(perPageEl.value,10)||20), start = (page-1)*per;
     const items = filtered.slice(start, start+per);
@@ -506,26 +416,22 @@
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download = `ranking_page${page}.csv`; a.click();
   }
 
-  // escape simples para HTML
-  function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c])); }
+  function escapeHtml(s){ return String(s||'').replace(/[&<>\"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c])); }
 
   /* ---------- listeners e inicialização ---------- */
-
   const debouncedFilter = debounce(applyFilters, 250);
   qEl.addEventListener('input', debouncedFilter);
   sortEl.addEventListener('change', applyFilters);
   orderEl.addEventListener('change', applyFilters);
-  perPageEl.addEventListener('change', renderPage);
+  perPageEl.addEventListener('change', ()=>{ page = 1; renderPage(); }); // garante volta à página 1 ao mudar per-page
   exportBtn.addEventListener('click', exportCurrentPageCsv);
   document.getElementById('dismissJoinBanner').addEventListener('click', ()=>document.querySelector('.hero').style.display='none');
 
-  // carrega dados ao iniciar
   loadData();
 
-  // re-render quando viewport muda (troca tabela/cards)
   const mql = window.matchMedia('(max-width:880px)');
   if (mql.addEventListener) mql.addEventListener('change', ()=>{ renderPage(); });
-  else if (mql.addListener) mql.addListener(()=>{ renderPage(); }); // fallback antigo
+  else if (mql.addListener) mql.addListener(()=>{ renderPage(); });
 
 })();
 </script>
