@@ -1,5 +1,5 @@
 {
-  "generated_at": 1759498607604,
+  "generated_at": 1759499555684,
   "count": 73,
   "players": [
     {
@@ -9,7 +9,7 @@
       "blitz": 2272,
       "bullet": 2178,
       "rapid": 2200,
-      "seenAt": 1759368594979,
+      "seenAt": 1759499515935,
       "blitz_diff": 0,
       "bullet_diff": 0,
       "rapid_diff": 0,
@@ -99,7 +99,7 @@
       "blitz": 2200,
       "bullet": 2204,
       "rapid": 2231,
-      "seenAt": 1759496956785,
+      "seenAt": 1759498907807,
       "blitz_diff": 0,
       "bullet_diff": 0,
       "rapid_diff": 0,
