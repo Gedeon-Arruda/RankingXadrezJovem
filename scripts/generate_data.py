@@ -1,4 +1,4 @@
-# players_server.py
+# players_generator.py
 import json
 import time
 import requests
@@ -8,7 +8,6 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from urllib.parse import quote
-from flask import Flask, request, jsonify, send_file, abort
 
 # ---------- sua parte existente (mantive praticamente igual) ----------
 TEAM_ID = "xadrezjovemes"
@@ -21,7 +20,7 @@ RETRY_ATTEMPTS = 3
 RETRY_BACKOFF = 1.0
 ACTIVE_DAYS = 30
 OUT_DIR = "docs"
-OUT_FILE = f"{OUT_DIR}/players.json"
+DEFAULT_OUT_FILE = f"{OUT_DIR}/players.json"
 
 
 def make_session():
@@ -163,7 +162,11 @@ def rating_status(diff):
     return "manteve"
 
 
-def generate_players_json():
+def generate_players_json(output_path=DEFAULT_OUT_FILE, write_file=True):
+    """
+    Coleta dados, monta o payload e grava em `output_path` quando write_file==True.
+    Retorna o dicionário final (out).
+    """
     session = make_session()
     print("Fetching team members...")
     members = fetch_team_members(session)
@@ -187,12 +190,12 @@ def generate_players_json():
     active = [v for v in byu.values() if active_since_days(v)]
     active_sorted = sorted(active, key=lambda x: (-(x.get("blitz") or 0), -(x.get("bullet") or 0), -(x.get("rapid") or 0)))
 
-    # load previous snapshot
+    # load previous snapshot only if we will write to the same file
     prev_map = {}
     prev_rank_map = {}
     try:
-        if os.path.exists(OUT_FILE):
-            with open(OUT_FILE, "r", encoding="utf-8") as f:
+        if write_file and os.path.exists(output_path):
+            with open(output_path, "r", encoding="utf-8") as f:
                 prev = json.load(f)
             for idx, pp in enumerate((prev.get("players") or [])):
                 uname = (pp.get("username") or "").strip().lower()
@@ -256,108 +259,30 @@ def generate_players_json():
         "count": len(active_sorted),
         "players": active_sorted
     }
-    os.makedirs(OUT_DIR, exist_ok=True)
-    with open(OUT_FILE, "w", encoding="utf-8") as f:
-        json.dump(out, f, ensure_ascii=False, indent=2)
-    print(f"Wrote {OUT_FILE} ({len(active_sorted)} players)")
+
+    if write_file:
+        out_dir = os.path.dirname(output_path) or "."
+        os.makedirs(out_dir, exist_ok=True)
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump(out, f, ensure_ascii=False, indent=2)
+        print(f"Wrote {output_path} ({len(active_sorted)} players)")
+    else:
+        # print to stdout
+        print(json.dumps(out, ensure_ascii=False, indent=2))
+
+    return out
 # ---------- fim parte existente ----------
 
-app = Flask(__name__)
 
-# Serve the generated players.json (no visit logging)
-@app.route("/players.json", methods=["GET"])
-def serve_players_json():
-    if not os.path.exists(OUT_FILE):
-        abort(404)
-    return send_file(OUT_FILE, mimetype="application/json")
-
-# API to return paginated players
-@app.route("/api/players", methods=["GET"])
-def api_players():
-    if not os.path.exists(OUT_FILE):
-        return jsonify({"error": "players.json not found"}), 503
-    with open(OUT_FILE, "r", encoding="utf-8") as f:
-        data = json.load(f)
-    items = data.get("players", [])
-
-    try:
-        page = max(1, int(request.args.get("page", 1)))
-    except Exception:
-        page = 1
-    try:
-        per_page = max(1, int(request.args.get("per_page", 20)))
-    except Exception:
-        per_page = 20
-
-    sort = request.args.get("sort", "blitz")
-    if sort not in ("blitz", "bullet", "rapid", "username", "position"):
-        sort = "blitz"
-    order = request.args.get("order", "desc")
-    reverse = (order != "asc")
-
-    if sort == "username":
-        data_sorted = sorted(items, key=lambda x: x.get("username", "").lower(), reverse=reverse)
-    elif sort == "position":
-        data_sorted = sorted(items, key=lambda x: (x.get("position") is None, x.get("position") or float("inf")), reverse=reverse)
-    else:
-        data_sorted = sorted(items, key=lambda x: x.get(sort, 0) or 0, reverse=reverse)
-
-    total = len(data_sorted)
-    start = (page - 1) * per_page
-    page_items = data_sorted[start:start + per_page]
-
-    resp_items = [
-        {
-            "username": p.get("username"),
-            "name": p.get("name"),
-            "blitz": p.get("blitz"),
-            "bullet": p.get("bullet"),
-            "rapid": p.get("rapid"),
-            "seenAt": p.get("seenAt"),
-            "profile": p.get("profile"),
-            "position": p.get("position"),
-            "position_change": p.get("position_change"),
-            "position_arrow": p.get("position_arrow"),
-            "blitz_diff": p.get("blitz_diff"),
-            "bullet_diff": p.get("bullet_diff"),
-            "rapid_diff": p.get("rapid_diff"),
-        } for p in page_items
-    ]
-
-    return jsonify({
-        "total": total,
-        "page": page,
-        "per_page": per_page,
-        "sort": sort,
-        "order": order,
-        "items": resp_items,
-    })
-
-# Simple admin endpoint to refresh data manually
-@app.route("/admin/refresh", methods=["POST"])
-def admin_refresh():
-    # allow only local calls for safety
-    if request.remote_addr not in ("127.0.0.1", "localhost", "::1"):
-        return jsonify({"error": "forbidden"}), 403
-    try:
-        generate_players_json()
-        return jsonify({"status": "ok", "loaded": True})
-    except Exception as e:
-        return jsonify({"status": "error", "error": str(e)}), 500
-
-def run_server(host="0.0.0.0", port=3000):
-    print(f"Starting server on {host}:{port}")
-    app.run(host=host, port=port)
-
-# CLI
 if __name__ == "__main__":
-    import sys
-    if "--serve" in sys.argv:
-        # optional: generate players.json before serving
-        try:
-            generate_players_json()
-        except Exception as e:
-            print("Erro gerando players.json:", e)
-        run_server()
-    else:
-        generate_players_json()
+    import argparse
+    parser = argparse.ArgumentParser(description="Gerador de docs/players.json para o XadrezJovemes (sem Flask).")
+    parser.add_argument("--output", "-o", default=DEFAULT_OUT_FILE, help="Caminho do arquivo de saída (default: docs/players.json)")
+    parser.add_argument("--stdout", action="store_true", help="Imprime o JSON no stdout em vez de gravar o arquivo")
+    args = parser.parse_args()
+
+    try:
+        generate_players_json(output_path=args.output, write_file=not args.stdout)
+    except Exception as e:
+        print("Erro gerando players.json:", e)
+        raise
