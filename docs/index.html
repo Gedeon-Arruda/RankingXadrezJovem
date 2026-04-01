@@ -27,9 +27,10 @@
     --gray:#9ca3af;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%}
-  body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:linear-gradient(180deg,#eef2ff 0%,var(--bg) 100%);color:var(--text);padding:28px;min-height:100vh;display:flex;justify-content:center}
-  .container{max-width:1150px;width:100%;display:flex;flex-direction:column;gap:18px}
+  html,body{min-height:100%}
+  html{overflow-x:hidden}
+  body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:linear-gradient(180deg,#eef2ff 0%,var(--bg) 100%);color:var(--text);padding:28px;min-height:100vh;min-height:100dvh;overflow-x:hidden}
+  .container{max-width:1150px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:18px}
 
   /* ----------------- Header / hero / controls ----------------- */
   header.site{display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -45,7 +46,7 @@
   .hero{background:linear-gradient(180deg,rgba(255,255,255,0.7),var(--card));border-radius:var(--radius);padding:14px;border:1px solid var(--border);box-shadow:var(--shadow-sm);display:flex;justify-content:space-between;align-items:center;gap:14px}
   .hero .left{max-width:70%}
   .hero p{color:var(--muted);margin-top:6px;font-size:0.95rem}
-  .hero .cta{display:flex;gap:10px;align-items:center}
+  .hero .cta{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
   .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:10px 14px;border-radius:12px;border:none;cursor:pointer;font-weight:700;box-shadow:0 10px 30px rgba(59,130,246,0.12);text-decoration:none}
   .btn-primary:hover{transform:translateY(-2px)}
   .btn-ghost{padding:8px 12px;border-radius:10px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap}
@@ -66,6 +67,7 @@
   .controls-right{display:flex;align-items:flex-start;justify-content:flex-end;gap:10px;min-width:0;flex:1 1 100%;width:100%}
   #info{max-width:100%;white-space:normal;overflow:visible;text-overflow:clip;line-height:1.25;text-align:right}
 
+  .insights,.highlights,.card{width:100%}
   .insights{background:linear-gradient(180deg,rgba(255,255,255,0.78),var(--card));border:1px solid var(--border);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow-sm)}
   .insights-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
   .insight-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:var(--shadow-sm)}
@@ -142,56 +144,98 @@
   .pos-same{color:var(--gray)}
 
   .card-list{display:none}
+  .player-link{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit;width:100%;min-width:0}
+  .player-meta-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .player-rank-chip{display:inline-flex;align-items:center;justify-content:center;padding:3px 8px;border-radius:999px;background:rgba(59,130,246,0.08);color:var(--accent);font-size:.78rem;font-weight:800;letter-spacing:.02em}
+  .player-pos{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;color:var(--muted);font-weight:700}
+  .player-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:100%}
+  .player-stat{padding:9px 10px;border-radius:10px;background:rgba(15,23,36,0.035);border:1px solid rgba(15,23,36,0.05)}
+  .player-stat-label{display:block;font-size:.74rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+  .player-stat-value{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px;font-size:.95rem;color:var(--text);font-weight:800}
+  .player-seen{font-size:.82rem;color:var(--muted);font-weight:600}
+  .skeleton{position:relative;overflow:hidden;background:rgba(148,163,184,0.16)!important;color:transparent!important;border-color:rgba(148,163,184,0.18)!important;user-select:none}
+  .skeleton::after{content:"";position:absolute;inset:0;transform:translateX(-100%);background:linear-gradient(90deg,transparent,rgba(255,255,255,0.7),transparent);animation:skeletonSweep 1.4s ease-in-out infinite}
+  .skeleton-line{height:12px;border-radius:999px}
+  .skeleton-line.lg{height:18px}
+  .skeleton-line.sm{height:10px}
+  .skeleton-card{display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:14px;border:1px solid var(--border);background:#fff}
+  .skeleton-top3{display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:12px;border:1px solid var(--border);background:#fff}
+  .skeleton-player{display:flex;flex-direction:column;gap:12px;padding:14px;border-radius:14px;border:1px solid var(--border);background:#fff}
+  .skeleton-player-head{display:flex;gap:12px;align-items:center}
+  .skeleton-avatar{width:52px;height:52px;border-radius:12px;flex-shrink:0}
+  .skeleton-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .skeleton-stat{height:54px;border-radius:12px}
+  .back-to-top{position:fixed;right:16px;bottom:18px;z-index:40;display:none;align-items:center;justify-content:center;min-width:52px;height:52px;padding:0 14px;border:0;border-radius:999px;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#fff;font-weight:800;box-shadow:0 16px 34px rgba(15,23,36,0.22);cursor:pointer}
+  .back-to-top.visible{display:inline-flex}
+  .back-to-top-label{display:none}
+  @keyframes skeletonSweep{
+    to{transform:translateX(100%)}
+  }
   @media(max-width:880px){
     header.site{flex-direction:column;align-items:flex-start;gap:10px}
     .title-group h1{font-size:1.05rem}
-    .meta{width:100%;display:flex;justify-content:space-between}
+    .meta{width:100%;display:flex;justify-content:space-between;flex-wrap:wrap}
 
     .hero{flex-direction:column;align-items:flex-start}
     .hero .left{max-width:100%}
+    .hero .cta{width:100%}
+    .hero .cta > *{flex:1 1 180px}
 
     .controls{flex-direction:column;align-items:stretch}
-    .controls-left{width:100%;align-items:center;flex-wrap:wrap}
+    .controls-left{width:100%;align-items:stretch;flex-wrap:wrap;flex:1 1 auto}
     .search{flex:1;min-width:unset;width:100%}
-    .select{flex:0 0 auto;min-width:120px}
-    .select.small{min-width:86px}
+    .select{flex:1 1 160px;min-width:0;width:100%}
+    .select.small{min-width:0}
     .source-tabs{width:100%;justify-content:space-between}
     .source-tab{flex:1}
     .controls-right{width:100%;justify-content:flex-start;flex-wrap:wrap;flex:0 0 auto}
     #info{max-width:100%;text-align:left}
-    .controls{position:sticky;top:8px;z-index:30;background:rgba(244,246,251,0.92);backdrop-filter:blur(6px);border-radius:14px;padding:8px;border:1px solid var(--border)}
+    .controls{position:static;background:rgba(244,246,251,0.92);backdrop-filter:blur(6px);border-radius:14px;padding:8px;border:1px solid var(--border)}
     .insights-grid{grid-template-columns:1fr}
     .top3-grid{grid-template-columns:1fr}
 
     table{display:none}
     .card-list{display:flex;flex-direction:column;gap:12px}
-    .player-card{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow-sm)}
-    .player-left{display:flex;gap:12px;align-items:center;min-width:0}
+    .player-card{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:14px;border-radius:14px;border:1px solid var(--border);background:linear-gradient(180deg,rgba(255,255,255,0.98),rgba(255,255,255,0.92));box-shadow:var(--shadow-sm);width:100%;min-width:0}
+    .player-left{display:flex;gap:12px;align-items:flex-start;min-width:0;flex:1 1 auto}
     .avatar{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;flex-shrink:0}
     .player-names{display:flex;flex-direction:column;min-width:0}
     .player-nick{font-weight:800;color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .player-real{color:var(--muted);font-size:0.92rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .player-right{text-align:right;color:var(--muted);font-weight:700;display:flex;flex-direction:column;align-items:flex-end;gap:6px;min-width:110px}
-    .player-right .diff{display:inline-block;margin-top:6px}
+    .player-right{color:var(--muted);font-weight:700;display:flex;flex-direction:column;align-items:flex-end;gap:10px;min-width:180px}
+    .player-right .diff{display:inline-flex}
 
     .pager{justify-content:center;flex-wrap:wrap;gap:8px}
     .pager button{min-width:44px;padding:8px 10px}
     .card{padding:10px}
+    .legend{display:none}
+    .back-to-top-label{display:inline}
   }
 
   @media(max-width:480px){
-    body{padding:18px}
+    body{padding:14px}
+    .container{gap:14px}
     .logo{width:52px;height:52px;font-size:18px}
     .avatar{width:48px;height:48px}
-    .player-right{min-width:90px}
+    .player-right{min-width:0;width:100%}
     .badge{padding:6px 10px;font-size:0.85rem}
     .btn-primary{padding:8px 12px;font-size:0.9rem}
+    .btn-ghost{padding:8px 10px;font-size:0.9rem}
     .search{padding:6px 10px}
     .select{padding:6px 8px}
     .hero p{font-size:0.9rem}
+    .meta{gap:8px}
+    .meta .badge{flex:1 1 140px}
     .player-card{flex-direction:column;align-items:flex-start}
     .player-right{align-items:flex-start;text-align:left}
+    .player-stats{grid-template-columns:1fr}
+    .player-meta-top{gap:6px}
     .player-nick{font-size:0.98rem}
+    .diff{margin-left:6px}
+    .highlights,.insights,.card{border-radius:16px}
+    footer{padding-bottom:8px}
+    .skeleton-stats{grid-template-columns:1fr}
+    .back-to-top{right:14px;bottom:14px}
   }
 
   .pager{display:flex;gap:8px;justify-content:flex-end;padding-top:10px}
@@ -256,8 +300,8 @@
         <option value="username">Usuário</option>
       </select>
       <select id="order" class="select" title="Ordem">
-        <option value="desc">Desc</option>
-        <option value="asc">Asc</option>
+        <option value="desc">Maior primeiro</option>
+        <option value="asc">Menor primeiro</option>
       </select>
       <select id="perPage" class="select small" title="Por página">
         <option value="10">10</option>
@@ -315,6 +359,9 @@
 
   <footer id="footerText">Dados: Lichess · Site atualizado uma vez por dia.</footer>
 </div>
+<button id="backToTop" class="back-to-top" type="button" aria-label="Voltar ao topo">
+  ↑ <span class="back-to-top-label">Topo</span>
+</button>
 
 <script>
 (() => {
@@ -343,6 +390,7 @@
   const top3GridEl = document.getElementById('top3Grid');
   const insightsGridEl = document.getElementById('insightsGrid');
   const tableWrapEl = document.querySelector('.table-wrap');
+  const backToTopEl = document.getElementById('backToTop');
 
   const VISIT_COUNTER_API = 'https://api.counterapi.dev/v1';
   const VISIT_COUNTER_NAMESPACE = 'ranking-xadrez-jovem-es';
@@ -424,7 +472,7 @@
     if(days < 30) return `há ${days} dia${days > 1 ? 's' : ''}`;
 
     const months = Math.floor(days / 30);
-    if(months < 12) return `há ${months} mês${months > 1 ? 'es' : ''}`;
+    if(months < 12) return `há ${months} ${months === 1 ? 'mês' : 'meses'}`;
 
     const years = Math.floor(months / 12);
     return `há ${years} ano${years > 1 ? 's' : ''}`;
@@ -455,6 +503,23 @@
     if(Number.isNaN(n)) return '(0)';
     const sign = n > 0 ? '+' : '';
     return `(${sign}${n})`;
+  }
+
+  function pluralizePosition(count){
+    return `${count} ${count === 1 ? 'posição' : 'posições'}`;
+  }
+
+  function pluralizePlayers(count){
+    return `${count} ${count === 1 ? 'jogador' : 'jogadores'}`;
+  }
+
+  function formatPositionMovement(player){
+    const arrow = normalizeArrow(player.position_arrow);
+    const hasChange = player.position_change != null && !Number.isNaN(Number(player.position_change));
+    if(!arrow || !hasChange) return 'sem variação';
+    const amount = Math.abs(Number(player.position_change));
+    if(amount === 0) return 'sem variação';
+    return `${arrow} ${pluralizePosition(amount)}`;
   }
 
   function normalizeArrow(arrow){
@@ -639,7 +704,7 @@
       </article>`;
     }).join('');
 
-    highlightsMetaEl.textContent = `Top 3 de ${items.length} jogador(es) na visão atual`;
+    highlightsMetaEl.textContent = `Top 3 entre ${pluralizePlayers(items.length)} na visão atual`;
   }
 
   function renderInsights(items){
@@ -685,7 +750,7 @@
     let riseUser = 'Sem subida detectada';
     if(upMoves.length){
       const topRise = upMoves[0];
-      riseValue = `+${topRise.change} posição${topRise.change > 1 ? 'es' : ''}`;
+      riseValue = `+${pluralizePosition(topRise.change)}`;
       riseUser = escapeHtml(topRise.player.username || 'sem usuário');
     } else {
       const ratingRise = items
@@ -758,6 +823,80 @@
     });
   }
 
+  function renderLoadingState(){
+    totalBadge.textContent = '...';
+    infoEl.textContent = `Carregando ${getSourceConfig().label}...`;
+    insightsGridEl.innerHTML = `
+      <article class="insight-card skeleton-card">
+        <div class="skeleton skeleton-line"></div>
+        <div class="skeleton skeleton-line lg"></div>
+        <div class="skeleton skeleton-line sm"></div>
+      </article>
+      <article class="insight-card skeleton-card">
+        <div class="skeleton skeleton-line"></div>
+        <div class="skeleton skeleton-line lg"></div>
+        <div class="skeleton skeleton-line sm"></div>
+      </article>
+      <article class="insight-card skeleton-card">
+        <div class="skeleton skeleton-line"></div>
+        <div class="skeleton skeleton-line lg"></div>
+        <div class="skeleton skeleton-line sm"></div>
+      </article>`;
+    top3GridEl.innerHTML = `
+      <article class="skeleton-top3">
+        <div class="skeleton skeleton-line"></div>
+        <div class="skeleton skeleton-line lg"></div>
+        <div class="skeleton skeleton-line sm"></div>
+        <div class="skeleton skeleton-line"></div>
+      </article>
+      <article class="skeleton-top3">
+        <div class="skeleton skeleton-line"></div>
+        <div class="skeleton skeleton-line lg"></div>
+        <div class="skeleton skeleton-line sm"></div>
+        <div class="skeleton skeleton-line"></div>
+      </article>
+      <article class="skeleton-top3">
+        <div class="skeleton skeleton-line"></div>
+        <div class="skeleton skeleton-line lg"></div>
+        <div class="skeleton skeleton-line sm"></div>
+        <div class="skeleton skeleton-line"></div>
+      </article>`;
+    tbody.innerHTML = Array.from({ length: 6 }, () => `
+      <tr>
+        <td colspan="7" style="padding:0;border-top:0">
+          <div class="skeleton-card" style="margin:8px 0">
+            <div class="skeleton skeleton-line"></div>
+            <div class="skeleton skeleton-line lg"></div>
+          </div>
+        </td>
+      </tr>`).join('');
+    cardList.innerHTML = Array.from({ length: 4 }, () => `
+      <div class="skeleton-player">
+        <div class="skeleton-player-head">
+          <div class="skeleton skeleton-avatar"></div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:8px;min-width:0">
+            <div class="skeleton skeleton-line" style="width:55%"></div>
+            <div class="skeleton skeleton-line lg" style="width:72%"></div>
+            <div class="skeleton skeleton-line sm" style="width:48%"></div>
+          </div>
+        </div>
+        <div class="skeleton-stats">
+          <div class="skeleton skeleton-stat"></div>
+          <div class="skeleton skeleton-stat"></div>
+          <div class="skeleton skeleton-stat"></div>
+        </div>
+        <div class="skeleton skeleton-line sm" style="width:42%"></div>
+      </div>`).join('');
+    pager.innerHTML = '';
+  }
+
+  function updateBackToTopVisibility(){
+    if(!backToTopEl) return;
+    const isMobile = window.matchMedia('(max-width:880px)').matches;
+    const shouldShow = isMobile && window.scrollY > 360;
+    backToTopEl.classList.toggle('visible', shouldShow);
+  }
+
 
   async function updateVisitCounter(){
     visitBadge.textContent = '...';
@@ -779,7 +918,7 @@
   async function loadData(resetPage = false){
     const cfg = getSourceConfig();
     const requestId = ++lastLoadRequest;
-    infoEl.textContent = `Carregando ${cfg.label}...`;
+    renderLoadingState();
 
     try{
       const url = `./${cfg.file}?v=${Date.now()}`;
@@ -811,7 +950,7 @@
           })
         : '—';
       const relative = generatedAt ? formatRelativeFromNow(generatedAt) : '';
-      infoEl.textContent = `Fonte: ${cfg.label} · ${all.length} jogador(es) · atualizado: ${gen}${relative ? ` (${relative})` : ''}`;
+      infoEl.textContent = `Fonte: ${cfg.label} · ${pluralizePlayers(all.length)} · atualizado: ${gen}${relative ? ` (${relative})` : ''}`;
 
       if(resetPage) page = 1;
       applyFilters(resetPage);
@@ -900,27 +1039,39 @@
         const initial = escapeHtml((p.username || '').charAt(0).toUpperCase());
         const userEsc = escapeHtml(p.username || '(sem usuário)');
         const realEsc = real ? escapeHtml(real) : '';
-        const arrow = normalizeArrow(p.position_arrow);
-        const posClass = arrow === '▲' ? 'pos-up' : (arrow === '▼' ? 'pos-down' : 'pos-same');
-        const posHtml = arrow ? `<span class="pos-arrow ${posClass}">${escapeHtml(arrow)}</span>` : '';
         const firstClass = rank === 1 ? ' row-first' : '';
 
+        const positionText = formatPositionMovement(p);
         const html = `<div class="player-card${firstClass}" role="group" aria-label="Jogador ${userEsc}">
           <div class="player-left">
-            <a href="${profile}" target="_blank" rel="noopener" style="display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit;width:100%">
+            <a href="${profile}" target="_blank" rel="noopener" class="player-link">
               <div class="avatar" aria-hidden="true">${initial}</div>
               <div class="player-names">
-                <div class="player-nick truncate">${rank}. ${userEsc}</div>
+                <div class="player-meta-top">
+                  <span class="player-rank-chip">#${rank}</span>
+                  <span class="player-pos">Posição ${p.position ?? rank} ${positionText}</span>
+                </div>
+                <div class="player-nick truncate">${userEsc}</div>
                 <div class="player-real truncate">${realEsc}</div>
               </div>
             </a>
           </div>
           <div class="player-right">
-            <div style="font-weight:700">Pos: ${p.position ?? rank} ${posHtml} ${p.position_change != null ? Math.abs(p.position_change) : ''}</div>
-            <div style="font-size:0.95rem">Blitz: ${p.blitz ?? '—'} <span class="${(p.blitz_diff>0)?'diff diff-pos':(p.blitz_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.blitz_diff)}</span></div>
-            <div style="font-size:0.95rem">Bullet: ${p.bullet ?? '—'} <span class="${(p.bullet_diff>0)?'diff diff-pos':(p.bullet_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.bullet_diff)}</span></div>
-            <div style="font-size:0.95rem">Rapid: ${p.rapid ?? '—'} <span class="${(p.rapid_diff>0)?'diff diff-pos':(p.rapid_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.rapid_diff)}</span></div>
-            <div style="font-size:0.85rem;color:var(--muted);margin-top:6px">${formatSeen(p.seenAt)}</div>
+            <div class="player-stats">
+              <div class="player-stat">
+                <span class="player-stat-label">Blitz</span>
+                <div class="player-stat-value">${p.blitz ?? '—'} <span class="${(p.blitz_diff>0)?'diff diff-pos':(p.blitz_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.blitz_diff)}</span></div>
+              </div>
+              <div class="player-stat">
+                <span class="player-stat-label">Bullet</span>
+                <div class="player-stat-value">${p.bullet ?? '—'} <span class="${(p.bullet_diff>0)?'diff diff-pos':(p.bullet_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.bullet_diff)}</span></div>
+              </div>
+              <div class="player-stat">
+                <span class="player-stat-label">Rapid</span>
+                <div class="player-stat-value">${p.rapid ?? '—'} <span class="${(p.rapid_diff>0)?'diff diff-pos':(p.rapid_diff<0)?'diff diff-neg':'diff diff-zero'}">${formatDiff(p.rapid_diff)}</span></div>
+              </div>
+            </div>
+            <div class="player-seen">Ativo por último: ${formatSeen(p.seenAt)}</div>
           </div>
         </div>`;
         cardList.insertAdjacentHTML('beforeend', html);
@@ -1005,6 +1156,9 @@
   document.getElementById('dismissJoinBanner').addEventListener('click', () => {
     document.querySelector('.hero').style.display = 'none';
   });
+  backToTopEl.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 
   try{
     const saved = localStorage.getItem(SOURCE_STORAGE_KEY);
@@ -1015,10 +1169,12 @@
   setSource(currentSource, true);
   updateVisitCounter();
   loadData(false);
+  updateBackToTopVisibility();
 
   const mql = window.matchMedia('(max-width:880px)');
-  if (mql.addEventListener) mql.addEventListener('change', () => { renderPage(); });
-  else if (mql.addListener) mql.addListener(() => { renderPage(); });
+  if (mql.addEventListener) mql.addEventListener('change', () => { renderPage(); updateBackToTopVisibility(); });
+  else if (mql.addListener) mql.addListener(() => { renderPage(); updateBackToTopVisibility(); });
+  window.addEventListener('scroll', updateBackToTopVisibility, { passive: true });
 })();
 </script>
 </body>
