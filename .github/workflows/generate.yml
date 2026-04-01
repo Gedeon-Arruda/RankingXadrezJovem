@@ -34,6 +34,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/players.json
-          git commit -m "Update players.json" || echo "no changes to commit"
+          git add docs/players.json docs/players_chesscom.json
+          git commit -m "Update ranking data files" || echo "no changes to commit"
           git push

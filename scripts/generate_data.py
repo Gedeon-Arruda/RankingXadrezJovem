@@ -1,65 +1,243 @@
-# players_generator.py
+import argparse
 import json
-import time
-import requests
-import certifi
 import os
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
 from urllib.parse import quote
 
-# ---------- sua parte existente (mantive praticamente igual) ----------
-TEAM_ID = "xadrezjovemes"
-TEAM_URL = "https://lichess.org/api/team/{}/users"
-USER_URL = "https://lichess.org/api/user/{}"
-USER_RATING_HISTORY_URL = "https://lichess.org/api/user/{}/rating-history"
+import certifi
+import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+
+# ----------------------------- Config -----------------------------
 MAX_WORKERS = 8
-REQUEST_TIMEOUT = 10
+REQUEST_TIMEOUT = 12
 RETRY_ATTEMPTS = 3
 RETRY_BACKOFF = 1.0
 ACTIVE_DAYS = 30
+
 OUT_DIR = "docs"
-DEFAULT_OUT_FILE = f"{OUT_DIR}/players.json"
+LICHESS_OUT_FILE = f"{OUT_DIR}/players.json"
+CHESSCOM_OUT_FILE = f"{OUT_DIR}/players_chesscom.json"
+
+# Lichess
+LICHESS_TEAM_ID = "xadrezjovemes"
+LICHESS_TEAM_URL = "https://lichess.org/api/team/{}/users"
+LICHESS_USER_URL = "https://lichess.org/api/user/{}"
+LICHESS_USER_RATING_HISTORY_URL = "https://lichess.org/api/user/{}/rating-history"
+
+# Chess.com
+CHESSCOM_CLUB_ID = "xadrez-jovem-es"
+CHESSCOM_CLUB_MEMBERS_URL = "https://api.chess.com/pub/club/{}/members"
+CHESSCOM_PLAYER_URL = "https://api.chess.com/pub/player/{}"
+CHESSCOM_PLAYER_STATS_URL = "https://api.chess.com/pub/player/{}/stats"
 
 
 def make_session():
-    s = requests.Session()
-    retries = Retry(total=RETRY_ATTEMPTS, backoff_factor=RETRY_BACKOFF, status_forcelist=(500,502,503,504))
-    s.mount("https://", HTTPAdapter(max_retries=retries))
-    s.headers.update({"User-Agent":"xadrezjovemes-generator/1.0"})
-    s.verify = certifi.where()
-    return s
+    session = requests.Session()
+    retries = Retry(
+        total=RETRY_ATTEMPTS,
+        backoff_factor=RETRY_BACKOFF,
+        status_forcelist=(429, 500, 502, 503, 504),
+    )
+    session.mount("https://", HTTPAdapter(max_retries=retries))
+    session.headers.update({"User-Agent": "ranking-xadrez-jovem-es-generator/1.1"})
+    session.verify = certifi.where()
+    return session
 
 
-def fetch_team_members(session):
-    url = TEAM_URL.format(quote(TEAM_ID))
-    resp = session.get(url, timeout=REQUEST_TIMEOUT)
-    resp.raise_for_status()
-    text = resp.text.strip()
-    users = []
+def safe_int(value, default=0):
     try:
-        if text.startswith('['):
-            arr = resp.json()
-            for obj in arr:
+        if value is None or value == "":
+            return default
+        return int(value)
+    except Exception:
+        return default
+
+
+def safe_timestamp_ms(value):
+    if value is None or value == "":
+        return None
+    try:
+        ts = int(float(value))
+    except Exception:
+        return None
+    # Chess.com usa segundos. Lichess já vem em ms.
+    return ts * 1000 if ts < 1_000_000_000_000 else ts
+
+
+def active_since_days(player, days=ACTIVE_DAYS):
+    seen = safe_timestamp_ms(player.get("seenAt"))
+    if not seen:
+        return False
+    age_days = (time.time() * 1000 - seen) / (24 * 3600 * 1000)
+    return age_days <= days
+
+
+def rating_status(diff):
+    if diff is None:
+        return None
+    d = safe_int(diff, default=0)
+    if d > 0:
+        return "subiu"
+    if d < 0:
+        return "caiu"
+    return "manteve"
+
+
+def dedupe_players(players):
+    by_user = {}
+
+    def score(p):
+        return safe_int(p.get("blitz")) + safe_int(p.get("bullet")) + safe_int(p.get("rapid"))
+
+    for player in players:
+        username = (player.get("username") or "").strip().lower()
+        if not username:
+            continue
+        previous = by_user.get(username)
+        if previous is None:
+            by_user[username] = player
+            continue
+        previous_seen = safe_timestamp_ms(previous.get("seenAt")) or 0
+        current_seen = safe_timestamp_ms(player.get("seenAt")) or 0
+        if score(player) > score(previous) or current_seen > previous_seen:
+            by_user[username] = player
+
+    return list(by_user.values())
+
+
+def read_previous_map(output_path, write_file):
+    prev_players = []
+    if not write_file or not os.path.exists(output_path):
+        return {}, {}
+    try:
+        with open(output_path, "r", encoding="utf-8") as f:
+            prev = json.load(f)
+        prev_players = prev.get("players") or []
+    except Exception:
+        prev_players = []
+
+    prev_map = {}
+    prev_rank_map = {}
+    for idx, player in enumerate(prev_players):
+        username = (player.get("username") or "").strip().lower()
+        if not username:
+            continue
+        prev_map[username] = player
+        prev_rank_map[username] = idx + 1
+    return prev_map, prev_rank_map
+
+
+def enrich_with_deltas_and_positions(players, output_path, write_file):
+    prev_map, prev_rank_map = read_previous_map(output_path, write_file)
+
+    for player in players:
+        if not (player.get("name") or "").strip():
+            player["name"] = "Sem nome registrado"
+
+        username = (player.get("username") or "").strip().lower()
+        previous = prev_map.get(username)
+
+        if previous:
+            player["blitz_diff"] = safe_int(player.get("blitz")) - safe_int(previous.get("blitz"))
+            player["bullet_diff"] = safe_int(player.get("bullet")) - safe_int(previous.get("bullet"))
+            player["rapid_diff"] = safe_int(player.get("rapid")) - safe_int(previous.get("rapid"))
+        else:
+            player["blitz_diff"] = safe_int(player.get("recent_blitz_diff"))
+            player["bullet_diff"] = safe_int(player.get("recent_bullet_diff"))
+            player["rapid_diff"] = safe_int(player.get("recent_rapid_diff"))
+
+        player.pop("recent_blitz_diff", None)
+        player.pop("recent_bullet_diff", None)
+        player.pop("recent_rapid_diff", None)
+
+    for idx, player in enumerate(players):
+        current_pos = idx + 1
+        player["position"] = current_pos
+
+        username = (player.get("username") or "").strip().lower()
+        prev_pos = prev_rank_map.get(username)
+        if prev_pos is None:
+            player["position_change"] = None
+            player["position_arrow"] = None
+        else:
+            change = prev_pos - current_pos
+            player["position_change"] = change
+            if change > 0:
+                player["position_arrow"] = "▲"
+            elif change < 0:
+                player["position_arrow"] = "▼"
+            else:
+                player["position_arrow"] = "→"
+
+        player["blitz_status"] = rating_status(player.get("blitz_diff"))
+        player["bullet_status"] = rating_status(player.get("bullet_diff"))
+        player["rapid_status"] = rating_status(player.get("rapid_diff"))
+
+
+def write_output(players, output_path, write_file=True):
+    payload = {
+        "generated_at": int(time.time() * 1000),
+        "count": len(players),
+        "players": players,
+    }
+
+    if write_file:
+        out_dir = os.path.dirname(output_path) or "."
+        os.makedirs(out_dir, exist_ok=True)
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump(payload, f, ensure_ascii=False, indent=2)
+        print(f"Wrote {output_path} ({len(players)} players)")
+
+    return payload
+
+
+def finalize_players(players, output_path, write_file=True):
+    deduped = dedupe_players(players)
+    active = [p for p in deduped if active_since_days(p)]
+    active_sorted = sorted(
+        active,
+        key=lambda p: (-safe_int(p.get("blitz")), -safe_int(p.get("bullet")), -safe_int(p.get("rapid"))),
+    )
+    enrich_with_deltas_and_positions(active_sorted, output_path, write_file)
+    return write_output(active_sorted, output_path, write_file)
+
+
+# ----------------------------- Lichess -----------------------------
+def fetch_lichess_team_members(session):
+    url = LICHESS_TEAM_URL.format(quote(LICHESS_TEAM_ID))
+    response = session.get(url, timeout=REQUEST_TIMEOUT)
+    response.raise_for_status()
+    text = response.text.strip()
+
+    users = []
+    if not text:
+        return users
+
+    try:
+        if text.startswith("["):
+            for obj in response.json():
                 if isinstance(obj, dict):
-                    users.append(obj.get('id') or obj.get('username'))
+                    users.append(obj.get("id") or obj.get("username"))
         else:
             for line in text.splitlines():
-                if not line.strip(): continue
+                line = line.strip()
+                if not line:
+                    continue
                 try:
                     obj = json.loads(line)
-                    users.append(obj.get('id') or obj.get('username') or obj.get('name'))
+                    users.append(obj.get("id") or obj.get("username") or obj.get("name"))
                 except Exception:
-                    users.append(line.strip())
+                    users.append(line)
     except Exception:
         pass
+
     return [u for u in users if u]
 
 
-def extract_name_from_profile(profile, uobj):
-    if not profile and not isinstance(uobj, dict):
-        return ""
+def extract_lichess_name(profile, user_obj):
     profile = profile or {}
     name = profile.get("name") or profile.get("fullName") or ""
     first = profile.get("firstName") or profile.get("first") or ""
@@ -70,219 +248,208 @@ def extract_name_from_profile(profile, uobj):
         name = first.strip()
     if not name:
         name = profile.get("realName") or profile.get("displayName") or ""
-    if not name and isinstance(uobj, dict):
-        name = uobj.get("name") or uobj.get("fullName") or uobj.get("displayName") or ""
+    if not name and isinstance(user_obj, dict):
+        name = user_obj.get("name") or user_obj.get("fullName") or user_obj.get("displayName") or ""
     return (name or "").strip()
 
 
-def fetch_rating_history(session, username):
-    out = {'blitz': None, 'bullet': None, 'rapid': None}
+def fetch_lichess_rating_history(session, username):
+    out = {"blitz": None, "bullet": None, "rapid": None}
     try:
-        resp = session.get(USER_RATING_HISTORY_URL.format(quote(username)), timeout=REQUEST_TIMEOUT)
-        if resp.status_code != 200:
+        response = session.get(
+            LICHESS_USER_RATING_HISTORY_URL.format(quote(username)),
+            timeout=REQUEST_TIMEOUT,
+        )
+        if response.status_code != 200:
             return out
-        arr = resp.json()
-        for rec in arr:
-            name = (rec.get('name') or '').lower()
-            if name not in out: continue
-            pts = rec.get('points') or []
-            if not pts:
-                out[name] = None
+        history = response.json()
+        for rec in history:
+            name = (rec.get("name") or "").lower()
+            if name not in out:
+                continue
+            points = rec.get("points") or []
+            if len(points) >= 2:
+                out[name] = safe_int(points[-1][1], default=0) - safe_int(points[-2][1], default=0)
             else:
-                if len(pts) >= 2:
-                    last = pts[-1][1]
-                    prev = pts[-2][1]
-                    try:
-                        out[name] = int(last) - int(prev)
-                    except Exception:
-                        out[name] = None
-                else:
-                    out[name] = None
+                out[name] = None
     except Exception:
         return out
     return out
 
 
-def fetch_user(session, username):
+def fetch_lichess_user(session, username):
     try:
-        resp = session.get(USER_URL.format(quote(username)), timeout=REQUEST_TIMEOUT)
-        if resp.status_code == 404: return None
-        resp.raise_for_status()
-        u = resp.json()
-        prof = u.get("profile") or {}
-        name = extract_name_from_profile(prof, u)
-        perfs = u.get("perfs", {})
-        blitz = perfs.get("blitz", {}).get("rating")
-        bullet = perfs.get("bullet", {}).get("rating")
-        rapid = perfs.get("rapid", {}).get("rating")
-        seenAt = u.get("seenAt") or u.get("lastSeenAt") or u.get("seenAtMillis") or None
-        profile_url = prof.get("url") or f"https://lichess.org/@/{username}"
-        history_diffs = fetch_rating_history(session, username)
+        response = session.get(LICHESS_USER_URL.format(quote(username)), timeout=REQUEST_TIMEOUT)
+        if response.status_code == 404:
+            return None
+        response.raise_for_status()
+        user = response.json()
+
+        profile = user.get("profile") or {}
+        name = extract_lichess_name(profile, user)
+        perfs = user.get("perfs") or {}
+        history_diffs = fetch_lichess_rating_history(session, username)
+
         return {
             "username": username,
             "name": name,
-            "profile": profile_url,
-            "blitz": blitz,
-            "bullet": bullet,
-            "rapid": rapid,
-            "seenAt": seenAt,
-            "recent_blitz_diff": history_diffs.get('blitz'),
-            "recent_bullet_diff": history_diffs.get('bullet'),
-            "recent_rapid_diff": history_diffs.get('rapid'),
+            "profile": profile.get("url") or f"https://lichess.org/@/{username}",
+            "blitz": (perfs.get("blitz") or {}).get("rating"),
+            "bullet": (perfs.get("bullet") or {}).get("rating"),
+            "rapid": (perfs.get("rapid") or {}).get("rating"),
+            "seenAt": safe_timestamp_ms(user.get("seenAt") or user.get("lastSeenAt") or user.get("seenAtMillis")),
+            "recent_blitz_diff": history_diffs.get("blitz"),
+            "recent_bullet_diff": history_diffs.get("bullet"),
+            "recent_rapid_diff": history_diffs.get("rapid"),
         }
-    except Exception as e:
-        print(f"warning: erro ao buscar {username}: {e}")
+    except Exception as exc:
+        print(f"warning: erro ao buscar Lichess user {username}: {exc}")
         return None
 
 
-def active_since_days(player, days=ACTIVE_DAYS):
-    if not player: return False
-    seen = player.get("seenAt")
-    if not seen: return False
-    try:
-        ts = int(seen)
-    except Exception:
-        try: ts = int(float(seen))
-        except Exception: return False
-    age_days = (time.time()*1000 - ts) / (24*3600*1000)
-    return age_days <= days
-
-
-def rating_status(diff):
-    if diff is None:
-        return None
-    try:
-        d = int(diff)
-    except Exception:
-        return None
-    if d > 0:
-        return "subiu"
-    if d < 0:
-        return "caiu"
-    return "manteve"
-
-
-def generate_players_json(output_path=DEFAULT_OUT_FILE, write_file=True):
-    """
-    Coleta dados, monta o payload e grava em `output_path` quando write_file==True.
-    Retorna o dicionário final (out).
-    """
+def generate_lichess_json(output_path=LICHESS_OUT_FILE, write_file=True):
     session = make_session()
-    print("Fetching team members...")
-    members = fetch_team_members(session)
-    print(f"Members: {len(members)}")
+    print("Lichess: fetching team members...")
+    members = fetch_lichess_team_members(session)
+    print(f"Lichess members: {len(members)}")
+
     players = []
-    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as ex:
-        futures = {ex.submit(fetch_user, session, m): m for m in members}
-        for fut in as_completed(futures):
-            res = fut.result()
-            if res: players.append(res)
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        futures = {executor.submit(fetch_lichess_user, session, member): member for member in members}
+        for future in as_completed(futures):
+            result = future.result()
+            if result:
+                players.append(result)
 
-    # dedupe
-    byu = {}
-    def score(p): return (p.get("blitz") or 0) + (p.get("bullet") or 0) + (p.get("rapid") or 0)
-    for p in players:
-        key = (p.get("username") or "").strip().lower()
-        if not key: continue
-        if key not in byu or score(p) > score(byu[key]) or (p.get("seenAt") or 0) > (byu[key].get("seenAt") or 0):
-            byu[key] = p
+    return finalize_players(players, output_path, write_file)
 
-    active = [v for v in byu.values() if active_since_days(v)]
-    active_sorted = sorted(active, key=lambda x: (-(x.get("blitz") or 0), -(x.get("bullet") or 0), -(x.get("rapid") or 0)))
 
-    # load previous snapshot only if we will write to the same file
-    prev_map = {}
-    prev_rank_map = {}
+# ----------------------------- Chess.com -----------------------------
+def fetch_chesscom_club_members(session):
+    response = session.get(CHESSCOM_CLUB_MEMBERS_URL.format(quote(CHESSCOM_CLUB_ID)), timeout=REQUEST_TIMEOUT)
+    response.raise_for_status()
+    data = response.json() or {}
+
+    usernames = []
+    for bucket in ("all_time", "weekly", "monthly"):
+        for item in data.get(bucket) or []:
+            username = (item.get("username") or "").strip()
+            if username:
+                usernames.append(username)
+
+    unique = []
+    seen = set()
+    for username in usernames:
+        key = username.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        unique.append(username)
+    return unique
+
+
+def extract_chesscom_rating(stats_obj, key):
+    return ((stats_obj.get(key) or {}).get("last") or {}).get("rating")
+
+
+def fetch_chesscom_user(session, username):
     try:
-        if write_file and os.path.exists(output_path):
-            with open(output_path, "r", encoding="utf-8") as f:
-                prev = json.load(f)
-            for idx, pp in enumerate((prev.get("players") or [])):
-                uname = (pp.get("username") or "").strip().lower()
-                if uname:
-                    prev_map[uname] = pp
-                    prev_rank_map[uname] = idx + 1
-    except Exception:
-        pass
+        profile_response = session.get(CHESSCOM_PLAYER_URL.format(quote(username)), timeout=REQUEST_TIMEOUT)
+        if profile_response.status_code in (404, 410):
+            return None
+        profile_response.raise_for_status()
+        profile = profile_response.json() or {}
 
-    for p in active_sorted:
-        if not (p.get("name") or "").strip():
-            p["name"] = "Sem nome registrado"
-        key = (p.get("username") or "").strip().lower()
-        prev = prev_map.get(key)
-
-        if prev:
-            try:
-                p["blitz_diff"] = int(p.get("blitz") or 0) - int(prev.get("blitz") or 0)
-            except Exception:
-                p["blitz_diff"] = 0
-            try:
-                p["bullet_diff"] = int(p.get("bullet") or 0) - int(prev.get("bullet") or 0)
-            except Exception:
-                p["bullet_diff"] = 0
-            try:
-                p["rapid_diff"] = int(p.get("rapid") or 0) - int(prev.get("rapid") or 0)
-            except Exception:
-                p["rapid_diff"] = 0
+        stats_response = session.get(CHESSCOM_PLAYER_STATS_URL.format(quote(username)), timeout=REQUEST_TIMEOUT)
+        if stats_response.status_code in (404, 410):
+            stats = {}
         else:
-            p["blitz_diff"] = p.get("recent_blitz_diff") if p.get("recent_blitz_diff") is not None else 0
-            p["bullet_diff"] = p.get("recent_bullet_diff") if p.get("recent_bullet_diff") is not None else 0
-            p["rapid_diff"] = p.get("recent_rapid_diff") if p.get("recent_rapid_diff") is not None else 0
+            stats_response.raise_for_status()
+            stats = stats_response.json() or {}
 
-        p.pop("recent_blitz_diff", None)
-        p.pop("recent_bullet_diff", None)
-        p.pop("recent_rapid_diff", None)
+        return {
+            "username": username,
+            "name": (profile.get("name") or "").strip(),
+            "profile": profile.get("url") or f"https://www.chess.com/member/{username}",
+            "blitz": extract_chesscom_rating(stats, "chess_blitz"),
+            "bullet": extract_chesscom_rating(stats, "chess_bullet"),
+            "rapid": extract_chesscom_rating(stats, "chess_rapid"),
+            "seenAt": safe_timestamp_ms(profile.get("last_online")),
+        }
+    except Exception as exc:
+        print(f"warning: erro ao buscar Chess.com user {username}: {exc}")
+        return None
 
-    for idx, p in enumerate(active_sorted):
-        current_pos = idx + 1
-        p["position"] = current_pos
-        key = (p.get("username") or "").strip().lower()
-        prev_pos = prev_rank_map.get(key)
-        if prev_pos is None:
-            p["position_change"] = None
-            p["position_arrow"] = None
-        else:
-            change = prev_pos - current_pos
-            p["position_change"] = change
-            if change > 0:
-                p["position_arrow"] = "▲"
-            elif change < 0:
-                p["position_arrow"] = "▼"
-            else:
-                p["position_arrow"] = "→"
-        p["blitz_status"] = rating_status(p.get("blitz_diff"))
-        p["bullet_status"] = rating_status(p.get("bullet_diff"))
-        p["rapid_status"] = rating_status(p.get("rapid_diff"))
 
-    out = {
-        "generated_at": int(time.time()*1000),
-        "count": len(active_sorted),
-        "players": active_sorted
-    }
+def generate_chesscom_json(output_path=CHESSCOM_OUT_FILE, write_file=True):
+    session = make_session()
+    print("Chess.com: fetching club members...")
+    members = fetch_chesscom_club_members(session)
+    print(f"Chess.com members: {len(members)}")
 
-    if write_file:
-        out_dir = os.path.dirname(output_path) or "."
-        os.makedirs(out_dir, exist_ok=True)
-        with open(output_path, "w", encoding="utf-8") as f:
-            json.dump(out, f, ensure_ascii=False, indent=2)
-        print(f"Wrote {output_path} ({len(active_sorted)} players)")
+    players = []
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+        futures = {executor.submit(fetch_chesscom_user, session, member): member for member in members}
+        for future in as_completed(futures):
+            result = future.result()
+            if result:
+                players.append(result)
+
+    return finalize_players(players, output_path, write_file)
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Gera rankings para Lichess e Chess.com no formato consumido pelo site estático."
+    )
+    parser.add_argument(
+        "--source",
+        choices=("all", "lichess", "chesscom"),
+        default="all",
+        help="Fonte a gerar. Default: all",
+    )
+    parser.add_argument(
+        "--output",
+        "-o",
+        default=None,
+        help="Caminho de saída (apenas para --source lichess|chesscom).",
+    )
+    parser.add_argument(
+        "--stdout",
+        action="store_true",
+        help="Imprime JSON no stdout em vez de gravar arquivo(s).",
+    )
+    args = parser.parse_args()
+
+    write_file = not args.stdout
+
+    if args.source == "all":
+        lichess_payload = generate_lichess_json(output_path=LICHESS_OUT_FILE, write_file=write_file)
+        chesscom_payload = generate_chesscom_json(output_path=CHESSCOM_OUT_FILE, write_file=write_file)
+        if args.stdout:
+            print(
+                json.dumps(
+                    {"lichess": lichess_payload, "chesscom": chesscom_payload},
+                    ensure_ascii=False,
+                    indent=2,
+                )
+            )
+        return
+
+    if args.source == "lichess":
+        output = args.output or LICHESS_OUT_FILE
+        payload = generate_lichess_json(output_path=output, write_file=write_file)
     else:
-        # print to stdout
-        print(json.dumps(out, ensure_ascii=False, indent=2))
+        output = args.output or CHESSCOM_OUT_FILE
+        payload = generate_chesscom_json(output_path=output, write_file=write_file)
 
-    return out
-# ---------- fim parte existente ----------
+    if args.stdout:
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":
-    import argparse
-    parser = argparse.ArgumentParser(description="Gerador de docs/players.json para o XadrezJovemes (sem Flask).")
-    parser.add_argument("--output", "-o", default=DEFAULT_OUT_FILE, help="Caminho do arquivo de saída (default: docs/players.json)")
-    parser.add_argument("--stdout", action="store_true", help="Imprime o JSON no stdout em vez de gravar o arquivo")
-    args = parser.parse_args()
-
     try:
-        generate_players_json(output_path=args.output, write_file=not args.stdout)
-    except Exception as e:
-        print("Erro gerando players.json:", e)
+        main()
+    except Exception as exc:
+        print(f"Erro gerando JSON: {exc}")
         raise
