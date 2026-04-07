@@ -760,6 +760,35 @@ footer {
   font-size: 0.92rem;
 }
 
+.back-to-top {
+  position: fixed;
+  right: 16px;
+  bottom: 18px;
+  z-index: 40;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  height: 52px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #ffffff;
+  font: inherit;
+  font-weight: 800;
+  box-shadow: 0 16px 34px rgba(15, 23, 42, 0.22);
+  cursor: pointer;
+}
+
+.back-to-top.visible {
+  display: inline-flex;
+}
+
+.back-to-top-label {
+  display: none;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -811,6 +840,10 @@ footer {
 
   .pager {
     justify-content: center;
+  }
+
+  .back-to-top-label {
+    display: inline;
   }
 }
 
@@ -875,5 +908,10 @@ footer {
 
   .player-card-actions {
     align-items: flex-start;
+  }
+
+  .back-to-top {
+    right: 14px;
+    bottom: 14px;
   }
 }

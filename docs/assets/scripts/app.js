@@ -49,7 +49,8 @@ const elements = {
   cardList: document.getElementById("cardList"),
   pager: document.getElementById("pager"),
   footer: document.getElementById("footerText"),
-  tableWrap: document.getElementById("tableWrap")
+  tableWrap: document.getElementById("tableWrap"),
+  backToTop: document.getElementById("backToTop")
 };
 
 function getSourceConfig() {
@@ -206,6 +207,14 @@ function applyResponsiveAria() {
   elements.cardList.setAttribute("aria-hidden", String(!isMobile));
 }
 
+function updateBackToTopVisibility() {
+  if (!elements.backToTop) {
+    return;
+  }
+
+  elements.backToTop.classList.toggle("visible", window.scrollY > 320);
+}
+
 function togglePlayerCard(cardElement) {
   if (!cardElement) {
     return;
@@ -355,6 +364,10 @@ function bindEvents() {
     elements.hero.hidden = true;
   });
 
+  elements.backToTop?.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
   document.addEventListener("click", (event) => {
     const clearButton = event.target.closest(".js-clear-filters");
     if (clearButton) {
@@ -398,6 +411,8 @@ function bindEvents() {
   } else if (typeof mediaQuery.addListener === "function") {
     mediaQuery.addListener(handleMediaChange);
   }
+
+  window.addEventListener("scroll", updateBackToTopVisibility, { passive: true });
 }
 
 async function hydrateVisitCounter() {
@@ -418,6 +433,7 @@ function bootstrap() {
   restoreState();
   setSource(state.source, { persist: true, resetPage: false });
   bindEvents();
+  updateBackToTopVisibility();
   hydrateVisitCounter();
   loadData({ resetPage: false });
 }
