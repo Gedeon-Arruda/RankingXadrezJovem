@@ -25,7 +25,7 @@ export const SOURCE_CONFIG = Object.freeze({
     profileBase: "https://lichess.org/@/",
     heroTitle: "Quer aparecer no ranking?",
     heroDescription:
-      'Seja membro do time <strong>xadrezjovemes</strong> no Lichess. Voce aparece automaticamente apos a geracao diaria.',
+      'Seja membro do time <strong>xadrezjovemes</strong> no Lichess. Você aparece automaticamente após a geração diária.',
     footerText: "Dados: Lichess. Atualizado uma vez por dia.",
     hasCountryRanks: false
   }),
@@ -38,7 +38,7 @@ export const SOURCE_CONFIG = Object.freeze({
     profileBase: "https://www.chess.com/member/",
     heroTitle: "Quer aparecer no ranking?",
     heroDescription:
-      'Seja membro do clube <strong>xadrez-jovem-es</strong> no Chess.com. O ranking nacional aparece por ritmo quando o dado publico estiver disponivel.',
+      'Seja membro do clube <strong>xadrez-jovem-es</strong> no Chess.com. O ranking nacional aparece por ritmo quando o dado público estiver disponível.',
     footerText: "Dados: Chess.com. Atualizado uma vez por dia.",
     hasCountryRanks: true
   })

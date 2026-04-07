@@ -422,10 +422,10 @@ async function hydrateVisitCounter() {
     const count = await incrementVisitCounter();
     elements.visitBadge.textContent = Number.isFinite(count)
       ? count.toLocaleString("pt-BR")
-      : "indisponivel";
+      : "indisponível";
   } catch (error) {
     console.error(error);
-    elements.visitBadge.textContent = "indisponivel";
+    elements.visitBadge.textContent = "indisponível";
   }
 }
 

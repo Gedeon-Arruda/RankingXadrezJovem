@@ -78,21 +78,21 @@ export function formatRelativeFromNow(value) {
   }
 
   if (diffMinutes < 60) {
-    return `ha ${diffMinutes} min`;
+    return `há ${diffMinutes} min`;
   }
 
   const diffHours = Math.floor(diffMinutes / 60);
   if (diffHours < 24) {
-    return `ha ${diffHours} h`;
+    return `há ${diffHours} h`;
   }
 
   const diffDays = Math.floor(diffHours / 24);
   if (diffDays < 30) {
-    return `ha ${diffDays} dia${diffDays > 1 ? "s" : ""}`;
+    return `há ${diffDays} dia${diffDays > 1 ? "s" : ""}`;
   }
 
   const diffMonths = Math.floor(diffDays / 30);
-  return `ha ${diffMonths} mes${diffMonths > 1 ? "es" : ""}`;
+  return `há ${diffMonths} mês${diffMonths > 1 ? "es" : ""}`;
 }
 
 export function formatSeenCompact(value) {
@@ -107,10 +107,10 @@ export function formatSeenCompact(value) {
 export function formatSeenTitle(value) {
   const timestamp = toTimestamp(value);
   if (!timestamp) {
-    return "Ultimo login indisponivel";
+    return "Último login indisponível";
   }
 
-  return `Ultimo login: ${formatDateTime(timestamp)}`;
+  return `Último login: ${formatDateTime(timestamp)}`;
 }
 
 export function formatDiff(value) {
@@ -223,7 +223,7 @@ export function getCountryRankText(player, rhythm, sourceId) {
     return `${code} #${formatNumber(rank)}`;
   }
 
-  return `${code} nao listado`;
+  return `${code} não listado`;
 }
 
 export function getCountryRankMuted(player, rhythm, sourceId) {

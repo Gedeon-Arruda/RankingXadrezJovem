@@ -118,7 +118,7 @@ export function renderDesktopRows(items, startIndex, sourceId, sourceConfig) {
           <td class="user-cell">
             <div class="user-main">
               ${identityChips}
-              <a class="player-name" href="${escapeHtml(profileUrl)}" target="_blank" rel="noopener">${escapeHtml(player?.username || "sem-usuario")}</a>
+              <a class="player-name" href="${escapeHtml(profileUrl)}" target="_blank" rel="noopener">${escapeHtml(player?.username || "sem-usuário")}</a>
             </div>
             <span class="realname">${escapeHtml(realName)}</span>
           </td>
@@ -146,7 +146,7 @@ export function renderMobileCards(items, startIndex, sourceId, sourceConfig) {
       const seenTitle = formatSeenTitle(player?.seenAt);
 
       return `
-        <article class="player-card ${rowClass}" tabindex="0" role="button" aria-pressed="false" aria-label="Mostrar maximas de ${escapeHtml(player?.username || "sem-usuario")}">
+        <article class="player-card ${rowClass}" tabindex="0" role="button" aria-pressed="false" aria-label="Mostrar máximas de ${escapeHtml(player?.username || "sem-usuário")}">
           <div class="player-card-inner">
             <section class="player-card-face player-card-face-front">
               <div class="player-card-header">
@@ -155,7 +155,7 @@ export function renderMobileCards(items, startIndex, sourceId, sourceConfig) {
                   <div class="player-title-row">
                     <span class="player-rank-label">#${rank}</span>
                     ${identityChips}
-                    <span class="player-name">${escapeHtml(player?.username || "sem-usuario")}</span>
+                    <span class="player-name">${escapeHtml(player?.username || "sem-usuário")}</span>
                   </div>
                   <span class="player-realname">${escapeHtml(realName)}</span>
                   <span class="player-country">Movimento: ${positionBadge}</span>
@@ -170,7 +170,7 @@ export function renderMobileCards(items, startIndex, sourceId, sourceConfig) {
               </div>
 
               <div class="player-card-actions">
-                <span class="player-card-hint">Toque para ver maximas registradas</span>
+                <span class="player-card-hint">Toque para ver máximas registradas</span>
                 <a class="player-profile-link js-profile-link" href="${escapeHtml(profileUrl)}" target="_blank" rel="noopener">Perfil</a>
               </div>
             </section>
@@ -182,10 +182,10 @@ export function renderMobileCards(items, startIndex, sourceId, sourceConfig) {
                   <div class="player-title-row">
                     <span class="player-rank-label">#${rank}</span>
                     ${identityChips}
-                    <span class="player-name">${escapeHtml(player?.username || "sem-usuario")}</span>
+                    <span class="player-name">${escapeHtml(player?.username || "sem-usuário")}</span>
                   </div>
                   <span class="player-realname">${escapeHtml(realName)}</span>
-                  <span class="player-country">Maximas registradas</span>
+                  <span class="player-country">Máximas registradas</span>
                   <span class="player-country">Clique novamente para voltar</span>
                 </div>
               </div>
@@ -197,7 +197,7 @@ export function renderMobileCards(items, startIndex, sourceId, sourceConfig) {
               </div>
 
               <div class="player-card-actions">
-                <span class="player-card-hint">Historico de pico por ritmo</span>
+                <span class="player-card-hint">Histórico de pico por ritmo</span>
                 <a class="player-profile-link js-profile-link" href="${escapeHtml(profileUrl)}" target="_blank" rel="noopener">Perfil</a>
               </div>
             </section>
@@ -211,10 +211,10 @@ export function renderMobileCards(items, startIndex, sourceId, sourceConfig) {
 export function renderEmptyState(hasFilters) {
   const title = hasFilters
     ? "Nenhum jogador encontrado com os filtros atuais."
-    : "Ainda nao ha jogadores disponiveis nesta fonte.";
+    : "Ainda não há jogadores disponíveis nesta fonte.";
   const hint = hasFilters
     ? "Limpe os filtros para voltar ao ranking completo."
-    : "Tente novamente apos a proxima geracao dos dados.";
+    : "Tente novamente após a próxima geração dos dados.";
   const clearButton = hasFilters
     ? '<button type="button" class="clear-btn js-clear-filters">Limpar filtros</button>'
     : "";
