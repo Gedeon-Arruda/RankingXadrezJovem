@@ -1,0 +1,11 @@
+{
+  "name": "ranking-xadrez-jovem",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "node tools/generate-data.mjs",
+    "generate:lichess": "node tools/generate-data.mjs --source lichess",
+    "generate:chesscom": "node tools/generate-data.mjs --source chesscom",
+    "serve": "node tools/serve-preview.mjs"
+  }
+}

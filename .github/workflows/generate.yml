@@ -19,16 +19,13 @@ jobs:
         with:
           persist-credentials: true
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
         with:
-          python-version: '3.11'
-
-      - name: Install dependencies
-        run: python -m pip install --upgrade pip requests urllib3
+          node-version: '20'
 
       - name: Run generator script
-        run: python scripts/generate_data.py
+        run: npm run generate
 
       - name: Commit generated JSON
         run: |
