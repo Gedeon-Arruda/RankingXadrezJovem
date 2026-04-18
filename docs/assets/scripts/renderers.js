@@ -5,8 +5,6 @@ import {
   formatSeenCompact,
   formatSeenTitle,
   getArrowClass,
-  getCountryCode,
-  getCountryName,
   getCountryRankMuted,
   getCountryRankText,
   getDiffClass,
@@ -38,8 +36,6 @@ function renderIdentityChips(player) {
   const parts = [];
   const honorBadge = getPlayerHonorBadge(player);
   const title = getPlayerTitle(player);
-  const countryCode = getCountryCode(player);
-  const countryName = getCountryName(player);
 
   if (honorBadge) {
     const tooltip = honorBadge.tooltip
@@ -52,11 +48,6 @@ function renderIdentityChips(player) {
 
   if (title) {
     parts.push(`<span class="title-chip">${escapeHtml(title)}</span>`);
-  }
-
-  if (countryCode) {
-    const tooltip = countryName ? ` title="${escapeHtml(countryName)}"` : "";
-    parts.push(`<span class="country-chip"${tooltip}>${escapeHtml(countryCode)}</span>`);
   }
 
   return parts.join("");
