@@ -5,6 +5,14 @@ const TITLE_OVERRIDES = Object.freeze({
   gedevon_arrudev: "DEV"
 });
 
+const HONOR_BADGE_OVERRIDES = Object.freeze({
+  // Adicione novos campeoes estaduais manualmente aqui.
+  normanfrieman: Object.freeze({
+    label: "CE",
+    tooltip: "Campeão estadual"
+  })
+});
+
 const COUNTRY_DISPLAY_NAMES =
   typeof Intl !== "undefined" && typeof Intl.DisplayNames === "function"
     ? new Intl.DisplayNames(["pt-BR", "en"], { type: "region" })
@@ -179,6 +187,11 @@ export function getPlayerTitle(player) {
   const usernameKey = getUsernameKey(player?.username);
   const explicitTitle = String(player?.title || "").trim().toUpperCase();
   return TITLE_OVERRIDES[usernameKey] || explicitTitle || null;
+}
+
+export function getPlayerHonorBadge(player) {
+  const usernameKey = getUsernameKey(player?.username);
+  return HONOR_BADGE_OVERRIDES[usernameKey] || null;
 }
 
 export function getCountryCode(player) {

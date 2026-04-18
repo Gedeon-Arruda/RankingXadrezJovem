@@ -10,6 +10,7 @@ import {
   getCountryRankMuted,
   getCountryRankText,
   getDiffClass,
+  getPlayerHonorBadge,
   getPeakRating,
   getPlayerName,
   getPlayerTitle,
@@ -35,9 +36,19 @@ function renderPositionBadge(player) {
 
 function renderIdentityChips(player) {
   const parts = [];
+  const honorBadge = getPlayerHonorBadge(player);
   const title = getPlayerTitle(player);
   const countryCode = getCountryCode(player);
   const countryName = getCountryName(player);
+
+  if (honorBadge) {
+    const tooltip = honorBadge.tooltip
+      ? ` title="${escapeHtml(honorBadge.tooltip)}"`
+      : "";
+    parts.push(
+      `<span class="title-chip title-chip--champion"${tooltip}>${escapeHtml(honorBadge.label)}</span>`
+    );
+  }
 
   if (title) {
     parts.push(`<span class="title-chip">${escapeHtml(title)}</span>`);
