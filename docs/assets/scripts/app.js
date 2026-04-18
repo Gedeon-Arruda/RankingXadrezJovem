@@ -360,8 +360,10 @@ function bindEvents() {
     });
   }
 
-  elements.dismissJoinBanner.addEventListener("click", () => {
+  elements.dismissJoinBanner.addEventListener("click", (event) => {
+    event.preventDefault();
     elements.hero.hidden = true;
+    elements.hero.style.display = "none";
   });
 
   elements.backToTop?.addEventListener("click", () => {
